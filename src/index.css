@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Roboto:wght@400;500;600&family=Roboto+Condensed:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* MySyde brand colors */
+  --color-mysyde-blue: #02348E;
+  --color-community-yellow: #FFEC00;
+  --color-mysyde-black: #010100;
+  --color-light-gray: #F2F3F7;
+
+  /* Partner type colors */
+  --color-partner-chamber: #1d4ed8;
+  --color-partner-city: #7c3aed;
+  --color-partner-downtown: #0d9488;
+  --color-partner-community: #f43f5e;
+  --color-partner-business: #f59e0b;
+
+  /* Typography */
+  --font-heading: 'IBM Plex Sans', sans-serif;
+  --font-sans: 'Roboto', sans-serif;
+  --font-condensed: 'Roboto Condensed', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: #F2F3F7;
+  color: #010100;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}

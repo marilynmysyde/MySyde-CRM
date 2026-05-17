@@ -1,0 +1,100 @@
+import { useEffect, useState } from 'react'
+import { supabase } from '../lib/supabase'
+import PartnerTypeTag from '../components/shared/PartnerTypeTag'
+
+const SAMPLE_CONTACTS = [
+  { id: 'c1', name: 'Sandra Lee',    role: 'Executive Director', email: 'sandra@mhchamber.com', partners: { name: 'Morgan Hill Chamber', type: 'chamber' } },
+  { id: 'c2', name: 'James Ortega',  role: 'City Manager',       email: 'jortega@morgan-hill.ca.gov', partners: { name: 'City of Morgan Hill', type: 'city_gov' } },
+  { id: 'c3', name: 'Priya Nair',    role: 'Events Coordinator', email: 'priya@downtownmh.org', partners: { name: 'Downtown Morgan Hill', type: 'downtown_assoc' } },
+]
+
+export default function Contacts() {
+  const [contacts, setContacts] = useState(SAMPLE_CONTACTS)
+  const [search, setSearch]     = useState('')
+
+  useEffect(() => {
+    async function fetchContacts() {
+      const { data, error } = await supabase
+        .from('contacts')
+        .select('*, partners(name, type)')
+        .order('name')
+
+      if (!error && data && data.length > 0) setContacts(data)
+    }
+    fetchContacts()
+  }, [])
+
+  const visible = contacts.filter(c =>
+    c.name.toLowerCase().includes(search.toLowerCase()) ||
+    c.email?.toLowerCase().includes(search.toLowerCase()) ||
+    c.partners?.name.toLowerCase().includes(search.toLowerCase())
+  )
+
+  return (
+    <div className="p-4">
+      <div className="flex items-center justify-between mb-4">
+        <h1
+          className="text-xl font-semibold text-[#010100]"
+          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+        >
+          Contacts
+        </h1>
+        <button
+          className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
+          style={{ fontFamily: 'Roboto, sans-serif' }}
+        >
+          + Add Contact
+        </button>
+      </div>
+
+      <input
+        type="text"
+        placeholder="Search contacts…"
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        className="border border-gray-200 rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#02348E]/30 w-64 mb-4 block"
+        style={{ fontFamily: 'Roboto, sans-serif' }}
+      />
+
+      <div className="bg-white rounded-lg border border-gray-100 overflow-hidden">
+        {visible.length === 0 && (
+          <div className="text-center py-12 text-gray-400 text-sm" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            No contacts found.
+          </div>
+        )}
+        {visible.map((contact, i) => (
+          <div
+            key={contact.id}
+            className={`flex items-center justify-between px-4 py-3 hover:bg-gray-50 cursor-pointer ${i > 0 ? 'border-t border-gray-50' : ''}`}
+          >
+            <div className="flex items-center gap-3">
+              {/* Avatar initials */}
+              <div className="w-8 h-8 rounded-full bg-[#02348E] flex items-center justify-center shrink-0">
+                <span className="text-white text-xs font-semibold" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                  {contact.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                </span>
+              </div>
+              <div>
+                <p
+                  className="text-sm font-medium text-[#010100]"
+                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                >
+                  {contact.name}
+                </p>
+                <p
+                  className="text-xs text-gray-400"
+                  style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                >
+                  {contact.role}{contact.email ? ` · ${contact.email}` : ''}
+                </p>
+              </div>
+            </div>
+            {contact.partners && (
+              <PartnerTypeTag type={contact.partners.type} />
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
