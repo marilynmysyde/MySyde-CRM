@@ -1,4 +1,4 @@
 import { ComingSoon } from './Tasks'
 export default function Kiosks() {
-  return <ComingSoon title="Kiosks" phase={4} description="Kiosk locations, ad slot status, linked deals, and install tracking." />
+  return <ComingSoon title="Kiosks" phase={5} description="Kiosk locations, ad slot status, linked deals, and install tracking." />
 }
