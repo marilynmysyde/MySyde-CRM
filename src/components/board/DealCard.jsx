@@ -2,16 +2,36 @@ import { useNavigate } from 'react-router-dom'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import PartnerTypeTag from '../shared/PartnerTypeTag'
+import { PLACEMENTS, CATEGORIES } from '../../lib/rateCard'
 
-const PACKAGE_STYLES = {
-  starter:  'bg-gray-100 text-gray-600',
-  standard: 'bg-blue-50 text-[#02348E]',
-  premium:  'bg-yellow-50 text-yellow-700',
+const CATEGORY_STYLES = {
+  digital: 'bg-blue-50 text-[#02348E]',
+  wrap:    'bg-amber-50 text-amber-700',
+  event:   'bg-purple-50 text-purple-700',
+  map:     'bg-teal-50 text-teal-700',
 }
 
 function formatCurrency(value) {
   if (!value) return null
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value)
+}
+
+function PlacementBadge({ placementType }) {
+  if (!placementType) return null
+  const p   = PLACEMENTS[placementType]
+  if (!p) return null
+  const cat = CATEGORIES.find(c => c.key === p.category)
+  const style = CATEGORY_STYLES[p.category] ?? 'bg-gray-100 text-gray-600'
+  const short = p.label.replace('Dynamic ', '').replace(' Sponsor', '').replace(' — Main Face', '').replace(' (Left or Right)', '')
+  return (
+    <span
+      className={`text-[10px] font-semibold px-1.5 py-0.5 rounded uppercase tracking-wide shrink-0 ${style}`}
+      style={{ fontFamily: 'Roboto, sans-serif' }}
+      title={p.label}
+    >
+      {cat?.icon} {short.length > 16 ? short.slice(0, 14) + '…' : short}
+    </span>
+  )
 }
 
 // Six-dot grip icon
@@ -38,7 +58,6 @@ export default function DealCard({ deal }) {
 
   const monthlyDisplay = formatCurrency(deal.monthly_rate)
   const totalDisplay   = formatCurrency(deal.total_value ?? deal.monthly_rate * (deal.months ?? 3))
-  const packageStyle   = PACKAGE_STYLES[deal.package] ?? PACKAGE_STYLES.starter
 
   function handleCardClick() {
     navigate(`/deal/${deal.id}`)
@@ -71,14 +90,7 @@ export default function DealCard({ deal }) {
             <PartnerTypeTag type={deal.partners.type} />
           )}
         </div>
-        {deal.package && (
-          <span
-            className={`text-[10px] font-semibold px-1.5 py-0.5 rounded uppercase tracking-wide shrink-0 ${packageStyle}`}
-            style={{ fontFamily: 'Roboto, sans-serif' }}
-          >
-            {deal.package}
-          </span>
-        )}
+        <PlacementBadge placementType={deal.placement_type ?? deal.package} />
       </div>
 
       {/* Clickable body — navigates to DealRecord */}

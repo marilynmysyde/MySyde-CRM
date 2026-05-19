@@ -62,20 +62,32 @@ create table deals (
   contact_id        uuid references contacts(id) on delete set null,
   partner_id        uuid references partners(id) on delete set null,
   kiosk_id          uuid references kiosks(id) on delete set null,
-  type              text not null default 'ad_space' check (type in ('ad_space','subscription','placement','sponsorship')),
   stage             text not null default 'prospect' check (stage in ('prospect','pitched','proposal','creative','live','closed_won','closed_lost')),
-  package           text check (package in ('starter','standard','premium')),
+
+  -- Placement & pricing (MySyde rate card)
+  placement_type    text check (placement_type in (
+                      'top_banner','bottom_banner','premier_welcome','start_screen',
+                      'search_button','primary_wrap','side_wrap','featured_event',
+                      'map_picture','map_name_under','map_name_category','map_bundle'
+                    )),
+  screen            text check (screen in ('screen_1','screen_2','both')),
+  pricing_tier      text default 'option_2' check (pricing_tier in ('option_1','option_2','option_3')),
+  launch_pricing    boolean default false,
   monthly_rate      numeric(10,2),
   months            integer default 3,
   total_value       numeric(10,2) generated always as (monthly_rate * months) stored,
-  design_included   boolean default false,
-  design_fee        numeric(10,2),
+
+  -- Creative workflow
   design_status     text default 'none' check (design_status in ('none','briefed','in_progress','revised','approved','uploaded')),
   canva_file_url    text,
   canva_file_name   text,
+
+  -- Run dates & renewal
   run_start         date,
   run_end           date,
   renewal_alert     date generated always as (run_end - interval '14 days') stored,
+
+  -- Admin
   invoice_status    text default 'none' check (invoice_status in ('none','deposit_pending','paid','overdue')),
   gmail_thread_id   text,
   notes             text,

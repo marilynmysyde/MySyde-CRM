@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import PackageSelector from '../components/deal/PackageSelector'
+import PlacementSelector from '../components/deal/PlacementSelector'
 import CreativeTracker from '../components/deal/CreativeTracker'
 import CanvaLink       from '../components/deal/CanvaLink'
 import ActivityLog     from '../components/deal/ActivityLog'
@@ -237,7 +237,7 @@ export default function DealRecord() {
 
         {/* Left: main sections */}
         <div className="lg:col-span-2 flex flex-col gap-4">
-          <PackageSelector deal={deal} onUpdate={handleUpdate} />
+          <PlacementSelector deal={deal} onUpdate={handleUpdate} />
           <CreativeTracker deal={deal} onUpdate={handleUpdate} />
           <CanvaLink       deal={deal} onUpdate={handleUpdate} />
 
