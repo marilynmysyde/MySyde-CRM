@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import PartnerTypeTag from '../shared/PartnerTypeTag'
@@ -13,7 +14,20 @@ function formatCurrency(value) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value)
 }
 
+// Six-dot grip icon
+function GripIcon() {
+  return (
+    <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor" className="opacity-30">
+      <circle cx="2" cy="2"  r="1.2" /><circle cx="8" cy="2"  r="1.2" />
+      <circle cx="2" cy="7"  r="1.2" /><circle cx="8" cy="7"  r="1.2" />
+      <circle cx="2" cy="12" r="1.2" /><circle cx="8" cy="12" r="1.2" />
+    </svg>
+  )
+}
+
 export default function DealCard({ deal }) {
+  const navigate = useNavigate()
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: deal.id })
 
   const style = {
@@ -22,26 +36,44 @@ export default function DealCard({ deal }) {
     opacity: isDragging ? 0.5 : 1,
   }
 
-  const monthlyDisplay  = formatCurrency(deal.monthly_rate)
-  const totalDisplay    = formatCurrency(deal.total_value ?? deal.monthly_rate * (deal.months ?? 3))
-  const packageStyle    = PACKAGE_STYLES[deal.package] ?? PACKAGE_STYLES.starter
+  const monthlyDisplay = formatCurrency(deal.monthly_rate)
+  const totalDisplay   = formatCurrency(deal.total_value ?? deal.monthly_rate * (deal.months ?? 3))
+  const packageStyle   = PACKAGE_STYLES[deal.package] ?? PACKAGE_STYLES.starter
+
+  function handleCardClick() {
+    navigate(`/deal/${deal.id}`)
+  }
+
+  function handlePartnerClick(e) {
+    e.stopPropagation()
+    if (deal.partners?.id) navigate(`/partner/${deal.partners.id}`)
+  }
 
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...attributes}
-      {...listeners}
-      className="bg-white rounded-lg shadow-sm border border-gray-100 p-3 cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow"
+      className="bg-white rounded-lg shadow-sm border border-gray-100 p-3 hover:shadow-md transition-shadow group"
     >
-      {/* Partner tag + package badge */}
+      {/* Top row: drag handle + partner tag + package badge */}
       <div className="flex items-center justify-between gap-2 mb-2">
-        {deal.partners?.type && (
-          <PartnerTypeTag type={deal.partners.type} />
-        )}
+        <div className="flex items-center gap-1.5 flex-1 min-w-0">
+          {/* Drag handle — only this area initiates drag */}
+          <div
+            {...listeners}
+            className="cursor-grab active:cursor-grabbing shrink-0 text-gray-300 hover:text-gray-500 transition-colors pt-0.5"
+            onClick={e => e.stopPropagation()}
+          >
+            <GripIcon />
+          </div>
+          {deal.partners?.type && (
+            <PartnerTypeTag type={deal.partners.type} />
+          )}
+        </div>
         {deal.package && (
           <span
-            className={`text-[10px] font-semibold px-1.5 py-0.5 rounded uppercase tracking-wide ${packageStyle}`}
+            className={`text-[10px] font-semibold px-1.5 py-0.5 rounded uppercase tracking-wide shrink-0 ${packageStyle}`}
             style={{ fontFamily: 'Roboto, sans-serif' }}
           >
             {deal.package}
@@ -49,53 +81,62 @@ export default function DealCard({ deal }) {
         )}
       </div>
 
-      {/* Deal title */}
-      <p
-        className="text-sm font-medium text-[#010100] leading-snug mb-1"
-        style={{ fontFamily: 'Roboto, sans-serif' }}
-      >
-        {deal.title}
-      </p>
-
-      {/* Partner name */}
-      {deal.partners?.name && (
+      {/* Clickable body — navigates to DealRecord */}
+      <div onClick={handleCardClick} className="cursor-pointer">
+        {/* Deal title */}
         <p
-          className="text-xs text-gray-400 mb-2 truncate"
-          style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+          className="text-sm font-medium text-[#010100] leading-snug mb-1 group-hover:text-[#02348E] transition-colors"
+          style={{ fontFamily: 'Roboto, sans-serif' }}
         >
-          {deal.partners.name}
+          {deal.title}
         </p>
-      )}
 
-      {/* Financials */}
-      {monthlyDisplay && (
-        <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-50">
+        {/* Partner name — clickable link to partner record */}
+        {deal.partners?.name && (
           <span
-            className="text-xs text-gray-400"
+            role="button"
+            onClick={handlePartnerClick}
+            className={`text-xs mb-2 truncate block transition-colors ${
+              deal.partners?.id
+                ? 'text-[#02348E] hover:underline cursor-pointer'
+                : 'text-gray-400 cursor-default'
+            }`}
             style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
           >
-            {monthlyDisplay}/mo
+            {deal.partners.name}
           </span>
-          {totalDisplay && (
+        )}
+
+        {/* Financials */}
+        {monthlyDisplay && (
+          <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-50">
             <span
-              className="text-xs font-semibold text-[#02348E]"
+              className="text-xs text-gray-400"
               style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
             >
-              {totalDisplay} total
+              {monthlyDisplay}/mo
             </span>
-          )}
-        </div>
-      )}
+            {totalDisplay && (
+              <span
+                className="text-xs font-semibold text-[#02348E]"
+                style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              >
+                {totalDisplay} total
+              </span>
+            )}
+          </div>
+        )}
 
-      {/* Run dates */}
-      {deal.run_start && (
-        <p
-          className="text-[10px] text-gray-300 mt-1"
-          style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
-        >
-          {deal.run_start} → {deal.run_end ?? '—'}
-        </p>
-      )}
+        {/* Run dates */}
+        {deal.run_start && (
+          <p
+            className="text-[10px] text-gray-300 mt-1"
+            style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+          >
+            {deal.run_start} → {deal.run_end ?? '—'}
+          </p>
+        )}
+      </div>
     </div>
   )
 }

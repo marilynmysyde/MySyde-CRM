@@ -13,7 +13,8 @@ const SAMPLE_DEALS = [
     total_value: 897,
     run_start: null,
     run_end: null,
-    partners: { name: 'Morgan Hill Chamber of Commerce', type: 'chamber' },
+    partner_id: 'sample-partner-1',
+    partners: { id: 'sample-partner-1', name: 'Morgan Hill Chamber of Commerce', type: 'chamber' },
   },
   {
     id: 'sample-2',
@@ -25,7 +26,8 @@ const SAMPLE_DEALS = [
     total_value: 1497,
     run_start: '2026-06-01',
     run_end: '2026-08-31',
-    partners: { name: 'Downtown Morgan Hill', type: 'downtown_assoc' },
+    partner_id: 'sample-partner-2',
+    partners: { id: 'sample-partner-2', name: 'Downtown Morgan Hill', type: 'downtown_assoc' },
   },
   {
     id: 'sample-3',
@@ -36,8 +38,9 @@ const SAMPLE_DEALS = [
     months: 3,
     total_value: 2397,
     run_start: '2026-05-01',
-    run_end: '2026-07-31',
-    partners: { name: 'City of Morgan Hill', type: 'city_gov' },
+    run_end: '2026-07-25',
+    partner_id: 'sample-partner-3',
+    partners: { id: 'sample-partner-3', name: 'City of Morgan Hill', type: 'city_gov' },
   },
 ]
 
@@ -49,7 +52,7 @@ export default function Board() {
     async function fetchDeals() {
       const { data, error } = await supabase
         .from('deals')
-        .select('*, partners(name, type)')
+        .select('*, partners(id, name, type)')
         .not('stage', 'in', '("closed_won","closed_lost")')
         .order('created_at', { ascending: false })
 
