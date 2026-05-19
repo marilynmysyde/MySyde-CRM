@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import PartnerTypeTag from '../components/shared/PartnerTypeTag'
+import TaskBoard from '../components/tasks/TaskBoard'
+import NewTaskModal from '../components/tasks/NewTaskModal'
 
 // ─── Sample data ────────────────────────────────────────────────────────────
 
@@ -344,130 +346,50 @@ function DealsTab({ deals }) {
 
 // ─── Tasks tab ───────────────────────────────────────────────────────────────
 
-function TasksTab({ partnerId }) {
-  const [tasks, setTasks]       = useState([])
-  const [newTitle, setNewTitle] = useState('')
-  const [adding, setAdding]     = useState(false)
+function TasksTab({ partnerId, partner }) {
+  const [tasks,  setTasks]  = useState([])
+  const [modal,  setModal]  = useState(false)
 
   useEffect(() => {
     if (partnerId.startsWith('sample-')) {
-      setTasks(SAMPLE_TASKS_MAP[partnerId] ?? [])
+      setTasks((SAMPLE_TASKS_MAP[partnerId] ?? []).map(t => ({
+        ...t, partner_id: partnerId,
+        partners: { id: partnerId, name: partner?.name ?? '', type: partner?.type ?? '' },
+      })))
       return
     }
-    supabase.from('tasks').select('*').eq('partner_id', partnerId)
+    supabase.from('tasks').select('*, partners(id, name, type)')
+      .eq('partner_id', partnerId)
       .order('created_at', { ascending: false })
       .then(({ data }) => { if (data) setTasks(data) })
-      .catch(() => null)
   }, [partnerId])
 
-  async function addTask() {
-    const title = newTitle.trim()
-    if (!title) return
-    setAdding(true)
-    const payload = { title, status: 'todo', priority: 'medium', partner_id: partnerId }
-    const { data } = await supabase.from('tasks').insert(payload).select().single()
-      .catch(() => ({ data: null }))
-    setTasks(prev => [data ?? { id: crypto.randomUUID(), ...payload, created_at: new Date().toISOString() }, ...prev])
-    setNewTitle('')
-    setAdding(false)
-  }
-
-  async function advanceTask(taskId) {
-    const task    = tasks.find(t => t.id === taskId)
-    const newStatus = TASK_STATUS_NEXT[task.status] ?? 'todo'
-    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: newStatus } : t))
-    await supabase.from('tasks').update({ status: newStatus }).eq('id', taskId).catch(() => null)
+  function handleCreated(task) {
+    setTasks(prev => [task, ...prev])
   }
 
   return (
     <div>
-      {/* Add task */}
-      <div className="flex gap-2 mb-4">
-        <input
-          type="text"
-          value={newTitle}
-          onChange={e => setNewTitle(e.target.value)}
-          onKeyDown={e => { if (e.key === 'Enter') addTask() }}
-          placeholder="New task… (↵ to add)"
-          className="flex-1 text-sm border border-gray-200 rounded px-3 py-2 focus:outline-none focus:border-[#02348E] text-[#010100]"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
-        />
+      <div className="flex justify-end mb-3">
         <button
-          onClick={addTask}
-          disabled={adding || !newTitle.trim()}
-          className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-sm font-medium px-4 py-2 rounded transition-colors"
+          onClick={() => setModal(true)}
+          className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
           style={{ fontFamily: 'Roboto, sans-serif' }}
         >
-          Add
+          + New Task
         </button>
       </div>
 
-      {/* Kanban columns */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {TASK_STATUSES.map(status => {
-          const colTasks = tasks.filter(t => t.status === status)
-          return (
-            <div key={status} className="bg-[#F2F3F7] rounded-lg p-3">
-              <div className="flex items-center justify-between mb-2">
-                <span
-                  className="text-xs font-semibold text-[#010100] uppercase tracking-wide"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
-                >
-                  {TASK_LABELS[status]}
-                </span>
-                <span
-                  className="text-[10px] text-gray-500 bg-white rounded-full px-1.5 py-0.5 font-medium"
-                  style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
-                >
-                  {colTasks.length}
-                </span>
-              </div>
+      <TaskBoard tasks={tasks} setTasks={setTasks} showPartner={false} />
 
-              <div className="space-y-2">
-                {colTasks.length === 0 && (
-                  <p
-                    className="text-[10px] text-gray-400 text-center py-2 italic"
-                    style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
-                  >
-                    Empty
-                  </p>
-                )}
-                {colTasks.map(task => (
-                  <div
-                    key={task.id}
-                    className="bg-white rounded-md border border-gray-100 p-2.5 shadow-sm"
-                  >
-                    <p
-                      className="text-xs text-[#010100] leading-snug mb-1.5"
-                      style={{ fontFamily: 'Roboto, sans-serif' }}
-                    >
-                      {task.title}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span
-                        className={`text-[9px] font-semibold uppercase ${PRIORITY_COLORS[task.priority] ?? 'text-gray-400'}`}
-                        style={{ fontFamily: 'Roboto, sans-serif' }}
-                      >
-                        {task.priority}
-                      </span>
-                      {status !== 'done' && (
-                        <button
-                          onClick={() => advanceTask(task.id)}
-                          className="text-[9px] text-[#02348E] hover:underline font-medium"
-                          style={{ fontFamily: 'Roboto, sans-serif' }}
-                          title={`Move to ${TASK_LABELS[TASK_STATUS_NEXT[status]]}`}
-                        >
-                          → {TASK_LABELS[TASK_STATUS_NEXT[status]]}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )
-        })}
-      </div>
+      {modal && (
+        <NewTaskModal
+          partners={partner ? [{ id: partner.id, name: partner.name, type: partner.type }] : []}
+          defaultPartnerId={partnerId.startsWith('sample-') ? null : partnerId}
+          onClose={() => setModal(false)}
+          onCreated={handleCreated}
+        />
+      )}
     </div>
   )
 }
@@ -721,7 +643,7 @@ export default function PartnerRecord() {
         />
       )}
       {tab === 'Deals' && <DealsTab deals={deals} />}
-      {tab === 'Tasks' && <TasksTab partnerId={id} />}
+      {tab === 'Tasks' && <TasksTab partnerId={id} partner={partner} />}
       {tab === 'Notes' && <NotesTab partnerId={id} />}
     </div>
   )
