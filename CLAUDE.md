@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-MySyde CRM — the internal operating system for MySyde (Aligned Abundance Inc.). Manages sales pipeline for kiosk ad space, partner relationships, social content, task tracking, and kiosk operations across 7+ community association partners.
+MySyde Connect — the internal operating system for MySyde (Aligned Abundance Inc.). Manages sales pipeline for kiosk ad space, partner relationships, social content, task tracking, and kiosk operations across 7+ community association partners.
 
 ## Commands
 

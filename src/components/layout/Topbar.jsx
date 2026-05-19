@@ -19,7 +19,7 @@ export default function Topbar() {
         className="text-white font-bold text-lg tracking-tight shrink-0 mr-2"
         style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
       >
-        MySyde CRM
+        MySyde Connect
       </span>
 
       {/* Nav tabs */}

@@ -1,4 +1,4 @@
--- MySyde CRM — Full Schema
+-- MySyde Connect — Full Schema
 -- Run this in the Supabase SQL editor at supabase.com/dashboard
 -- After running: enable Row Level Security policies at the bottom of this file
 
