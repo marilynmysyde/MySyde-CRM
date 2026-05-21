@@ -12,6 +12,20 @@ import { fetchGmailThread, parseGmailThreadId } from '../lib/googleCalendar'
 
 const STAGES = ['prospect', 'pitched', 'proposal', 'creative', 'live', 'closed_won', 'closed_lost']
 
+const INVOICE_STATUSES = ['none', 'deposit_pending', 'paid', 'overdue']
+const INVOICE_LABELS = {
+  none:            'No Invoice',
+  deposit_pending: 'Deposit Pending',
+  paid:            'Paid',
+  overdue:         'Overdue',
+}
+const INVOICE_COLORS = {
+  none:            'bg-gray-100 text-gray-500',
+  deposit_pending: 'bg-amber-50 text-amber-700 border border-amber-200',
+  paid:            'bg-green-50 text-green-700 border border-green-200',
+  overdue:         'bg-red-50 text-red-600 border border-red-200',
+}
+
 const STAGE_LABELS = {
   prospect:    'Prospect',
   pitched:     'Pitched',
@@ -65,6 +79,10 @@ export default function DealRecord() {
   const [gmailLoading,  setGmailLoading]  = useState(false)
   const [gcalConn,      setGcalConn]      = useState(isGoogleConnected())
 
+  // Invoice status
+  const [invoiceStatus,     setInvoiceStatus]     = useState('none')
+  const [invoiceDropOpen,   setInvoiceDropOpen]   = useState(false)
+
   // Inline editing
   const [editingTitle,  setEditingTitle]  = useState(false)
   const [titleDraft,    setTitleDraft]    = useState('')
@@ -82,6 +100,7 @@ export default function DealRecord() {
       setNotesDraft(d.notes ?? '')
       setRunStart(d.run_start ?? '')
       setRunEnd(d.run_end ?? '')
+      setInvoiceStatus(d.invoice_status ?? 'none')
       setLoading(false)
       return
     }
@@ -99,6 +118,7 @@ export default function DealRecord() {
         setNotesDraft(data.notes ?? '')
         setRunStart(data.run_start ?? '')
         setRunEnd(data.run_end ?? '')
+        setInvoiceStatus(data.invoice_status ?? 'none')
       }
       setLoading(false)
     }
@@ -107,6 +127,18 @@ export default function DealRecord() {
 
   function handleUpdate(patch) {
     setDeal(prev => prev ? { ...prev, ...patch } : prev)
+  }
+
+  async function changeInvoiceStatus(status) {
+    setInvoiceDropOpen(false)
+    setInvoiceStatus(status)
+    await supabase.from('deals').update({ invoice_status: status }).eq('id', deal.id).catch(() => null)
+    await supabase.from('activity_log').insert({
+      type:       'note',
+      body:       `Invoice status → ${INVOICE_LABELS[status]}`,
+      deal_id:    deal.id,
+      partner_id: deal.partner_id ?? null,
+    }).catch(() => null)
   }
 
   async function changeStage(stage) {
@@ -284,6 +316,38 @@ export default function DealRecord() {
                         style={{ fontFamily: 'Roboto, sans-serif' }}
                       >
                         {STAGE_LABELS[s]}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Invoice status badge */}
+            <div className="relative">
+              <button
+                onClick={() => setInvoiceDropOpen(o => !o)}
+                className={`text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wide transition-opacity hover:opacity-80 ${
+                  INVOICE_COLORS[invoiceStatus] ?? INVOICE_COLORS.none
+                }`}
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              >
+                💳 {INVOICE_LABELS[invoiceStatus]} ▾
+              </button>
+              {invoiceDropOpen && (
+                <>
+                  <div className="fixed inset-0 z-10" onClick={() => setInvoiceDropOpen(false)} />
+                  <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-20 min-w-[160px] py-1 overflow-hidden">
+                    {INVOICE_STATUSES.map(s => (
+                      <button
+                        key={s}
+                        onClick={() => changeInvoiceStatus(s)}
+                        className={`block w-full text-left px-3 py-2 text-xs hover:bg-gray-50 transition-colors ${
+                          invoiceStatus === s ? 'font-semibold text-[#02348E]' : 'text-[#010100]'
+                        }`}
+                        style={{ fontFamily: 'Roboto, sans-serif' }}
+                      >
+                        {INVOICE_LABELS[s]}
                       </button>
                     ))}
                   </div>

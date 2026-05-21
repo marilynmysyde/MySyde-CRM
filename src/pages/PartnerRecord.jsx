@@ -99,13 +99,25 @@ function initials(name) {
 
 // ─── Overview tab ────────────────────────────────────────────────────────────
 
+const PARTNER_TYPES = [
+  { value: 'chamber',        label: 'Chamber' },
+  { value: 'city_gov',       label: 'City / Gov' },
+  { value: 'downtown_assoc', label: 'Downtown' },
+  { value: 'community_org',  label: 'Community' },
+  { value: 'local_business', label: 'Business' },
+  { value: 'nonprofit',      label: 'Nonprofit' },
+  { value: 'other',          label: 'Other' },
+]
+
 function OverviewTab({ partner, contacts, onPartnerUpdate }) {
   const [editing, setEditing] = useState(false)
   const [form, setForm]       = useState({
     name:    partner.name,
+    type:    partner.type,
     website: partner.website ?? '',
     address: partner.address ?? '',
     notes:   partner.notes   ?? '',
+    active:  partner.active  ?? true,
   })
   const [saving, setSaving] = useState(false)
 
@@ -177,6 +189,56 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
               )}
             </div>
           ))}
+
+          {/* Type + Active (only shown in edit mode) */}
+          {editing && (
+            <>
+              <div>
+                <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                  Partner Type
+                </label>
+                <div className="flex gap-1.5 flex-wrap">
+                  {PARTNER_TYPES.map(pt => (
+                    <button
+                      key={pt.value}
+                      type="button"
+                      onClick={() => handleChange('type', pt.value)}
+                      className={`text-xs px-2.5 py-1 rounded font-medium transition-colors ${
+                        form.type === pt.value
+                          ? 'bg-[#02348E] text-white'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                    >
+                      {pt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                  Status
+                </label>
+                <div className="flex gap-2">
+                  {[true, false].map(val => (
+                    <button
+                      key={String(val)}
+                      type="button"
+                      onClick={() => handleChange('active', val)}
+                      className={`text-xs px-3 py-1.5 rounded font-medium border transition-colors ${
+                        form.active === val
+                          ? val ? 'bg-green-500 text-white border-green-500' : 'bg-gray-400 text-white border-gray-400'
+                          : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'
+                      }`}
+                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                    >
+                      {val ? 'Active' : 'Inactive'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
 
           <div>
             <label

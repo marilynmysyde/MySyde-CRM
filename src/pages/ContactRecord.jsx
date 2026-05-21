@@ -174,6 +174,8 @@ function MailerLitePanel({ email, mailerliteId }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#02348E] text-[#010100] bg-white'
+
 export default function ContactRecord() {
   const { id }      = useParams()
   const navigate    = useNavigate()
@@ -182,23 +184,34 @@ export default function ContactRecord() {
   const [savingNotes, setSavingNotes] = useState(false)
   const [notesSaved,  setNotesSaved]  = useState(false)
   const [loading,   setLoading]  = useState(true)
+  const [partners,  setPartners] = useState([])
+
+  // Info editing
+  const [editingInfo, setEditingInfo] = useState(false)
+  const [infoForm,    setInfoForm]    = useState({ name: '', role: '', email: '', phone: '', partner_id: '' })
+  const [savingInfo,  setSavingInfo]  = useState(false)
 
   useEffect(() => {
     if (SAMPLE_CONTACTS[id]) {
       const c = SAMPLE_CONTACTS[id]
       setContact(c)
       setNotes(c.notes ?? '')
+      setInfoForm({ name: c.name, role: c.role ?? '', email: c.email ?? '', phone: c.phone ?? '', partner_id: c.partners?.id ?? '' })
       setLoading(false)
       return
     }
     async function load() {
       try {
-        const { data } = await supabase
-          .from('contacts')
-          .select('*, partners(id, name, type)')
-          .eq('id', id)
-          .single()
-        if (data) { setContact(data); setNotes(data.notes ?? '') }
+        const [{ data }, { data: pData }] = await Promise.all([
+          supabase.from('contacts').select('*, partners(id, name, type)').eq('id', id).single(),
+          supabase.from('partners').select('id, name').eq('active', true).order('name'),
+        ])
+        if (data) {
+          setContact(data)
+          setNotes(data.notes ?? '')
+          setInfoForm({ name: data.name, role: data.role ?? '', email: data.email ?? '', phone: data.phone ?? '', partner_id: data.partner_id ?? '' })
+        }
+        if (pData) setPartners(pData)
       } catch { /* nothing */ }
       setLoading(false)
     }
@@ -211,6 +224,21 @@ export default function ContactRecord() {
     setSavingNotes(false)
     setNotesSaved(true)
     setTimeout(() => setNotesSaved(false), 2500)
+  }
+
+  async function saveInfo() {
+    setSavingInfo(true)
+    const payload = {
+      name:       infoForm.name.trim(),
+      role:       infoForm.role.trim() || null,
+      email:      infoForm.email.trim() || null,
+      phone:      infoForm.phone.trim() || null,
+      partner_id: infoForm.partner_id || null,
+    }
+    await supabase.from('contacts').update(payload).eq('id', id).catch(() => null)
+    setContact(prev => ({ ...prev, ...payload }))
+    setSavingInfo(false)
+    setEditingInfo(false)
   }
 
   if (loading) {
@@ -282,38 +310,82 @@ export default function ContactRecord() {
 
           {/* Contact info */}
           <div className="bg-white rounded-lg border border-gray-100 p-4">
-            <h3
-              className="text-sm font-semibold text-[#010100] mb-3"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-            >
-              Contact Info
-            </h3>
-            <div className="space-y-2">
-              {contact.email && (
-                <div className="flex items-center gap-3">
-                  <span className="text-[10px] text-gray-400 uppercase tracking-wide w-12 shrink-0" style={{ fontFamily: 'Roboto, sans-serif' }}>Email</span>
-                  <a
-                    href={`mailto:${contact.email}`}
-                    className="text-sm text-[#02348E] hover:underline"
-                    style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
-                  >
-                    {contact.email}
-                  </a>
-                </div>
-              )}
-              {contact.phone && (
-                <div className="flex items-center gap-3">
-                  <span className="text-[10px] text-gray-400 uppercase tracking-wide w-12 shrink-0" style={{ fontFamily: 'Roboto, sans-serif' }}>Phone</span>
-                  <a
-                    href={`tel:${contact.phone}`}
-                    className="text-sm text-[#010100] hover:text-[#02348E]"
-                    style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
-                  >
-                    {contact.phone}
-                  </a>
-                </div>
-              )}
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-[#010100]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+                Contact Info
+              </h3>
+              <div className="flex gap-2">
+                {editingInfo && (
+                  <button onClick={() => setEditingInfo(false)} className="text-xs text-gray-400 hover:text-gray-600" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                    Cancel
+                  </button>
+                )}
+                <button
+                  onClick={editingInfo ? saveInfo : () => setEditingInfo(true)}
+                  disabled={savingInfo}
+                  className={`text-xs font-medium px-3 py-1.5 rounded transition-colors ${editingInfo ? 'bg-[#02348E] text-white hover:bg-[#02348E]/90' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                >
+                  {savingInfo ? 'Saving…' : editingInfo ? 'Save' : 'Edit'}
+                </button>
+              </div>
             </div>
+
+            {editingInfo ? (
+              <div className="space-y-3">
+                {[
+                  { label: 'Name',  field: 'name',  type: 'text'  },
+                  { label: 'Role',  field: 'role',  type: 'text'  },
+                  { label: 'Email', field: 'email', type: 'email' },
+                  { label: 'Phone', field: 'phone', type: 'tel'   },
+                ].map(({ label, field, type }) => (
+                  <div key={field}>
+                    <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>{label}</label>
+                    <input
+                      type={type}
+                      value={infoForm[field]}
+                      onChange={e => setInfoForm(prev => ({ ...prev, [field]: e.target.value }))}
+                      className={inputCls}
+                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                    />
+                  </div>
+                ))}
+                <div>
+                  <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Partner</label>
+                  <select
+                    value={infoForm.partner_id}
+                    onChange={e => setInfoForm(prev => ({ ...prev, partner_id: e.target.value }))}
+                    className={inputCls}
+                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                  >
+                    <option value="">— No partner —</option>
+                    {partners.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                  </select>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {contact.email && (
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] text-gray-400 uppercase tracking-wide w-12 shrink-0" style={{ fontFamily: 'Roboto, sans-serif' }}>Email</span>
+                    <a href={`mailto:${contact.email}`} className="text-sm text-[#02348E] hover:underline" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                      {contact.email}
+                    </a>
+                  </div>
+                )}
+                {contact.phone && (
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] text-gray-400 uppercase tracking-wide w-12 shrink-0" style={{ fontFamily: 'Roboto, sans-serif' }}>Phone</span>
+                    <a href={`tel:${contact.phone}`} className="text-sm text-[#010100] hover:text-[#02348E]" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                      {contact.phone}
+                    </a>
+                  </div>
+                )}
+                {!contact.email && !contact.phone && (
+                  <p className="text-xs text-gray-400 italic" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>No contact info yet — click Edit to add.</p>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Notes */}

@@ -109,6 +109,8 @@ const STAGE_COLORS = {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#02348E] text-[#010100] bg-white'
+
 export default function KioskRecord() {
   const { id }      = useParams()
   const navigate    = useNavigate()
@@ -118,6 +120,12 @@ export default function KioskRecord() {
   const [notes,     setNotes]   = useState('')
   const [savingNotes, setSavingNotes] = useState(false)
   const [notesSaved,  setNotesSaved]  = useState(false)
+  const [partners,    setPartners]    = useState([])
+
+  // Detail editing
+  const [editingInfo, setEditingInfo] = useState(false)
+  const [infoForm,    setInfoForm]    = useState({ name: '', location: '', status: 'pending', installed_at: '', partner_id: '' })
+  const [savingInfo,  setSavingInfo]  = useState(false)
 
   useEffect(() => {
     if (id?.startsWith('kiosk-')) {
@@ -126,6 +134,7 @@ export default function KioskRecord() {
         setKiosk(k)
         setDeals(k.deals ?? [])
         setNotes(k.notes ?? '')
+        setInfoForm({ name: k.name, location: k.location ?? '', status: k.status, installed_at: k.installed_at ?? '', partner_id: k.partners?.id ?? '' })
       }
       setLoading(false)
       return
@@ -133,23 +142,38 @@ export default function KioskRecord() {
 
     async function load() {
       try {
-        const { data: k } = await supabase
-          .from('kiosks')
-          .select('*, partners(id, name, type)')
-          .eq('id', id)
-          .single()
-        const { data: d } = await supabase
-          .from('deals')
-          .select('id, title, stage, monthly_rate, months')
-          .eq('kiosk_id', id)
-          .order('created_at', { ascending: false })
-        if (k) { setKiosk(k); setNotes(k.notes ?? '') }
+        const [{ data: k }, { data: d }, { data: pData }] = await Promise.all([
+          supabase.from('kiosks').select('*, partners(id, name, type)').eq('id', id).single(),
+          supabase.from('deals').select('id, title, stage, monthly_rate, months').eq('kiosk_id', id).order('created_at', { ascending: false }),
+          supabase.from('partners').select('id, name').eq('active', true).order('name'),
+        ])
+        if (k) {
+          setKiosk(k)
+          setNotes(k.notes ?? '')
+          setInfoForm({ name: k.name, location: k.location ?? '', status: k.status, installed_at: k.installed_at ?? '', partner_id: k.partner_id ?? '' })
+        }
         if (d) setDeals(d)
+        if (pData) setPartners(pData)
       } catch { /* nothing */ }
       setLoading(false)
     }
     load()
   }, [id])
+
+  async function saveInfo() {
+    setSavingInfo(true)
+    const payload = {
+      name:         infoForm.name.trim(),
+      location:     infoForm.location.trim() || null,
+      status:       infoForm.status,
+      installed_at: infoForm.installed_at || null,
+      partner_id:   infoForm.partner_id || null,
+    }
+    await supabase.from('kiosks').update(payload).eq('id', id).catch(() => null)
+    setKiosk(prev => ({ ...prev, ...payload }))
+    setSavingInfo(false)
+    setEditingInfo(false)
+  }
 
   async function saveNotes() {
     setSavingNotes(true)
@@ -240,6 +264,56 @@ export default function KioskRecord() {
         <div className="flex items-center gap-2 mb-6 text-sm text-gray-500" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
           <span>📍</span>
           <span>{kiosk.location}</span>
+        </div>
+      )}
+
+      {/* Edit details panel */}
+      {editingInfo ? (
+        <div className="bg-white rounded-lg border border-[#02348E]/20 p-4 mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-[#010100]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>Edit Kiosk Details</h3>
+            <div className="flex gap-2">
+              <button onClick={() => setEditingInfo(false)} className="text-xs text-gray-400 hover:text-gray-600" style={{ fontFamily: 'Roboto, sans-serif' }}>Cancel</button>
+              <button onClick={saveInfo} disabled={savingInfo} className="text-xs font-medium bg-[#02348E] text-white px-3 py-1.5 rounded hover:bg-[#02348E]/90 disabled:opacity-40 transition-colors" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                {savingInfo ? 'Saving…' : 'Save'}
+              </button>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="col-span-2">
+              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Name</label>
+              <input type="text" value={infoForm.name} onChange={e => setInfoForm(p => ({ ...p, name: e.target.value }))} className={inputCls} style={{ fontFamily: 'Roboto, sans-serif' }} />
+            </div>
+            <div className="col-span-2">
+              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Location</label>
+              <input type="text" value={infoForm.location} onChange={e => setInfoForm(p => ({ ...p, location: e.target.value }))} className={inputCls} style={{ fontFamily: 'Roboto, sans-serif' }} />
+            </div>
+            <div>
+              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Status</label>
+              <select value={infoForm.status} onChange={e => setInfoForm(p => ({ ...p, status: e.target.value }))} className={inputCls} style={{ fontFamily: 'Roboto, sans-serif' }}>
+                <option value="pending">Pending</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Install Date</label>
+              <input type="date" value={infoForm.installed_at} onChange={e => setInfoForm(p => ({ ...p, installed_at: e.target.value }))} className={inputCls} style={{ fontFamily: 'Roboto, sans-serif' }} />
+            </div>
+            <div className="col-span-2">
+              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Partner</label>
+              <select value={infoForm.partner_id} onChange={e => setInfoForm(p => ({ ...p, partner_id: e.target.value }))} className={inputCls} style={{ fontFamily: 'Roboto, sans-serif' }}>
+                <option value="">— No partner —</option>
+                {partners.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="flex justify-end mb-4">
+          <button onClick={() => setEditingInfo(true)} className="text-xs text-gray-400 hover:text-[#02348E] border border-gray-200 hover:border-[#02348E] px-3 py-1.5 rounded transition-colors" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            ✎ Edit details
+          </button>
         </div>
       )}
 
