@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import PartnerTypeTag from '../components/shared/PartnerTypeTag'
+import { exportCsv, todaySlug } from '../lib/csvExport'
 
 const SAMPLE_CONTACTS = [
   { id: 'c1', name: 'Sandra Lee',    role: 'Executive Director', email: 'sandra@mhchamber.com', partners: { name: 'Morgan Hill Chamber', type: 'chamber' } },
@@ -13,6 +14,15 @@ export default function Contacts() {
   const navigate               = useNavigate()
   const [contacts, setContacts] = useState(SAMPLE_CONTACTS)
   const [search, setSearch]     = useState('')
+
+  function handleExport() {
+    exportCsv(
+      contacts.map(c => ({ ...c, partner: c.partners?.name ?? '' })),
+      ['name', 'role', 'email', 'phone', 'partner'],
+      { name: 'Name', role: 'Role', email: 'Email', phone: 'Phone', partner: 'Partner' },
+      `contacts-${todaySlug()}.csv`
+    )
+  }
 
   useEffect(() => {
     async function fetchContacts() {
@@ -41,12 +51,21 @@ export default function Contacts() {
         >
           Contacts
         </h1>
-        <button
-          className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
-        >
-          + Add Contact
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExport}
+            className="text-sm text-gray-500 hover:text-[#02348E] border border-gray-200 hover:border-[#02348E] px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Roboto, sans-serif' }}
+          >
+            ↓ Export CSV
+          </button>
+          <button
+            className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Roboto, sans-serif' }}
+          >
+            + Add Contact
+          </button>
+        </div>
       </div>
 
       <input

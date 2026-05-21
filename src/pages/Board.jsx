@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import BoardView from '../components/board/BoardView'
 import { supabase } from '../lib/supabase'
+import { exportCsv, todaySlug } from '../lib/csvExport'
 
 const SAMPLE_DEALS = [
   {
@@ -57,6 +58,15 @@ export default function Board() {
   const [deals, setDeals]     = useState(SAMPLE_DEALS)
   const [loading, setLoading] = useState(true)
 
+  function handleExport() {
+    exportCsv(
+      deals.map(d => ({ ...d, partner: d.partners?.name ?? '' })),
+      ['title', 'stage', 'placement_type', 'monthly_rate', 'months', 'total_value', 'partner', 'run_start', 'run_end'],
+      { title: 'Deal', stage: 'Stage', placement_type: 'Placement', monthly_rate: 'Monthly Rate', months: 'Months', total_value: 'Total Value', partner: 'Partner', run_start: 'Run Start', run_end: 'Run End' },
+      `deals-${todaySlug()}.csv`
+    )
+  }
+
   useEffect(() => {
     async function fetchDeals() {
       const { data, error } = await supabase
@@ -91,6 +101,13 @@ export default function Board() {
               Loading…
             </span>
           )}
+          <button
+            onClick={handleExport}
+            className="text-sm text-gray-500 hover:text-[#02348E] border border-gray-200 hover:border-[#02348E] px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Roboto, sans-serif' }}
+          >
+            ↓ Export CSV
+          </button>
           <button
             className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
             style={{ fontFamily: 'Roboto, sans-serif' }}
