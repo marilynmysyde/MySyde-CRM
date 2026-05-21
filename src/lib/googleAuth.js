@@ -68,6 +68,8 @@ export async function requestGoogleToken() {
           const expiresIn = Number(response.expires_in ?? 3600)
           sessionStorage.setItem(TOKEN_KEY,  response.access_token)
           sessionStorage.setItem(EXPIRY_KEY, String(Date.now() + expiresIn * 1000 - 60_000))
+          // Notify any components that are watching for a new token
+          window.dispatchEvent(new CustomEvent('google-token-ready'))
           resolve(response.access_token)
         },
       })

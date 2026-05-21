@@ -65,11 +65,23 @@ export default function DealRecord() {
   const [gmailLoading,  setGmailLoading]  = useState(false)
   const [gcalConn,      setGcalConn]      = useState(isGoogleConnected())
 
+  // Inline editing
+  const [editingTitle,  setEditingTitle]  = useState(false)
+  const [titleDraft,    setTitleDraft]    = useState('')
+  const [editingDates,  setEditingDates]  = useState(false)
+  const [runStart,      setRunStart]      = useState('')
+  const [runEnd,        setRunEnd]        = useState('')
+  const [notesDraft,    setNotesDraft]    = useState('')
+  const [notesSaved,    setNotesSaved]    = useState(false)
+
   useEffect(() => {
     if (id?.startsWith('sample-')) {
       const d = { ...SAMPLE_DEAL, id }
       setDeal(d)
       setGmailId(d.gmail_thread_id ?? '')
+      setNotesDraft(d.notes ?? '')
+      setRunStart(d.run_start ?? '')
+      setRunEnd(d.run_end ?? '')
       setLoading(false)
       return
     }
@@ -84,6 +96,9 @@ export default function DealRecord() {
       if (data) {
         setDeal(data)
         setGmailId(data.gmail_thread_id ?? '')
+        setNotesDraft(data.notes ?? '')
+        setRunStart(data.run_start ?? '')
+        setRunEnd(data.run_end ?? '')
       }
       setLoading(false)
     }
@@ -138,6 +153,30 @@ export default function DealRecord() {
     } catch (e) { console.warn('Google auth failed', e) }
   }
 
+  async function saveTitle() {
+    const trimmed = titleDraft.trim()
+    if (!trimmed || trimmed === deal.title) { setEditingTitle(false); return }
+    setDeal(prev => ({ ...prev, title: trimmed }))
+    setEditingTitle(false)
+    await supabase.from('deals').update({ title: trimmed }).eq('id', deal.id).catch(() => null)
+  }
+
+  async function saveDates() {
+    setEditingDates(false)
+    setDeal(prev => ({ ...prev, run_start: runStart || null, run_end: runEnd || null }))
+    await supabase.from('deals').update({
+      run_start: runStart || null,
+      run_end:   runEnd || null,
+    }).eq('id', deal.id).catch(() => null)
+  }
+
+  async function saveNotes() {
+    await supabase.from('deals').update({ notes: notesDraft.trim() || null }).eq('id', deal.id).catch(() => null)
+    setDeal(prev => ({ ...prev, notes: notesDraft.trim() || null }))
+    setNotesSaved(true)
+    setTimeout(() => setNotesSaved(false), 2000)
+  }
+
   if (loading) {
     return (
       <div
@@ -184,12 +223,36 @@ export default function DealRecord() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 mb-6">
         <div className="flex-1 min-w-0">
-          <h1
-            className="text-2xl font-semibold text-[#010100] mb-2 leading-snug"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
-            {deal.title}
-          </h1>
+          {editingTitle ? (
+            <div className="flex items-center gap-2 mb-2">
+              <input
+                autoFocus
+                type="text"
+                value={titleDraft}
+                onChange={e => setTitleDraft(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') saveTitle(); if (e.key === 'Escape') setEditingTitle(false) }}
+                onBlur={saveTitle}
+                className="flex-1 text-2xl font-semibold text-[#010100] border-b-2 border-[#02348E] bg-transparent focus:outline-none leading-snug"
+                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              />
+            </div>
+          ) : (
+            <div className="flex items-start gap-2 mb-2 group">
+              <h1
+                className="text-2xl font-semibold text-[#010100] leading-snug"
+                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              >
+                {deal.title}
+              </h1>
+              <button
+                onClick={() => { setTitleDraft(deal.title); setEditingTitle(true) }}
+                className="opacity-0 group-hover:opacity-100 text-gray-300 hover:text-[#02348E] text-sm mt-1.5 transition-all shrink-0"
+                title="Edit title"
+              >
+                ✎
+              </button>
+            </div>
+          )}
 
           <div className="flex items-center gap-2 flex-wrap">
             {/* Stage badge + dropdown */}
@@ -245,22 +308,63 @@ export default function DealRecord() {
         </div>
 
         {/* Run dates */}
-        {deal.run_start && (
-          <div className="text-right shrink-0">
-            <p
-              className="text-[10px] text-gray-400 uppercase tracking-wide mb-0.5"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
-            >
-              Run dates
-            </p>
-            <p
-              className="text-sm text-[#010100]"
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
-            >
-              {deal.run_start} → {deal.run_end ?? '—'}
-            </p>
-          </div>
-        )}
+        <div className="text-right shrink-0">
+          {editingDates ? (
+            <div className="flex flex-col gap-1.5 items-end">
+              <div className="flex items-center gap-1.5">
+                <input
+                  type="date"
+                  value={runStart}
+                  onChange={e => setRunStart(e.target.value)}
+                  className="text-xs border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-[#02348E]"
+                  style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                />
+                <span className="text-xs text-gray-400">→</span>
+                <input
+                  type="date"
+                  value={runEnd}
+                  onChange={e => setRunEnd(e.target.value)}
+                  className="text-xs border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-[#02348E]"
+                  style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                />
+              </div>
+              <div className="flex gap-1.5">
+                <button onClick={() => setEditingDates(false)} className="text-[10px] text-gray-400 hover:text-gray-600" style={{ fontFamily: 'Roboto, sans-serif' }}>Cancel</button>
+                <button onClick={saveDates} className="text-[10px] text-[#02348E] font-semibold hover:underline" style={{ fontFamily: 'Roboto, sans-serif' }}>Save</button>
+              </div>
+            </div>
+          ) : (
+            <div className="group">
+              <p
+                className="text-[10px] text-gray-400 uppercase tracking-wide mb-0.5"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              >
+                Run dates
+                <button
+                  onClick={() => setEditingDates(true)}
+                  className="ml-1.5 opacity-0 group-hover:opacity-100 text-gray-300 hover:text-[#02348E] transition-all"
+                  title="Edit dates"
+                >
+                  ✎
+                </button>
+              </p>
+              <p
+                className="text-sm text-[#010100]"
+                style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              >
+                {deal.run_start ? `${deal.run_start} → ${deal.run_end ?? '—'}` : (
+                  <button
+                    onClick={() => setEditingDates(true)}
+                    className="text-xs text-gray-400 hover:text-[#02348E] italic"
+                    style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                  >
+                    + Set run dates
+                  </button>
+                )}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Two-column body */}
@@ -358,6 +462,39 @@ export default function DealRecord() {
             <p className="text-[10px] text-gray-400 mt-1.5" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
               Paste the thread URL from Gmail or the 16-character thread ID
             </p>
+          </div>
+          {/* Notes */}
+          <div className="bg-white rounded-lg border border-gray-100 p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3
+                className="text-sm font-semibold text-[#010100]"
+                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              >
+                Notes
+              </h3>
+              {notesSaved && (
+                <span className="text-[10px] text-green-500" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                  Saved ✓
+                </span>
+              )}
+            </div>
+            <textarea
+              value={notesDraft}
+              onChange={e => setNotesDraft(e.target.value)}
+              rows={4}
+              placeholder="Internal notes, context, follow-up reminders…"
+              className="w-full text-sm border border-gray-200 rounded px-3 py-2 focus:outline-none focus:border-[#02348E] text-[#010100] resize-none"
+              style={{ fontFamily: 'Roboto, sans-serif' }}
+            />
+            <div className="flex justify-end mt-2">
+              <button
+                onClick={saveNotes}
+                className="text-xs text-[#02348E] hover:underline font-medium"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              >
+                Save notes
+              </button>
+            </div>
           </div>
         </div>
 

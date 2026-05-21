@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import PartnerTypeTag from '../components/shared/PartnerTypeTag'
+import NewContactModal from '../components/contacts/NewContactModal'
 import { exportCsv, todaySlug } from '../lib/csvExport'
 
 const SAMPLE_CONTACTS = [
@@ -11,9 +12,14 @@ const SAMPLE_CONTACTS = [
 ]
 
 export default function Contacts() {
-  const navigate               = useNavigate()
-  const [contacts, setContacts] = useState(SAMPLE_CONTACTS)
-  const [search, setSearch]     = useState('')
+  const navigate                        = useNavigate()
+  const [contacts, setContacts]         = useState(SAMPLE_CONTACTS)
+  const [search, setSearch]             = useState('')
+  const [showNewContact, setShowNewContact] = useState(false)
+
+  function handleContactCreated(newContact) {
+    setContacts(prev => [...prev, newContact].sort((a, b) => a.name.localeCompare(b.name)))
+  }
 
   function handleExport() {
     exportCsv(
@@ -60,6 +66,7 @@ export default function Contacts() {
             ↓ Export CSV
           </button>
           <button
+            onClick={() => setShowNewContact(true)}
             className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
             style={{ fontFamily: 'Roboto, sans-serif' }}
           >
@@ -117,6 +124,12 @@ export default function Contacts() {
           </div>
         ))}
       </div>
+      {showNewContact && (
+        <NewContactModal
+          onClose={() => setShowNewContact(false)}
+          onCreated={handleContactCreated}
+        />
+      )}
     </div>
   )
 }

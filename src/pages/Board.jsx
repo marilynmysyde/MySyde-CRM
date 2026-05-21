@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import BoardView from '../components/board/BoardView'
+import NewDealModal from '../components/board/NewDealModal'
 import { supabase } from '../lib/supabase'
 import { exportCsv, todaySlug } from '../lib/csvExport'
 
@@ -55,8 +56,15 @@ const SAMPLE_DEALS = [
 ]
 
 export default function Board() {
-  const [deals, setDeals]     = useState(SAMPLE_DEALS)
-  const [loading, setLoading] = useState(true)
+  const [deals, setDeals]         = useState(SAMPLE_DEALS)
+  const [loading, setLoading]     = useState(true)
+  const [showNewDeal, setShowNewDeal] = useState(false)
+  const [boardKey, setBoardKey]   = useState(0)
+
+  function handleDealCreated(newDeal) {
+    setDeals(prev => [newDeal, ...prev])
+    setBoardKey(k => k + 1)
+  }
 
   function handleExport() {
     exportCsv(
@@ -109,6 +117,7 @@ export default function Board() {
             ↓ Export CSV
           </button>
           <button
+            onClick={() => setShowNewDeal(true)}
             className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
             style={{ fontFamily: 'Roboto, sans-serif' }}
           >
@@ -117,7 +126,14 @@ export default function Board() {
         </div>
       </div>
 
-      <BoardView initialDeals={deals} />
+      <BoardView key={boardKey} initialDeals={deals} />
+
+      {showNewDeal && (
+        <NewDealModal
+          onClose={() => setShowNewDeal(false)}
+          onCreated={handleDealCreated}
+        />
+      )}
     </div>
   )
 }

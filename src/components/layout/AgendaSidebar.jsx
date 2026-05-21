@@ -34,6 +34,7 @@ const DEFAULT_EVENT_COLOR = 'bg-[#02348E]'
 export default function AgendaSidebar() {
   const [dueToday,    setDueToday]    = useState(SAMPLE_DUE)
   const [overdue,     setOverdue]     = useState(SAMPLE_OVERDUE)
+  const [renewals,    setRenewals]    = useState([])
   const [events,      setEvents]      = useState([])
   const [gcalConn,    setGcalConn]    = useState(isGoogleConnected())
   const [gcalLoading, setGcalLoading] = useState(false)
@@ -56,13 +57,41 @@ export default function AgendaSidebar() {
         setOverdue(data.filter(t => t.due_date < todayStr))
       } catch { /* sample data stays */ }
     }
+
+    async function fetchRenewals() {
+      try {
+        const soon = new Date()
+        soon.setDate(soon.getDate() + 30)
+        const { data } = await supabase
+          .from('deals')
+          .select('id, title, renewal_alert, partners(name)')
+          .not('stage', 'in', '("closed_won","closed_lost")')
+          .gte('renewal_alert', todayStr)
+          .lte('renewal_alert', soon.toISOString().slice(0, 10))
+          .order('renewal_alert', { ascending: true })
+          .limit(5)
+        if (data) setRenewals(data)
+      } catch { /* no renewals shown */ }
+    }
+
     fetchDueTasks()
+    fetchRenewals()
   }, [])
 
   // Load Google Calendar events if already connected
   useEffect(() => {
     if (gcalConn) loadCalendarEvents()
   }, [gcalConn])
+
+  // Listen for token saved from another page (e.g. Calendar tab)
+  useEffect(() => {
+    function onTokenReady() {
+      setGcalConn(true)
+      loadCalendarEvents()
+    }
+    window.addEventListener('google-token-ready', onTokenReady)
+    return () => window.removeEventListener('google-token-ready', onTokenReady)
+  }, [])
 
   async function loadCalendarEvents() {
     setGcalLoading(true)
@@ -214,17 +243,31 @@ export default function AgendaSidebar() {
         </section>
 
         {/* Renewal alerts */}
-        <section>
-          <h3
-            className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
-          >
-            Renewal Alerts
-          </h3>
-          <div className="space-y-1.5">
-            <AgendaItem color="bg-[#f43f5e]" label="14 days — Sunrise Bakery ad" />
-          </div>
-        </section>
+        {renewals.length > 0 && (
+          <section>
+            <h3
+              className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2"
+              style={{ fontFamily: 'Roboto, sans-serif' }}
+            >
+              Renewal Alerts
+            </h3>
+            <div className="space-y-1.5">
+              {renewals.map(r => {
+                const daysUntil = Math.ceil(
+                  (new Date(r.renewal_alert) - new Date(todayStr)) / (1000 * 60 * 60 * 24)
+                )
+                const urgent = daysUntil <= 7
+                return (
+                  <AgendaItem
+                    key={r.id}
+                    color={urgent ? 'bg-[#f43f5e]' : 'bg-[#f59e0b]'}
+                    label={`${daysUntil}d — ${r.title}${r.partners?.name ? ` · ${r.partners.name}` : ''}`}
+                  />
+                )
+              })}
+            </div>
+          </section>
+        )}
       </div>
 
       {gcalConn && (

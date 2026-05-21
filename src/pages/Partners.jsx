@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import PartnerTypeTag from '../components/shared/PartnerTypeTag'
+import NewPartnerModal from '../components/partners/NewPartnerModal'
 import { exportCsv, todaySlug } from '../lib/csvExport'
 
 const SAMPLE_PARTNERS = [
@@ -25,10 +26,15 @@ const TYPE_FILTERS = [
 ]
 
 export default function Partners() {
-  const navigate                  = useNavigate()
-  const [partners, setPartners]   = useState(SAMPLE_PARTNERS)
-  const [filter, setFilter]       = useState('all')
-  const [search, setSearch]       = useState('')
+  const navigate                      = useNavigate()
+  const [partners, setPartners]       = useState(SAMPLE_PARTNERS)
+  const [filter, setFilter]           = useState('all')
+  const [search, setSearch]           = useState('')
+  const [showNewPartner, setShowNewPartner] = useState(false)
+
+  function handlePartnerCreated(newPartner) {
+    setPartners(prev => [...prev, newPartner].sort((a, b) => a.name.localeCompare(b.name)))
+  }
 
   function handleExport() {
     exportCsv(
@@ -77,6 +83,7 @@ export default function Partners() {
             ↓ Export CSV
           </button>
           <button
+            onClick={() => setShowNewPartner(true)}
             className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
             style={{ fontFamily: 'Roboto, sans-serif' }}
           >
@@ -152,6 +159,12 @@ export default function Partners() {
           </div>
         ))}
       </div>
+      {showNewPartner && (
+        <NewPartnerModal
+          onClose={() => setShowNewPartner(false)}
+          onCreated={handlePartnerCreated}
+        />
+      )}
     </div>
   )
 }

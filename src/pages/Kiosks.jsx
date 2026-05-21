@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import PartnerTypeTag from '../components/shared/PartnerTypeTag'
+import NewKioskModal from '../components/kiosks/NewKioskModal'
+import { exportCsv, todaySlug } from '../lib/csvExport'
 
 // ─── Sample data ─────────────────────────────────────────────────────────────
 
@@ -84,6 +86,20 @@ export default function Kiosks() {
   const [filter,  setFilter]  = useState('all')
   const [search,  setSearch]  = useState('')
   const [loading, setLoading] = useState(true)
+  const [showNewKiosk, setShowNewKiosk] = useState(false)
+
+  function handleKioskCreated(newKiosk) {
+    setKiosks(prev => [...prev, newKiosk].sort((a, b) => a.name.localeCompare(b.name)))
+  }
+
+  function handleExport() {
+    exportCsv(
+      kiosks.map(k => ({ ...k, partner: k.partners?.name ?? '' })),
+      ['name', 'location', 'partner', 'status', 'installed_at', 'deal_count'],
+      { name: 'Name', location: 'Location', partner: 'Partner', status: 'Status', installed_at: 'Installed', deal_count: 'Deals' },
+      `kiosks-${todaySlug()}.csv`
+    )
+  }
 
   useEffect(() => {
     async function load() {
@@ -136,6 +152,14 @@ export default function Kiosks() {
             </span>
           )}
           <button
+            onClick={handleExport}
+            className="text-sm text-gray-500 hover:text-[#02348E] border border-gray-200 hover:border-[#02348E] px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Roboto, sans-serif' }}
+          >
+            ↓ Export CSV
+          </button>
+          <button
+            onClick={() => setShowNewKiosk(true)}
             className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
             style={{ fontFamily: 'Roboto, sans-serif' }}
           >
@@ -249,6 +273,13 @@ export default function Kiosks() {
           </div>
         ))}
       </div>
+
+      {showNewKiosk && (
+        <NewKioskModal
+          onClose={() => setShowNewKiosk(false)}
+          onCreated={handleKioskCreated}
+        />
+      )}
 
       {/* Summary strip */}
       <div className="flex gap-8 mt-5">
