@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import PartnerTypeTag from '../components/shared/PartnerTypeTag'
 
@@ -9,6 +10,7 @@ const SAMPLE_CONTACTS = [
 ]
 
 export default function Contacts() {
+  const navigate               = useNavigate()
   const [contacts, setContacts] = useState(SAMPLE_CONTACTS)
   const [search, setSearch]     = useState('')
 
@@ -65,6 +67,7 @@ export default function Contacts() {
         {visible.map((contact, i) => (
           <div
             key={contact.id}
+            onClick={() => navigate(`/contacts/${contact.id}`)}
             className={`flex items-center justify-between px-4 py-3 hover:bg-gray-50 cursor-pointer ${i > 0 ? 'border-t border-gray-50' : ''}`}
           >
             <div className="flex items-center gap-3">

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
+import { requestGoogleToken, isGoogleConnected, clearGoogleToken } from '../../lib/googleAuth'
+import { fetchTodayEvents, fmtEventTime } from '../../lib/googleCalendar'
 
 // ─── Sample fallback tasks ────────────────────────────────────────────────────
 
@@ -7,23 +9,39 @@ const SAMPLE_DUE = [
   { id: 'sd-1', title: 'Send proposal — MH Chamber', due_date: new Date().toISOString().slice(0, 10), status: 'todo' },
   { id: 'sd-2', title: 'Review creative — Downtown',  due_date: new Date().toISOString().slice(0, 10), status: 'in_progress' },
 ]
-
 const SAMPLE_OVERDUE = [
-  { id: 'so-1', title: 'Design ad creative',   due_date: '2026-05-17', status: 'todo' },
+  { id: 'so-1', title: 'Design ad creative', due_date: '2026-05-17', status: 'todo' },
 ]
+
+// Google event dot colors by colorId (Google Calendar color IDs 1–11)
+const GCAL_COLORS = {
+  '1':  'bg-blue-400',    // Lavender → blue
+  '2':  'bg-green-400',   // Sage
+  '3':  'bg-purple-500',  // Grape
+  '4':  'bg-red-400',     // Flamingo
+  '5':  'bg-yellow-400',  // Banana
+  '6':  'bg-orange-400',  // Tangerine
+  '7':  'bg-teal-400',    // Peacock
+  '8':  'bg-gray-500',    // Graphite
+  '9':  'bg-blue-600',    // Blueberry
+  '10': 'bg-green-600',   // Basil
+  '11': 'bg-red-600',     // Tomato
+}
+const DEFAULT_EVENT_COLOR = 'bg-[#02348E]'
 
 // ─── AgendaSidebar ────────────────────────────────────────────────────────────
 
 export default function AgendaSidebar() {
-  const [dueToday,  setDueToday]  = useState(SAMPLE_DUE)
-  const [overdue,   setOverdue]   = useState(SAMPLE_OVERDUE)
+  const [dueToday,    setDueToday]    = useState(SAMPLE_DUE)
+  const [overdue,     setOverdue]     = useState(SAMPLE_OVERDUE)
+  const [events,      setEvents]      = useState([])
+  const [gcalConn,    setGcalConn]    = useState(isGoogleConnected())
+  const [gcalLoading, setGcalLoading] = useState(false)
 
-  const todayLabel = new Date().toLocaleDateString('en-US', {
-    weekday: 'long', month: 'long', day: 'numeric',
-  })
+  const todayLabel = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+  const todayStr   = new Date().toISOString().slice(0, 10)
 
-  const todayStr = new Date().toISOString().slice(0, 10)
-
+  // Fetch due tasks from Supabase
   useEffect(() => {
     async function fetchDueTasks() {
       try {
@@ -36,10 +54,42 @@ export default function AgendaSidebar() {
         if (!data) return
         setDueToday(data.filter(t => t.due_date === todayStr))
         setOverdue(data.filter(t => t.due_date < todayStr))
-      } catch { /* no Supabase — sample data stays */ }
+      } catch { /* sample data stays */ }
     }
     fetchDueTasks()
   }, [])
+
+  // Load Google Calendar events if already connected
+  useEffect(() => {
+    if (gcalConn) loadCalendarEvents()
+  }, [gcalConn])
+
+  async function loadCalendarEvents() {
+    setGcalLoading(true)
+    try {
+      const ev = await fetchTodayEvents()
+      setEvents(ev)
+    } catch { setEvents([]) }
+    setGcalLoading(false)
+  }
+
+  async function connectGoogle() {
+    setGcalLoading(true)
+    try {
+      await requestGoogleToken()
+      setGcalConn(true)
+      // loadCalendarEvents will fire via the effect above
+    } catch (e) {
+      console.warn('Google auth failed', e)
+      setGcalLoading(false)
+    }
+  }
+
+  function disconnect() {
+    clearGoogleToken()
+    setGcalConn(false)
+    setEvents([])
+  }
 
   return (
     <aside className="w-70 shrink-0 bg-white border-l border-gray-200 h-full overflow-y-auto">
@@ -57,18 +107,65 @@ export default function AgendaSidebar() {
 
       <div className="p-4 space-y-4">
 
-        {/* Events — still static until Phase 5 Google Calendar */}
+        {/* Google Calendar Events */}
         <section>
-          <h3
-            className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
-          >
-            Events
-          </h3>
-          <div className="space-y-1.5">
-            <AgendaItem color="bg-[#02348E]" label="10:00am — Chamber check-in" />
-            <AgendaItem color="bg-[#7c3aed]" label="2:00pm — City partner call" />
+          <div className="flex items-center justify-between mb-2">
+            <h3
+              className="text-xs font-semibold text-gray-400 uppercase tracking-wide"
+              style={{ fontFamily: 'Roboto, sans-serif' }}
+            >
+              Events
+            </h3>
+            {gcalConn ? (
+              <button
+                onClick={disconnect}
+                className="text-[10px] text-gray-400 hover:text-red-400 transition-colors"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+                title="Disconnect Google Calendar"
+              >
+                Disconnect
+              </button>
+            ) : (
+              <button
+                onClick={connectGoogle}
+                disabled={gcalLoading}
+                className="text-[10px] text-[#02348E] hover:underline disabled:opacity-50"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              >
+                {gcalLoading ? 'Connecting…' : '+ Connect Google'}
+              </button>
+            )}
           </div>
+
+          {gcalLoading && (
+            <p className="text-xs text-gray-400 italic" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+              Loading events…
+            </p>
+          )}
+
+          {!gcalLoading && gcalConn && events.length === 0 && (
+            <p className="text-xs text-gray-300 italic" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+              No events today
+            </p>
+          )}
+
+          {!gcalConn && !gcalLoading && (
+            <div className="space-y-1.5">
+              <AgendaItem color="bg-gray-200" label="Connect Google Calendar to see your events here" />
+            </div>
+          )}
+
+          {gcalConn && events.length > 0 && (
+            <div className="space-y-1.5">
+              {events.map(ev => (
+                <AgendaItem
+                  key={ev.id}
+                  color={GCAL_COLORS[ev.colorId] ?? DEFAULT_EVENT_COLOR}
+                  label={`${ev.allDay ? 'All day' : fmtEventTime(ev.start)} — ${ev.summary}`}
+                />
+              ))}
+            </div>
+          )}
         </section>
 
         {/* Overdue tasks */}
@@ -103,10 +200,7 @@ export default function AgendaSidebar() {
           </h3>
           <div className="space-y-1.5">
             {dueToday.length === 0 ? (
-              <p
-                className="text-xs text-gray-300 italic"
-                style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
-              >
+              <p className="text-xs text-gray-300 italic" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
                 Nothing due today
               </p>
             ) : dueToday.map(t => (
@@ -119,7 +213,7 @@ export default function AgendaSidebar() {
           </div>
         </section>
 
-        {/* Renewal alerts placeholder */}
+        {/* Renewal alerts */}
         <section>
           <h3
             className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2"
@@ -133,11 +227,13 @@ export default function AgendaSidebar() {
         </section>
       </div>
 
-      <div className="p-4 border-t border-gray-100">
-        <p className="text-xs text-gray-300 text-center" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
-          Google Calendar syncs in Phase 5
-        </p>
-      </div>
+      {gcalConn && (
+        <div className="p-4 border-t border-gray-100">
+          <p className="text-[10px] text-green-500 text-center" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            ✓ Google Calendar connected
+          </p>
+        </div>
+      )}
     </aside>
   )
 }

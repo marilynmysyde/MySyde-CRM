@@ -7,6 +7,8 @@ import CanvaLink       from '../components/deal/CanvaLink'
 import ActivityLog     from '../components/deal/ActivityLog'
 import RenewalAlert    from '../components/deal/RenewalAlert'
 import PartnerTypeTag  from '../components/shared/PartnerTypeTag'
+import { isGoogleConnected, requestGoogleToken } from '../lib/googleAuth'
+import { fetchGmailThread, parseGmailThreadId } from '../lib/googleCalendar'
 
 const STAGES = ['prospect', 'pitched', 'proposal', 'creative', 'live', 'closed_won', 'closed_lost']
 
@@ -57,8 +59,11 @@ export default function DealRecord() {
   const [deal, setDeal]         = useState(null)
   const [loading, setLoading]   = useState(true)
   const [stageOpen, setStageOpen] = useState(false)
-  const [gmailId, setGmailId]   = useState('')
-  const [gmailSaved, setGmailSaved] = useState(false)
+  const [gmailId,       setGmailId]       = useState('')
+  const [gmailSaved,    setGmailSaved]    = useState(false)
+  const [gmailThread,   setGmailThread]   = useState(null)
+  const [gmailLoading,  setGmailLoading]  = useState(false)
+  const [gcalConn,      setGcalConn]      = useState(isGoogleConnected())
 
   useEffect(() => {
     if (id?.startsWith('sample-')) {
@@ -102,9 +107,35 @@ export default function DealRecord() {
   }
 
   async function saveGmailThread() {
-    await supabase.from('deals').update({ gmail_thread_id: gmailId }).eq('id', deal.id).catch(() => null)
+    const parsed = parseGmailThreadId(gmailId)
+    await supabase.from('deals').update({ gmail_thread_id: parsed }).eq('id', deal.id).catch(() => null)
+    // Log as activity
+    await supabase.from('activity_log').insert({
+      type:       'gmail_linked',
+      body:       `Gmail thread linked`,
+      deal_id:    deal.id,
+      partner_id: deal.partner_id ?? null,
+    }).catch(() => null)
     setGmailSaved(true)
     setTimeout(() => setGmailSaved(false), 2500)
+    // Auto-fetch thread details if Google is connected
+    if (gcalConn && parsed) fetchThread(parsed)
+  }
+
+  async function fetchThread(threadId) {
+    setGmailLoading(true)
+    const details = await fetchGmailThread(threadId)
+    setGmailThread(details)
+    setGmailLoading(false)
+  }
+
+  async function connectGoogleAndFetch() {
+    try {
+      await requestGoogleToken()
+      setGcalConn(true)
+      const parsed = parseGmailThreadId(gmailId || deal.gmail_thread_id)
+      if (parsed) fetchThread(parsed)
+    } catch (e) { console.warn('Google auth failed', e) }
   }
 
   if (loading) {
@@ -249,31 +280,84 @@ export default function DealRecord() {
             >
               Gmail Thread
             </h3>
+
+            {/* Linked thread card */}
+            {deal.gmail_thread_id && (
+              <div className="mb-3 p-3 bg-[#02348E]/5 rounded-lg border border-[#02348E]/15">
+                {gmailLoading ? (
+                  <p className="text-xs text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                    Loading thread…
+                  </p>
+                ) : gmailThread ? (
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium text-[#010100]" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                      {gmailThread.subject}
+                    </p>
+                    <p className="text-[10px] text-gray-500" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                      {gmailThread.messageCount} messages · {gmailThread.participants} participants · Last: {gmailThread.lastDate}
+                    </p>
+                    <a
+                      href={`https://mail.google.com/mail/u/0/#all/${deal.gmail_thread_id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] text-[#02348E] hover:underline"
+                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                    >
+                      Open in Gmail ↗
+                    </a>
+                  </div>
+                ) : gcalConn ? (
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-gray-500" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                      Thread ID: <span className="font-mono">{deal.gmail_thread_id}</span>
+                    </p>
+                    <button
+                      onClick={() => fetchThread(deal.gmail_thread_id)}
+                      className="text-[10px] text-[#02348E] hover:underline"
+                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                    >
+                      Load details
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-xs text-gray-500" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                      Thread linked · Connect Google to see details
+                    </p>
+                    <button
+                      onClick={connectGoogleAndFetch}
+                      className="text-[10px] text-[#02348E] hover:underline shrink-0"
+                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                    >
+                      Connect Google
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Input row */}
             <div className="flex gap-2">
               <input
                 type="text"
                 value={gmailId}
                 onChange={e => setGmailId(e.target.value)}
-                placeholder="Paste Gmail thread ID…"
+                placeholder={deal.gmail_thread_id ? 'Paste new thread ID or URL…' : 'Paste Gmail thread ID or URL…'}
                 className="flex-1 text-sm border border-gray-200 rounded px-3 py-2 focus:outline-none focus:border-[#02348E] text-[#010100]"
                 style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
               />
               <button
                 onClick={saveGmailThread}
-                className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors shrink-0"
+                disabled={!gmailId.trim()}
+                className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors shrink-0"
                 style={{ fontFamily: 'Roboto, sans-serif' }}
               >
-                {gmailSaved ? 'Saved ✓' : 'Save'}
+                {gmailSaved ? 'Saved ✓' : 'Link'}
               </button>
             </div>
-            {gmailId && (
-              <p
-                className="text-xs text-gray-400 mt-2"
-                style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
-              >
-                Gmail sync coming in Phase 5 — thread ID stored for future linking.
-              </p>
-            )}
+            <p className="text-[10px] text-gray-400 mt-1.5" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+              Paste the thread URL from Gmail or the 16-character thread ID
+            </p>
           </div>
         </div>
 

@@ -4,9 +4,11 @@ import Shell from './components/layout/Shell'
 import Board from './pages/Board'
 import Partners from './pages/Partners'
 import Contacts from './pages/Contacts'
+import ContactRecord from './pages/ContactRecord'
 import Tasks from './pages/Tasks'
 import Social from './pages/Social'
 import Kiosks from './pages/Kiosks'
+import KioskRecord from './pages/KioskRecord'
 import Calendar from './pages/Calendar'
 import Dashboard from './pages/Dashboard'
 import DealRecord from './pages/DealRecord'
@@ -28,7 +30,9 @@ export default function App() {
             <Route path="tasks"          element={<Tasks />} />
             <Route path="social"         element={<Social />} />
             <Route path="contacts"       element={<Contacts />} />
+            <Route path="contacts/:id"   element={<ContactRecord />} />
             <Route path="kiosks"         element={<Kiosks />} />
+            <Route path="kiosks/:id"     element={<KioskRecord />} />
             <Route path="calendar"       element={<Calendar />} />
             <Route path="dashboard"      element={<Dashboard />} />
           </Route>

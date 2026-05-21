@@ -145,7 +145,7 @@ create table notes (
 
 create table activity_log (
   id          uuid primary key default gen_random_uuid(),
-  type        text not null check (type in ('note','email','call','stage_change','canva_update','task_complete','post_published')),
+  type        text not null check (type in ('note','email','call','stage_change','canva_update','task_complete','post_published','gmail_linked')),
   body        text,
   partner_id  uuid references partners(id) on delete set null,
   deal_id     uuid references deals(id) on delete set null,
@@ -154,6 +154,15 @@ create table activity_log (
   created_by  text,
   created_at  timestamp with time zone default now()
 );
+
+
+-- ─────────────────────────────────────────────────────────
+-- MIGRATION: Phase 5 — add gmail_linked to existing DBs
+-- Run only if upgrading from a Phase 1-4 schema:
+-- ─────────────────────────────────────────────────────────
+-- ALTER TABLE activity_log DROP CONSTRAINT activity_log_type_check;
+-- ALTER TABLE activity_log ADD CONSTRAINT activity_log_type_check
+--   CHECK (type IN ('note','email','call','stage_change','canva_update','task_complete','post_published','gmail_linked'));
 
 
 -- ─────────────────────────────────────────────────────────

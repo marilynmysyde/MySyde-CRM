@@ -1,4 +1,4 @@
 import { ComingSoon } from './Tasks'
 export default function Calendar() {
-  return <ComingSoon title="Calendar" phase={5} description="Google Calendar integration — events pulled directly into the app and sidebar." />
+  return <ComingSoon title="Calendar" phase={6} description="Full Google Calendar view — connect via the sidebar to see your events here." />
 }
