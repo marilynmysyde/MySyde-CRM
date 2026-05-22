@@ -24,6 +24,7 @@ function fmtActivity(ts) {
 
 const SAMPLE_STATS = {
   pipelineValue:   48_750,
+  liveMRR:         2_350,
   activeKiosks:    3,
   dealsByStage: {
     prospect:    2,
@@ -35,8 +36,13 @@ const SAMPLE_STATS = {
     closed_lost: 1,
   },
   tasksDueThisWeek:  5,
-  postsThisWeek:     3,
 }
+
+const SAMPLE_RENEWALS = [
+  { id: 'r1', title: 'Spring Ad Campaign — Banner Slot',   partner: 'MH Chamber',    run_end: '2026-06-10' },
+  { id: 'r2', title: 'PDF Map Bundle',                     partner: 'City of MH',    run_end: '2026-06-18' },
+  { id: 'r3', title: 'Full Panel Ad — Downtown Feature',   partner: 'Downtown MH',   run_end: '2026-06-25' },
+]
 
 const SAMPLE_ACTIVITY = [
   { id: 'a1', type: 'stage_change',   body: 'Spring Campaign moved to Live',           created_at: new Date(Date.now() - 1_800_000).toISOString() },
@@ -103,6 +109,7 @@ function StatCard({ label, value, sub, accent = false, to }) {
 export default function Dashboard() {
   const [stats,    setStats]    = useState(SAMPLE_STATS)
   const [activity, setActivity] = useState(SAMPLE_ACTIVITY)
+  const [renewals, setRenewals] = useState(SAMPLE_RENEWALS)
   const [loading,  setLoading]  = useState(true)
 
   useEffect(() => {
@@ -129,14 +136,16 @@ export default function Dashboard() {
           .neq('status', 'done')
           .lte('due_date', weekEnd.toISOString().slice(0, 10))
 
-        // Posts scheduled this week
-        const now = new Date().toISOString()
-        const { count: postCount } = await supabase
-          .from('posts')
-          .select('id', { count: 'exact', head: true })
-          .in('status', ['scheduled', 'review'])
-          .lte('scheduled_at', weekEnd.toISOString())
-          .gte('scheduled_at', now)
+        // Upcoming renewals (run_end within 30 days, still active)
+        const today       = new Date().toISOString().slice(0, 10)
+        const in30Days    = new Date(Date.now() + 30 * 86_400_000).toISOString().slice(0, 10)
+        const { data: renewalData } = await supabase
+          .from('deals')
+          .select('id, title, run_end, partners(name)')
+          .not('stage', 'in', '("closed_won","closed_lost")')
+          .gte('run_end', today)
+          .lte('run_end', in30Days)
+          .order('run_end')
 
         // Recent activity
         const { data: actData } = await supabase
@@ -147,16 +156,18 @@ export default function Dashboard() {
 
         if (deals) {
           const totalVal = deals.reduce((s, d) => s + (Number(d.total_value ?? (d.monthly_rate ?? 0) * (d.months ?? 1)) || 0), 0)
+          const liveMRR  = deals.filter(d => d.stage === 'live').reduce((s, d) => s + (Number(d.monthly_rate) || 0), 0)
           const byStage  = {}
           for (const d of deals) { byStage[d.stage] = (byStage[d.stage] ?? 0) + 1 }
           setStats({
             pipelineValue:    totalVal,
+            liveMRR,
             activeKiosks:     kioskCount ?? 0,
             dealsByStage:     byStage,
             tasksDueThisWeek: taskCount ?? 0,
-            postsThisWeek:    postCount ?? 0,
           })
         }
+        if (renewalData) setRenewals(renewalData.map(d => ({ id: d.id, title: d.title, partner: d.partners?.name ?? '', run_end: d.run_end })))
         if (actData && actData.length > 0) setActivity(actData)
       } catch { /* sample data stays */ }
       setLoading(false)
@@ -190,10 +201,16 @@ export default function Dashboard() {
       {/* Top stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
         <StatCard
-          label="Total Pipeline Value"
+          label="Live MRR"
+          value={fmt$(stats.liveMRR ?? 0)}
+          sub="Monthly from live deals"
+          accent
+          to="/board"
+        />
+        <StatCard
+          label="Pipeline Value"
           value={fmt$(stats.pipelineValue)}
           sub="Open deals excl. lost"
-          accent
           to="/board"
         />
         <StatCard
@@ -207,12 +224,6 @@ export default function Dashboard() {
           value={stats.tasksDueThisWeek}
           sub="Across all partners"
           to="/tasks"
-        />
-        <StatCard
-          label="Posts Scheduled"
-          value={stats.postsThisWeek}
-          sub="Next 7 days"
-          to="/social"
         />
       </div>
 
@@ -274,6 +285,55 @@ export default function Dashboard() {
               </div>
             )}
           </div>
+
+          {/* Upcoming renewals */}
+          {renewals.length > 0 && (
+            <div className="bg-white rounded-lg border border-amber-100 p-4 mb-4">
+              <div className="flex items-center justify-between mb-3">
+                <h2
+                  className="text-sm font-semibold text-[#010100]"
+                  style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                >
+                  Renewals in Next 30 Days
+                </h2>
+                <span
+                  className="text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded-full"
+                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                >
+                  {renewals.length}
+                </span>
+              </div>
+              <div className="space-y-2">
+                {renewals.map(r => {
+                  const daysLeft = Math.ceil((new Date(r.run_end) - new Date()) / 86_400_000)
+                  return (
+                    <Link
+                      key={r.id}
+                      to={`/deal/${r.id}`}
+                      className="flex items-center justify-between gap-3 p-2.5 rounded-lg hover:bg-amber-50/60 transition-colors group"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-medium text-[#010100] truncate" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                          {r.title}
+                        </p>
+                        <p className="text-[10px] text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                          {r.partner}
+                        </p>
+                      </div>
+                      <span
+                        className={`text-[10px] font-semibold shrink-0 px-2 py-0.5 rounded-full ${
+                          daysLeft <= 7 ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-700'
+                        }`}
+                        style={{ fontFamily: 'Roboto, sans-serif' }}
+                      >
+                        {daysLeft}d
+                      </span>
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Quick links */}
           <div className="grid grid-cols-3 gap-3">
