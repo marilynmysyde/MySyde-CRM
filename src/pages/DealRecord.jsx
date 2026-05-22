@@ -75,6 +75,10 @@ export default function DealRecord() {
   const [stageOpen, setStageOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [deleting, setDeleting]           = useState(false)
+
+  // Close deal workflow
+  const [pendingClose, setPendingClose] = useState(null) // 'closed_won' | 'closed_lost'
+  const [closeDate, setCloseDate]       = useState('')
   const [gmailId,       setGmailId]       = useState('')
   const [gmailSaved,    setGmailSaved]    = useState(false)
   const [gmailThread,   setGmailThread]   = useState(null)
@@ -145,11 +149,30 @@ export default function DealRecord() {
 
   async function changeStage(stage) {
     setStageOpen(false)
+    if (stage === 'closed_won' || stage === 'closed_lost') {
+      setCloseDate(new Date().toISOString().split('T')[0])
+      setPendingClose(stage)
+      return
+    }
     setDeal(prev => ({ ...prev, stage }))
     await supabase.from('deals').update({ stage }).eq('id', deal.id).catch(() => null)
     await supabase.from('activity_log').insert({
       type:       'stage_change',
       body:       `Stage changed to ${STAGE_LABELS[stage]}`,
+      deal_id:    deal.id,
+      partner_id: deal.partner_id ?? null,
+    }).catch(() => null)
+  }
+
+  async function confirmClose() {
+    const stage    = pendingClose
+    const closedAt = closeDate ? new Date(closeDate + 'T12:00:00').toISOString() : new Date().toISOString()
+    setPendingClose(null)
+    setDeal(prev => ({ ...prev, stage }))
+    await supabase.from('deals').update({ stage, closed_at: closedAt }).eq('id', deal.id).catch(() => null)
+    await supabase.from('activity_log').insert({
+      type:       'stage_change',
+      body:       `Deal ${stage === 'closed_won' ? 'closed — Won' : 'closed — Lost'} · ${closeDate}`,
       deal_id:    deal.id,
       partner_id: deal.partner_id ?? null,
     }).catch(() => null)
@@ -607,6 +630,66 @@ export default function DealRecord() {
           <ActivityLog deal={deal} />
         </div>
       </div>
+
+      {/* Close deal modal */}
+      {pendingClose && (
+        <>
+          <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setPendingClose(null)} />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
+              <h2
+                className="text-lg font-semibold text-[#010100] mb-1"
+                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              >
+                {pendingClose === 'closed_won' ? '🏆 Close as Won' : '❌ Close as Lost'}
+              </h2>
+              <p
+                className="text-sm text-gray-500 mb-5"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              >
+                {pendingClose === 'closed_won'
+                  ? 'Great work! Record the date this deal was won.'
+                  : 'Record the date this deal was marked as lost.'}
+              </p>
+
+              <label
+                className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1.5"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              >
+                Closed date
+              </label>
+              <input
+                type="date"
+                value={closeDate}
+                onChange={e => setCloseDate(e.target.value)}
+                className="w-full text-sm border border-gray-200 rounded px-3 py-2 focus:outline-none focus:border-[#02348E] text-[#010100] mb-5"
+                style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              />
+
+              <div className="flex gap-2 justify-end">
+                <button
+                  onClick={() => setPendingClose(null)}
+                  className="text-sm text-gray-500 hover:text-gray-700 px-4 py-2 rounded transition-colors"
+                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmClose}
+                  className={`text-sm font-medium text-white px-4 py-2 rounded transition-colors ${
+                    pendingClose === 'closed_won'
+                      ? 'bg-[#02348E] hover:bg-[#02348E]/90'
+                      : 'bg-red-500 hover:bg-red-600'
+                  }`}
+                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                >
+                  {pendingClose === 'closed_won' ? 'Mark as Won' : 'Mark as Lost'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
