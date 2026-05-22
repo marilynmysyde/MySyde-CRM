@@ -166,7 +166,7 @@ export default function KioskRecord() {
   async function deleteKiosk() {
     if (id?.startsWith('kiosk-')) { navigate('/kiosks'); return }
     setDeleting(true)
-    await supabase.from('kiosks').delete().eq('id', id).catch(() => null)
+    await supabase.from('kiosks').delete().eq('id', id)
     navigate('/kiosks')
   }
 
@@ -179,7 +179,7 @@ export default function KioskRecord() {
       installed_at: infoForm.installed_at || null,
       partner_id:   infoForm.partner_id || null,
     }
-    await supabase.from('kiosks').update(payload).eq('id', id).catch(() => null)
+    await supabase.from('kiosks').update(payload).eq('id', id)
     setKiosk(prev => ({ ...prev, ...payload }))
     setSavingInfo(false)
     setEditingInfo(false)
@@ -187,7 +187,7 @@ export default function KioskRecord() {
 
   async function saveNotes() {
     setSavingNotes(true)
-    await supabase.from('kiosks').update({ notes }).eq('id', id).catch(() => null)
+    await supabase.from('kiosks').update({ notes }).eq('id', id)
     setSavingNotes(false)
     setNotesSaved(true)
     setTimeout(() => setNotesSaved(false), 2500)

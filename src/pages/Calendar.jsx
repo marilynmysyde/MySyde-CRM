@@ -108,6 +108,7 @@ export default function Calendar() {
   const [events,    setEvents]    = useState([])
   const [connected, setConnected] = useState(isGoogleConnected())
   const [loading,   setLoading]   = useState(false)
+  const [authError, setAuthError] = useState('')
 
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i))
 
@@ -126,10 +127,17 @@ export default function Calendar() {
 
   async function connect() {
     setLoading(true)
+    setAuthError('')
     try {
       await requestGoogleToken()
       setConnected(true)
-    } catch { setLoading(false) }
+    } catch {
+      const msg = !import.meta.env.VITE_GOOGLE_CLIENT_ID
+        ? 'VITE_GOOGLE_CLIENT_ID is not set. Add it to your Vercel environment variables.'
+        : 'Sign-in failed. Make sure your Vercel URL is listed as an authorized JavaScript origin in Google Cloud Console.'
+      setAuthError(msg)
+      setLoading(false)
+    }
   }
 
   function prevWeek() { setWeekStart(w => addDays(w, -7)) }
@@ -244,6 +252,11 @@ export default function Calendar() {
             >
               {loading ? 'Connecting…' : 'Connect Google Calendar'}
             </button>
+            {authError && (
+              <p className="text-xs text-red-500 mt-3 max-w-xs" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                {authError}
+              </p>
+            )}
           </div>
         </div>
       )}

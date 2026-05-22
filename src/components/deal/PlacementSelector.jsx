@@ -38,7 +38,7 @@ export default function PlacementSelector({ deal, onUpdate }) {
 
   async function persist(patch) {
     setSaving(true)
-    await supabase.from('deals').update(patch).eq('id', deal.id).catch(() => null)
+    await supabase.from('deals').update(patch).eq('id', deal.id)
     setSaving(false)
     onUpdate?.(patch)
   }

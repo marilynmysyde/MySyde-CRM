@@ -127,7 +127,7 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
 
   async function save() {
     setSaving(true)
-    await supabase.from('partners').update(form).eq('id', partner.id).catch(() => null)
+    await supabase.from('partners').update(form).eq('id', partner.id)
     setSaving(false)
     setEditing(false)
     onPartnerUpdate?.(form)
@@ -468,7 +468,6 @@ function NotesTab({ partnerId }) {
     supabase.from('notes').select('*').eq('partner_id', partnerId)
       .order('created_at', { ascending: false })
       .then(({ data }) => { if (data) setNotes(data) })
-      .catch(() => null)
   }, [partnerId])
 
   async function addNote() {
@@ -476,7 +475,7 @@ function NotesTab({ partnerId }) {
     if (!body) return
     setPosting(true)
     const payload = { body, partner_id: partnerId }
-    const { data } = await supabase.from('notes').insert(payload).select().single().catch(() => ({ data: null }))
+    const { data } = await supabase.from('notes').insert(payload).select().single()
     setNotes(prev => [data ?? { id: crypto.randomUUID(), ...payload, created_at: new Date().toISOString() }, ...prev])
     setEntry('')
     setPosting(false)
@@ -500,7 +499,7 @@ function NotesTab({ partnerId }) {
           value={entry}
           onChange={e => setEntry(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) addNote() }}
-          placeholder="Meeting notes, call recap, follow-up reminders… (⌘↵ to save)"
+          placeholder="Meeting notes, call recap, follow-up reminders… (Ctrl+↵ to save)"
           rows={4}
           className="w-full text-sm border border-gray-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-[#02348E] text-[#010100] mb-2"
           style={{ fontFamily: 'Roboto, sans-serif' }}
@@ -573,9 +572,9 @@ export default function PartnerRecord() {
 
     async function load() {
       const [{ data: p }, { data: c }, { data: d }] = await Promise.all([
-        supabase.from('partners').select('*').eq('id', id).single().catch(() => ({ data: null })),
-        supabase.from('contacts').select('*').eq('partner_id', id).order('name').catch(() => ({ data: [] })),
-        supabase.from('deals').select('*').eq('partner_id', id).order('created_at', { ascending: false }).catch(() => ({ data: [] })),
+        supabase.from('partners').select('*').eq('id', id).single(),
+        supabase.from('contacts').select('*').eq('partner_id', id).order('name'),
+        supabase.from('deals').select('*').eq('partner_id', id).order('created_at', { ascending: false }),
       ])
       if (p) setPartner(p)
       setContacts(c ?? [])
@@ -588,7 +587,7 @@ export default function PartnerRecord() {
   async function deletePartner() {
     if (id?.startsWith('sample-')) { navigate('/partners'); return }
     setDeleting(true)
-    await supabase.from('partners').delete().eq('id', id).catch(() => null)
+    await supabase.from('partners').delete().eq('id', id)
     navigate('/partners')
   }
 

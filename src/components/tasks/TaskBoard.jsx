@@ -41,7 +41,7 @@ export default function TaskBoard({ tasks, setTasks, showPartner = false }) {
     setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: newStatus } : t))
 
     // Supabase
-    await supabase.from('tasks').update({ status: newStatus }).eq('id', taskId).catch(() => null)
+    await supabase.from('tasks').update({ status: newStatus }).eq('id', taskId)
 
     // Recurring: when moved to done, auto-generate the next instance
     if (newStatus === 'done' && task.is_recurring && task.recurrence_rule) {
@@ -53,7 +53,6 @@ export default function TaskBoard({ tasks, setTasks, showPartner = false }) {
         .insert(nextTask)
         .select('*, partners(id, name, type)')
         .single()
-        .catch(() => ({ data: null }))
 
       setTasks(prev => [
         data ?? { ...nextTask, id: crypto.randomUUID(), created_at: new Date().toISOString() },

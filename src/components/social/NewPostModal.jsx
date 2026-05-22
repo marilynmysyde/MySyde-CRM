@@ -65,12 +65,10 @@ export default function NewPostModal({ partners = [], post = null, onClose, onSa
     if (isEdit) {
       const { data } = await supabase.from('posts').update(payload)
         .eq('id', post.id).select('*, partners(id, name, type)').single()
-        .catch(() => ({ data: null }))
       saved = data ?? { ...post, ...payload }
     } else {
       const { data } = await supabase.from('posts').insert(payload)
         .select('*, partners(id, name, type)').single()
-        .catch(() => ({ data: null }))
       saved = data ?? {
         ...payload,
         id: crypto.randomUUID(),

@@ -86,7 +86,6 @@ export default function NewDealModal({ onClose, onCreated }) {
       .insert(payload)
       .select('*, partners(id, name, type)')
       .single()
-      .catch(() => ({ data: null }))
 
     const created = data ?? {
       ...payload,

@@ -27,7 +27,6 @@ export default function PackageSelector({ deal, onUpdate }) {
     await supabase.from('deals')
       .update({ package: newPkg, monthly_rate: rate, months: newMonths })
       .eq('id', deal.id)
-      .catch(() => null)
     setSaving(false)
     onUpdate?.({ package: newPkg, monthly_rate: rate, months: newMonths })
   }

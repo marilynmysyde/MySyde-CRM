@@ -48,7 +48,6 @@ export default function NewPartnerModal({ onClose, onCreated }) {
       .insert(payload)
       .select()
       .single()
-      .catch(() => ({ data: null }))
 
     const created = data ?? {
       ...payload,

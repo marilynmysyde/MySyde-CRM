@@ -48,7 +48,6 @@ export default function NewTaskModal({ partners = [], defaultPartnerId = null, o
       .insert(payload)
       .select('*, partners(id, name, type)')
       .single()
-      .catch(() => ({ data: null }))
 
     const created = data ?? {
       ...payload,

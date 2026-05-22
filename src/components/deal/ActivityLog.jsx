@@ -28,7 +28,6 @@ export default function ActivityLog({ deal }) {
       .select('*')
       .eq('deal_id', deal.id)
       .order('created_at', { ascending: false })
-      .catch(() => ({ data: null }))
     if (data) setEntries(data)
   }
 
@@ -48,7 +47,6 @@ export default function ActivityLog({ deal }) {
       .insert(payload)
       .select()
       .single()
-      .catch(() => ({ data: null }))
 
     setEntries(prev => [
       data ?? { id: crypto.randomUUID(), ...payload, created_at: new Date().toISOString() },
@@ -77,7 +75,7 @@ export default function ActivityLog({ deal }) {
           value={note}
           onChange={e => setNote(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Add a note… (⌘↵ to save)"
+          placeholder="Add a note… (Ctrl+↵ to save)"
           rows={2}
           className="flex-1 text-sm border border-gray-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-[#02348E] text-[#010100]"
           style={{ fontFamily: 'Roboto, sans-serif' }}

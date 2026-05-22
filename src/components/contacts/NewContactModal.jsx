@@ -15,6 +15,7 @@ export default function NewContactModal({ onClose, onCreated }) {
     notes:      '',
   })
   const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState('')
 
   useEffect(() => {
     async function fetchPartners() {
@@ -38,6 +39,7 @@ export default function NewContactModal({ onClose, onCreated }) {
     e.preventDefault()
     if (!form.name.trim()) return
     setSaving(true)
+    setSaveError('')
 
     const payload = {
       name:       form.name.trim(),
@@ -48,21 +50,19 @@ export default function NewContactModal({ onClose, onCreated }) {
       notes:      form.notes.trim() || null,
     }
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('contacts')
       .insert(payload)
       .select('*, partners(name, type)')
       .single()
-      .catch(() => ({ data: null }))
 
-    const created = data ?? {
-      ...payload,
-      id:         crypto.randomUUID(),
-      created_at: new Date().toISOString(),
-      partners:   partners.find(p => p.id === payload.partner_id) ?? null,
+    if (error) {
+      setSaveError('Could not save to database. Check your Supabase connection.')
+      setSaving(false)
+      return
     }
 
-    onCreated(created)
+    onCreated(data)
     setSaving(false)
     onClose()
   }
@@ -174,6 +174,13 @@ export default function NewContactModal({ onClose, onCreated }) {
               style={{ fontFamily: 'Roboto, sans-serif' }}
             />
           </div>
+
+          {/* Save error */}
+          {saveError && (
+            <p className="text-xs text-red-500 bg-red-50 border border-red-100 rounded px-3 py-2" style={{ fontFamily: 'Roboto, sans-serif' }}>
+              {saveError}
+            </p>
+          )}
 
           {/* Actions */}
           <div className="flex justify-end gap-2 pt-1">

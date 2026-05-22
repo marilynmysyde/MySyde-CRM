@@ -59,7 +59,6 @@ export default function NewKioskModal({ onClose, onCreated }) {
       .insert(payload)
       .select('*, partners(name, type)')
       .single()
-      .catch(() => ({ data: null }))
 
     const created = data ?? {
       ...payload,

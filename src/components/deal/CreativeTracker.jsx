@@ -23,7 +23,6 @@ export default function CreativeTracker({ deal, onUpdate }) {
     await supabase.from('deals')
       .update({ design_status: stepKey })
       .eq('id', deal.id)
-      .catch(() => null)
     setStatus(stepKey)
     setSaving(false)
     onUpdate?.({ design_status: stepKey })

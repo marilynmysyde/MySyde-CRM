@@ -224,13 +224,13 @@ export default function ContactRecord() {
   async function deleteContact() {
     if (SAMPLE_CONTACTS[id]) { navigate('/contacts'); return }
     setDeleting(true)
-    await supabase.from('contacts').delete().eq('id', id).catch(() => null)
+    await supabase.from('contacts').delete().eq('id', id)
     navigate('/contacts')
   }
 
   async function saveNotes() {
     setSavingNotes(true)
-    await supabase.from('contacts').update({ notes }).eq('id', id).catch(() => null)
+    await supabase.from('contacts').update({ notes }).eq('id', id)
     setSavingNotes(false)
     setNotesSaved(true)
     setTimeout(() => setNotesSaved(false), 2500)
@@ -245,7 +245,7 @@ export default function ContactRecord() {
       phone:      infoForm.phone.trim() || null,
       partner_id: infoForm.partner_id || null,
     }
-    await supabase.from('contacts').update(payload).eq('id', id).catch(() => null)
+    await supabase.from('contacts').update(payload).eq('id', id)
     setContact(prev => ({ ...prev, ...payload }))
     setSavingInfo(false)
     setEditingInfo(false)

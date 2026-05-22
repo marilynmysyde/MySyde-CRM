@@ -32,7 +32,7 @@ export default function PostBoard({ posts, setPosts, onPostClick }) {
     if (newStatus === 'live') patch.published_at = new Date().toISOString()
 
     setPosts(prev => prev.map(p => p.id === postId ? { ...p, ...patch } : p))
-    await supabase.from('posts').update(patch).eq('id', postId).catch(() => null)
+    await supabase.from('posts').update(patch).eq('id', postId)
   }
 
   return (

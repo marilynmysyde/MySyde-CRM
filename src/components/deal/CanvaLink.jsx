@@ -31,7 +31,6 @@ export default function CanvaLink({ deal, onUpdate }) {
     await supabase.from('deals')
       .update({ canva_file_url: url.trim(), canva_file_name: finalName })
       .eq('id', deal.id)
-      .catch(() => null)
     setSaving(false)
     setSaved(true)
     setTimeout(() => setSaved(false), 2500)

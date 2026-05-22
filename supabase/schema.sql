@@ -207,13 +207,13 @@ alter table posts        enable row level security;
 alter table notes        enable row level security;
 alter table activity_log enable row level security;
 
--- Partners
-create policy "auth_all" on partners     for all to authenticated using (true) with check (true);
-create policy "auth_all" on contacts     for all to authenticated using (true) with check (true);
-create policy "auth_all" on kiosks       for all to authenticated using (true) with check (true);
-create policy "auth_all" on packages     for all to authenticated using (true) with check (true);
-create policy "auth_all" on deals        for all to authenticated using (true) with check (true);
-create policy "auth_all" on tasks        for all to authenticated using (true) with check (true);
-create policy "auth_all" on posts        for all to authenticated using (true) with check (true);
-create policy "auth_all" on notes        for all to authenticated using (true) with check (true);
-create policy "auth_all" on activity_log for all to authenticated using (true) with check (true);
+-- Internal tool: allow anon read/write (no public user login required)
+create policy "anon_all" on partners     for all to anon using (true) with check (true);
+create policy "anon_all" on contacts     for all to anon using (true) with check (true);
+create policy "anon_all" on kiosks       for all to anon using (true) with check (true);
+create policy "anon_all" on packages     for all to anon using (true) with check (true);
+create policy "anon_all" on deals        for all to anon using (true) with check (true);
+create policy "anon_all" on tasks        for all to anon using (true) with check (true);
+create policy "anon_all" on posts        for all to anon using (true) with check (true);
+create policy "anon_all" on notes        for all to anon using (true) with check (true);
+create policy "anon_all" on activity_log for all to anon using (true) with check (true);

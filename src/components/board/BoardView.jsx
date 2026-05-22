@@ -64,7 +64,7 @@ export default function BoardView({ initialDeals }) {
       // Move to different stage
       setDeals(prev => prev.map(d => d.id === active.id ? { ...d, stage: toStage } : d))
       // Persist to Supabase (best-effort — silently fails if not connected yet)
-      await supabase.from('deals').update({ stage: toStage }).eq('id', active.id).catch(() => null)
+      await supabase.from('deals').update({ stage: toStage }).eq('id', active.id)
     }
   }
 

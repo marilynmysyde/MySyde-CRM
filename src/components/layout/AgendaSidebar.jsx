@@ -38,6 +38,7 @@ export default function AgendaSidebar() {
   const [events,      setEvents]      = useState([])
   const [gcalConn,    setGcalConn]    = useState(isGoogleConnected())
   const [gcalLoading, setGcalLoading] = useState(false)
+  const [gcalError,   setGcalError]   = useState('')
 
   const todayLabel = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
   const todayStr   = new Date().toISOString().slice(0, 10)
@@ -104,12 +105,16 @@ export default function AgendaSidebar() {
 
   async function connectGoogle() {
     setGcalLoading(true)
+    setGcalError('')
     try {
       await requestGoogleToken()
       setGcalConn(true)
       // loadCalendarEvents will fire via the effect above
     } catch (e) {
-      console.warn('Google auth failed', e)
+      const msg = !import.meta.env.VITE_GOOGLE_CLIENT_ID
+        ? 'VITE_GOOGLE_CLIENT_ID not set in Vercel environment variables.'
+        : 'Google sign-in failed. Make sure your Vercel URL is an authorized origin in Google Cloud Console.'
+      setGcalError(msg)
       setGcalLoading(false)
     }
   }
@@ -169,6 +174,12 @@ export default function AgendaSidebar() {
           {gcalLoading && (
             <p className="text-xs text-gray-400 italic" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
               Loading events…
+            </p>
+          )}
+
+          {gcalError && (
+            <p className="text-[10px] text-red-500 leading-snug" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+              {gcalError}
             </p>
           )}
 

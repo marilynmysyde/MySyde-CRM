@@ -147,7 +147,6 @@ export default function DealRecord() {
         .select('*, partners(id, name, type), contacts(name, email)')
         .eq('id', id)
         .single()
-        .catch(() => ({ data: null }))
       if (data) {
         setDeal(data)
         setGmailId(data.gmail_thread_id ?? '')
@@ -169,13 +168,13 @@ export default function DealRecord() {
   async function changeInvoiceStatus(status) {
     setInvoiceDropOpen(false)
     setInvoiceStatus(status)
-    await supabase.from('deals').update({ invoice_status: status }).eq('id', deal.id).catch(() => null)
+    await supabase.from('deals').update({ invoice_status: status }).eq('id', deal.id)
     await supabase.from('activity_log').insert({
       type:       'note',
       body:       `Invoice status → ${INVOICE_LABELS[status]}`,
       deal_id:    deal.id,
       partner_id: deal.partner_id ?? null,
-    }).catch(() => null)
+    })
   }
 
   async function changeStage(stage) {
@@ -186,13 +185,13 @@ export default function DealRecord() {
       return
     }
     setDeal(prev => ({ ...prev, stage }))
-    await supabase.from('deals').update({ stage }).eq('id', deal.id).catch(() => null)
+    await supabase.from('deals').update({ stage }).eq('id', deal.id)
     await supabase.from('activity_log').insert({
       type:       'stage_change',
       body:       `Stage changed to ${STAGE_LABELS[stage]}`,
       deal_id:    deal.id,
       partner_id: deal.partner_id ?? null,
-    }).catch(() => null)
+    })
   }
 
   async function confirmClose() {
@@ -200,25 +199,25 @@ export default function DealRecord() {
     const closedAt = closeDate ? new Date(closeDate + 'T12:00:00').toISOString() : new Date().toISOString()
     setPendingClose(null)
     setDeal(prev => ({ ...prev, stage }))
-    await supabase.from('deals').update({ stage, closed_at: closedAt }).eq('id', deal.id).catch(() => null)
+    await supabase.from('deals').update({ stage, closed_at: closedAt }).eq('id', deal.id)
     await supabase.from('activity_log').insert({
       type:       'stage_change',
       body:       `Deal ${stage === 'closed_won' ? 'closed — Won' : 'closed — Lost'} · ${closeDate}`,
       deal_id:    deal.id,
       partner_id: deal.partner_id ?? null,
-    }).catch(() => null)
+    })
   }
 
   async function saveGmailThread() {
     const parsed = parseGmailThreadId(gmailId)
-    await supabase.from('deals').update({ gmail_thread_id: parsed }).eq('id', deal.id).catch(() => null)
+    await supabase.from('deals').update({ gmail_thread_id: parsed }).eq('id', deal.id)
     // Log as activity
     await supabase.from('activity_log').insert({
       type:       'gmail_linked',
       body:       `Gmail thread linked`,
       deal_id:    deal.id,
       partner_id: deal.partner_id ?? null,
-    }).catch(() => null)
+    })
     setGmailSaved(true)
     setTimeout(() => setGmailSaved(false), 2500)
     // Auto-fetch thread details if Google is connected
@@ -246,17 +245,17 @@ export default function DealRecord() {
     setLinkError('')
     const { data, error } = await supabase.functions.invoke('stripe-payment-link', {
       body: { amount: deal.total_value, title: deal.title },
-    }).catch(e => ({ data: null, error: e }))
+    })
     setGeneratingLink(false)
     if (error || data?.error) {
       setLinkError(data?.error ?? 'Could not generate link — check that the Edge Function is deployed and STRIPE_SECRET_KEY is set.')
       return
     }
     setPaymentLink(data.url)
-    await supabase.from('deals').update({ stripe_payment_link: data.url }).eq('id', deal.id).catch(() => null)
+    await supabase.from('deals').update({ stripe_payment_link: data.url }).eq('id', deal.id)
     await supabase.from('activity_log').insert({
       type: 'note', body: 'Stripe payment link generated', deal_id: deal.id, partner_id: deal.partner_id ?? null,
-    }).catch(() => null)
+    })
   }
 
   async function copyLink() {
@@ -318,7 +317,7 @@ export default function DealRecord() {
   async function deleteDeal() {
     if (deal.id?.startsWith('sample-')) { navigate('/board'); return }
     setDeleting(true)
-    await supabase.from('deals').delete().eq('id', deal.id).catch(() => null)
+    await supabase.from('deals').delete().eq('id', deal.id)
     navigate('/board')
   }
 
@@ -327,7 +326,7 @@ export default function DealRecord() {
     if (!trimmed || trimmed === deal.title) { setEditingTitle(false); return }
     setDeal(prev => ({ ...prev, title: trimmed }))
     setEditingTitle(false)
-    await supabase.from('deals').update({ title: trimmed }).eq('id', deal.id).catch(() => null)
+    await supabase.from('deals').update({ title: trimmed }).eq('id', deal.id)
   }
 
   async function saveDates() {
@@ -336,11 +335,11 @@ export default function DealRecord() {
     await supabase.from('deals').update({
       run_start: runStart || null,
       run_end:   runEnd || null,
-    }).eq('id', deal.id).catch(() => null)
+    }).eq('id', deal.id)
   }
 
   async function saveNotes() {
-    await supabase.from('deals').update({ notes: notesDraft.trim() || null }).eq('id', deal.id).catch(() => null)
+    await supabase.from('deals').update({ notes: notesDraft.trim() || null }).eq('id', deal.id)
     setDeal(prev => ({ ...prev, notes: notesDraft.trim() || null }))
     setNotesSaved(true)
     setTimeout(() => setNotesSaved(false), 2000)

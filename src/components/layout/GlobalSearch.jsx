@@ -136,7 +136,7 @@ export default function GlobalSearch() {
           <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
         </svg>
         <span>Search</span>
-        <kbd className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded font-mono ml-1">⌘K</kbd>
+        <kbd className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded font-mono ml-1">Ctrl+K</kbd>
       </button>
     )
   }
