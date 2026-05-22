@@ -29,6 +29,7 @@ serve(async (req) => {
   const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
   const resendKey      = Deno.env.get('RESEND_API_KEY')
   const alertEmail     = Deno.env.get('ALERT_EMAIL')
+  const fromEmail      = Deno.env.get('FROM_EMAIL') ?? 'alerts@mysyde.com'
   const supabase       = createClient(supabaseUrl, serviceRoleKey)
 
   const today   = new Date()
@@ -79,7 +80,7 @@ serve(async (req) => {
         'Content-Type':  'application/json',
       },
       body: JSON.stringify({
-        from:    'MySyde Connect <alerts@mysyde.com>',
+        from:    `MySyde Connect <${fromEmail}>`,
         to:      [alertEmail],
         subject: `⚠️ ${deals.length} deal${deals.length === 1 ? '' : 's'} renewing soon — MySyde Connect`,
         text:    emailBody,

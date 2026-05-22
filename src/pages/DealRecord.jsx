@@ -12,6 +12,27 @@ import { fetchGmailThread, parseGmailThreadId } from '../lib/googleCalendar'
 
 const STAGES = ['prospect', 'pitched', 'proposal', 'creative', 'live', 'closed_won', 'closed_lost']
 
+const PLACEMENT_LABELS = {
+  top_banner:        'Top Banner',
+  bottom_banner:     'Bottom Banner',
+  premier_welcome:   'Premier Welcome Screen',
+  start_screen:      'Start Screen',
+  search_button:     'Search Button',
+  primary_wrap:      'Primary Wrap',
+  side_wrap:         'Side Wrap',
+  featured_event:    'Featured Event',
+  map_picture:       'Map Picture',
+  map_name_under:    'Map Name (Under)',
+  map_name_category: 'Map Name + Category',
+  map_bundle:        'Map Bundle',
+}
+
+const SCREEN_LABELS = {
+  screen_1: 'Screen 1',
+  screen_2: 'Screen 2',
+  both:     'Both Screens',
+}
+
 const INVOICE_STATUSES = ['none', 'deposit_pending', 'paid', 'overdue']
 const INVOICE_LABELS = {
   none:            'No Invoice',
@@ -85,6 +106,8 @@ export default function DealRecord() {
   const [generatingLink,   setGeneratingLink]   = useState(false)
   const [linkCopied,       setLinkCopied]       = useState(false)
   const [linkError,        setLinkError]        = useState('')
+  const [proposalOpen,   setProposalOpen]   = useState(false)
+  const [proposalCopied, setProposalCopied] = useState(false)
   const [gmailId,       setGmailId]       = useState('')
   const [gmailSaved,    setGmailSaved]    = useState(false)
   const [gmailThread,   setGmailThread]   = useState(null)
@@ -121,7 +144,7 @@ export default function DealRecord() {
     async function load() {
       const { data } = await supabase
         .from('deals')
-        .select('*, partners(id, name, type)')
+        .select('*, partners(id, name, type), contacts(name, email)')
         .eq('id', id)
         .single()
         .catch(() => ({ data: null }))
@@ -240,6 +263,56 @@ export default function DealRecord() {
     await navigator.clipboard.writeText(paymentLink).catch(() => null)
     setLinkCopied(true)
     setTimeout(() => setLinkCopied(false), 2000)
+  }
+
+  function buildProposalEmail() {
+    const fmt     = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
+    const fmtDate = d => d ? new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : null
+
+    const partnerName = deal.partners?.name ?? 'your organization'
+    const contactName = deal.contacts?.name?.split(' ')[0] ?? partnerName
+    const placement   = PLACEMENT_LABELS[deal.placement_type] ?? deal.placement_type ?? null
+    const screen      = deal.screen ? SCREEN_LABELS[deal.screen] : null
+    const rate        = deal.monthly_rate ? fmt(deal.monthly_rate) : null
+    const total       = deal.total_value  ? fmt(deal.total_value)  : null
+    const months      = deal.months
+    const startDate   = fmtDate(deal.run_start)
+    const endDate     = fmtDate(deal.run_end)
+
+    const lines = [
+      `Subject: MySyde Kiosk Ad Proposal — ${partnerName}`,
+      '',
+      `Hi ${contactName},`,
+      '',
+      `It was great connecting with you! I'm following up with a formal proposal for ${partnerName}'s advertising placement through MySyde Connect.`,
+      '',
+      'Here are the details for your package:',
+      '',
+      ...(placement ? [`Placement: ${placement}${screen ? ` · ${screen}` : ''}`] : []),
+      ...(rate      ? [`Monthly Rate: ${rate}/mo`] : []),
+      ...(months    ? [`Campaign Length: ${months} month${months === 1 ? '' : 's'}`] : []),
+      ...(total     ? [`Total Investment: ${total}`] : []),
+      ...(startDate ? [`Campaign Dates: ${startDate}${endDate ? ` – ${endDate}` : ''}`] : []),
+      '',
+      ...(paymentLink
+        ? [
+            'To secure your spot, you can pay securely online here:',
+            paymentLink,
+            '',
+            "Once payment is received, we'll get the creative process started and have your ad live on schedule.",
+          ]
+        : ["To move forward, I'll send over a payment link to secure your spot."]),
+      '',
+      'Happy to hop on a quick call if you have any questions — just reply here and we\'ll set something up.',
+      '',
+      'Looking forward to working together!',
+      '',
+      'Warmly,',
+      'Marilyn',
+      'MySyde Connect',
+    ]
+
+    return lines.join('\n')
   }
 
   async function deleteDeal() {
@@ -607,6 +680,31 @@ export default function DealRecord() {
             )}
           </div>
 
+          {/* Proposal Email */}
+          <div className="bg-white rounded-lg border border-gray-100 p-4">
+            <div className="flex items-center justify-between mb-1">
+              <h3
+                className="text-sm font-semibold text-[#010100]"
+                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              >
+                Proposal Email
+              </h3>
+            </div>
+            <p
+              className="text-xs text-gray-400 mb-3"
+              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+            >
+              Generate a ready-to-send proposal email with deal details{paymentLink ? ' and payment link' : ''}.
+            </p>
+            <button
+              onClick={() => setProposalOpen(true)}
+              className="w-full text-sm font-medium text-[#02348E] border border-[#02348E] hover:bg-[#02348E] hover:text-white px-4 py-2 rounded transition-colors"
+              style={{ fontFamily: 'Roboto, sans-serif' }}
+            >
+              Draft Proposal Email
+            </button>
+          </div>
+
           {/* Gmail thread */}
           <div className="bg-white rounded-lg border border-gray-100 p-4">
             <h3
@@ -734,6 +832,57 @@ export default function DealRecord() {
           <ActivityLog deal={deal} />
         </div>
       </div>
+
+      {/* Proposal email modal */}
+      {proposalOpen && (
+        <>
+          <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setProposalOpen(false)} />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl p-6 flex flex-col" style={{ maxHeight: '85vh' }}>
+              <div className="flex items-center justify-between mb-4">
+                <h2
+                  className="text-lg font-semibold text-[#010100]"
+                  style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                >
+                  Proposal Email
+                </h2>
+                <button
+                  onClick={() => setProposalOpen(false)}
+                  className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+                >
+                  ×
+                </button>
+              </div>
+              <pre
+                className="flex-1 overflow-y-auto text-sm text-[#010100] bg-[#F2F3F7] rounded-lg p-4 whitespace-pre-wrap leading-relaxed"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              >
+                {buildProposalEmail()}
+              </pre>
+              <div className="flex justify-end gap-2 mt-4">
+                <button
+                  onClick={() => setProposalOpen(false)}
+                  className="text-sm text-gray-500 hover:text-gray-700 px-4 py-2 rounded"
+                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                >
+                  Close
+                </button>
+                <button
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(buildProposalEmail()).catch(() => null)
+                    setProposalCopied(true)
+                    setTimeout(() => setProposalCopied(false), 2000)
+                  }}
+                  className="text-sm font-medium text-white bg-[#02348E] hover:bg-[#02348E]/90 px-4 py-2 rounded transition-colors"
+                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                >
+                  {proposalCopied ? 'Copied ✓' : 'Copy to Clipboard'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Close deal modal */}
       {pendingClose && (
