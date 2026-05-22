@@ -7,16 +7,67 @@ Live URL: https://mysyde-crm.vercel.app
 ---
 
 ## Table of Contents
-1. [Dashboard](#dashboard)
-2. [Sales Pipeline (Board)](#sales-pipeline)
-3. [Deal Record](#deal-record)
-4. [Partners](#partners)
-5. [Contacts](#contacts)
-6. [Kiosks](#kiosks)
-7. [Tasks](#tasks)
-8. [Social Content](#social-content)
-9. [Renewal Alerts](#renewal-alerts)
-10. [CSV Export](#csv-export)
+1. [Signing In](#signing-in)
+2. [Team Access](#team-access)
+3. [Google Calendar](#google-calendar)
+4. [Dashboard](#dashboard)
+5. [Sales Pipeline (Board)](#sales-pipeline)
+6. [Deal Record](#deal-record)
+7. [Partners](#partners)
+8. [Contacts](#contacts)
+9. [Kiosks](#kiosks)
+10. [Tasks](#tasks)
+11. [Social Content](#social-content)
+12. [Renewal Alerts](#renewal-alerts)
+13. [CSV Export](#csv-export)
+
+---
+
+## Signing In
+
+The CRM requires a login. Access is by email magic link — no password needed.
+
+**How to sign in:**
+1. Go to **mysyde-crm.vercel.app**
+2. Enter your work email address
+3. Click **Send sign-in link**
+4. Check your inbox — click the link in the email
+5. You'll land directly on the CRM, logged in
+
+The link expires after 24 hours. If it expires, just go back to the login page and request a new one.
+
+**Signing out:**
+Click **Sign out** in the top-right corner of the topbar next to your initials.
+
+---
+
+## Team Access
+
+Any team member can access the CRM by signing in with their work email. No admin setup required — just send them the URL.
+
+**To add a new team member:**
+1. Send them the link: **mysyde-crm.vercel.app**
+2. They enter their email and click the magic link
+3. That's it — they're in
+
+Access is all-or-nothing: every signed-in user can read and write all data. There are no separate permission levels at this time.
+
+---
+
+## Google Calendar
+
+Connect your Google Calendar to see today's events and upcoming meetings in the right-hand sidebar.
+
+**How to connect:**
+1. Click **+ Connect Google** in the right sidebar (visible from any page)
+2. A Google sign-in popup will appear — sign in and grant calendar access
+3. Your events will appear immediately in the **Today's Agenda** panel
+
+**What you'll see:**
+- Today's meetings and events with times
+- Tasks due today pulled from the CRM Tasks module
+
+The connection is stored in your browser session. If it disconnects, click **+ Connect Google** again to re-authorize.
 
 ---
 
@@ -55,7 +106,7 @@ The kanban board. Every deal in the system lives here.
 - **Create a deal** — click **+ New Deal** at the top of any column
 - **Move a deal** — drag the card to a new column, or open the deal and change the stage badge
 - **Open a deal** — click any card to open the full Deal Record
-- **Filter/search** — use the search bar (⌘K) to find any deal by name or partner
+- **Filter/search** — use the search bar (Ctrl+K) to find any deal by name or partner
 - **Export to CSV** — click the **Export** button on the Board page to download all deals
 
 ---
@@ -212,11 +263,12 @@ Click the **Export** button on any of these pages. The file downloads instantly 
 
 ## Tips
 
-- **Search everything** — press ⌘K (Mac) or Ctrl+K (Windows) to search deals, partners, contacts, and kiosks from anywhere
+- **Search everything** — press **Ctrl+K** to search deals, partners, contacts, and kiosks from anywhere in the app
 - **Sample data** — the Board and other pages show sample records when no real data exists. Once you add real records, the samples disappear
+- **Direct URLs work** — you can bookmark any page (e.g. `/contacts`, `/board`) and navigate directly to it
 - **Every time you push to GitHub**, Vercel auto-deploys — no manual steps needed
 - **Back up your data** — run a CSV export at the end of each month
 
 ---
 
-*Last updated: May 2026*
+*Last updated: May 22, 2026*
