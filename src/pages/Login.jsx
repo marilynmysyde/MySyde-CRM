@@ -1,0 +1,102 @@
+import { useState } from 'react'
+import { supabase } from '../lib/supabase'
+
+export default function Login() {
+  const [email, setEmail]     = useState('')
+  const [sent, setSent]       = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError]     = useState('')
+
+  async function submit(e) {
+    e.preventDefault()
+    if (!email.trim()) return
+    setLoading(true)
+    setError('')
+    const { error } = await supabase.auth.signInWithOtp({
+      email: email.trim(),
+      options: { emailRedirectTo: window.location.origin },
+    })
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+    } else {
+      setSent(true)
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-[#F2F3F7] flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-8">
+
+        {/* Logo */}
+        <div className="mb-8 text-center">
+          <div
+            className="text-2xl font-bold text-[#02348E] tracking-tight"
+            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          >
+            MySyde Connect
+          </div>
+          <p className="text-sm text-gray-400 mt-1" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            Internal CRM
+          </p>
+        </div>
+
+        {sent ? (
+          <div className="text-center">
+            <div className="text-4xl mb-4">📬</div>
+            <h2 className="text-base font-semibold text-[#010100] mb-2" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+              Check your email
+            </h2>
+            <p className="text-sm text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>
+              We sent a sign-in link to <strong>{email}</strong>. Click it to access the CRM.
+            </p>
+            <button
+              onClick={() => { setSent(false); setEmail('') }}
+              className="mt-6 text-xs text-[#02348E] hover:underline"
+              style={{ fontFamily: 'Roboto, sans-serif' }}
+            >
+              Use a different email
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={submit} className="space-y-4">
+            <div>
+              <label
+                className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              >
+                Work Email
+              </label>
+              <input
+                type="email"
+                required
+                autoFocus
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="you@mysyde.com"
+                className="w-full text-sm border border-gray-200 rounded px-3 py-2 focus:outline-none focus:border-[#02348E] text-[#010100]"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              />
+            </div>
+
+            {error && (
+              <p className="text-xs text-red-500 bg-red-50 border border-red-100 rounded px-3 py-2" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                {error}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading || !email.trim()}
+              className="w-full bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-sm font-medium py-2.5 rounded transition-colors"
+              style={{ fontFamily: 'Roboto, sans-serif' }}
+            >
+              {loading ? 'Sending…' : 'Send sign-in link'}
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  )
+}

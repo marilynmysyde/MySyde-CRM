@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import GlobalSearch from './GlobalSearch'
+import { useAuth } from '../../contexts/AuthContext'
 
 const NAV_TABS = [
   { label: 'Board',     to: '/board' },
@@ -13,6 +14,9 @@ const NAV_TABS = [
 ]
 
 export default function Topbar() {
+  const { user, signOut } = useAuth()
+  const initials = user?.email?.slice(0, 2).toUpperCase() ?? '??'
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#02348E] h-14 flex items-center px-4 gap-6 shadow-md">
       {/* Wordmark */}
@@ -47,6 +51,25 @@ export default function Topbar() {
       {/* Global search */}
       <div className="shrink-0">
         <GlobalSearch />
+      </div>
+
+      {/* User avatar + logout */}
+      <div className="shrink-0 flex items-center gap-2 ml-1">
+        <div
+          className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white text-[11px] font-bold"
+          style={{ fontFamily: 'Roboto, sans-serif' }}
+          title={user?.email}
+        >
+          {initials}
+        </div>
+        <button
+          onClick={signOut}
+          className="text-white/60 hover:text-white text-xs transition-colors"
+          style={{ fontFamily: 'Roboto, sans-serif' }}
+          title="Sign out"
+        >
+          Sign out
+        </button>
       </div>
     </header>
   )
