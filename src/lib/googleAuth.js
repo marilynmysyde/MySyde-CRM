@@ -1,6 +1,6 @@
 // src/lib/googleAuth.js
 // Google Identity Services (GIS) OAuth helper.
-// Loads the GIS script lazily and manages the access token in sessionStorage.
+// Loads the GIS script lazily and manages the access token in localStorage.
 //
 // Usage:
 //   import { requestGoogleToken, getGoogleToken, isGoogleConnected } from '../lib/googleAuth'
@@ -36,8 +36,8 @@ function loadGisScript() {
 // ─── Public API ─────────────────────────────────────────────────────────────
 
 export function getGoogleToken() {
-  const token  = sessionStorage.getItem(TOKEN_KEY)
-  const expiry = Number(sessionStorage.getItem(EXPIRY_KEY) ?? 0)
+  const token  = localStorage.getItem(TOKEN_KEY)
+  const expiry = Number(localStorage.getItem(EXPIRY_KEY) ?? 0)
   if (!token || Date.now() >= expiry) return null
   return token
 }
@@ -47,8 +47,8 @@ export function isGoogleConnected() {
 }
 
 export function clearGoogleToken() {
-  sessionStorage.removeItem(TOKEN_KEY)
-  sessionStorage.removeItem(EXPIRY_KEY)
+  localStorage.removeItem(TOKEN_KEY)
+  localStorage.removeItem(EXPIRY_KEY)
 }
 
 export async function requestGoogleToken() {
@@ -66,8 +66,8 @@ export async function requestGoogleToken() {
         callback:  (response) => {
           if (response.error) { reject(response); return }
           const expiresIn = Number(response.expires_in ?? 3600)
-          sessionStorage.setItem(TOKEN_KEY,  response.access_token)
-          sessionStorage.setItem(EXPIRY_KEY, String(Date.now() + expiresIn * 1000 - 60_000))
+          localStorage.setItem(TOKEN_KEY,  response.access_token)
+          localStorage.setItem(EXPIRY_KEY, String(Date.now() + expiresIn * 1000 - 60_000))
           // Notify any components that are watching for a new token
           window.dispatchEvent(new CustomEvent('google-token-ready'))
           resolve(response.access_token)

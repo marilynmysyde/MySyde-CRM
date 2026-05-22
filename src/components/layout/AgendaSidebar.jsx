@@ -39,6 +39,7 @@ export default function AgendaSidebar() {
   const [gcalConn,    setGcalConn]    = useState(isGoogleConnected())
   const [gcalLoading, setGcalLoading] = useState(false)
   const [gcalError,   setGcalError]   = useState('')
+  const [mobileOpen,  setMobileOpen]  = useState(false)
 
   const todayLabel = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
   const todayStr   = new Date().toISOString().slice(0, 10)
@@ -126,20 +127,28 @@ export default function AgendaSidebar() {
   }
 
   return (
-    <aside className="w-70 shrink-0 bg-white border-l border-gray-200 h-full overflow-y-auto">
-      <div className="p-4 border-b border-gray-100">
-        <h2
-          className="text-sm font-semibold text-[#02348E] uppercase tracking-wide"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-        >
-          Today's Agenda
-        </h2>
-        <p className="text-xs text-gray-400 mt-0.5" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
-          {todayLabel}
-        </p>
+    <aside className="w-full lg:w-70 shrink-0 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 lg:h-full lg:overflow-y-auto">
+      {/* Header — tappable on mobile to expand/collapse */}
+      <div
+        className="p-4 border-b border-gray-100 flex items-center justify-between cursor-pointer lg:cursor-default"
+        onClick={() => setMobileOpen(o => !o)}
+      >
+        <div>
+          <h2
+            className="text-sm font-semibold text-[#02348E] uppercase tracking-wide"
+            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          >
+            Today's Agenda
+          </h2>
+          <p className="text-xs text-gray-400 mt-0.5" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            {todayLabel}
+          </p>
+        </div>
+        {/* Chevron — mobile only */}
+        <span className="lg:hidden text-gray-400 text-sm">{mobileOpen ? '▲' : '▼'}</span>
       </div>
 
-      <div className="p-4 space-y-4">
+      <div className={`p-4 space-y-4 ${mobileOpen ? 'block' : 'hidden'} lg:block`}>
 
         {/* Google Calendar Events */}
         <section>
@@ -282,7 +291,7 @@ export default function AgendaSidebar() {
       </div>
 
       {gcalConn && (
-        <div className="p-4 border-t border-gray-100">
+        <div className={`p-4 border-t border-gray-100 ${mobileOpen ? 'block' : 'hidden'} lg:block`}>
           <p className="text-[10px] text-green-500 text-center" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
             ✓ Google Calendar connected
           </p>
