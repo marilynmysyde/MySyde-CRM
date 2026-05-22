@@ -88,11 +88,12 @@ create table deals (
   renewal_alert     date generated always as (run_end - interval '14 days') stored,
 
   -- Admin
-  invoice_status    text default 'none' check (invoice_status in ('none','deposit_pending','paid','overdue')),
-  gmail_thread_id   text,
-  notes             text,
-  created_at        timestamp with time zone default now(),
-  closed_at         timestamp with time zone
+  invoice_status      text default 'none' check (invoice_status in ('none','deposit_pending','paid','overdue')),
+  gmail_thread_id     text,
+  stripe_payment_link text,
+  notes               text,
+  created_at          timestamp with time zone default now(),
+  closed_at           timestamp with time zone
 );
 
 create table tasks (

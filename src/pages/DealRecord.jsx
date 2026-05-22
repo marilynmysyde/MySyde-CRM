@@ -79,6 +79,12 @@ export default function DealRecord() {
   // Close deal workflow
   const [pendingClose, setPendingClose] = useState(null) // 'closed_won' | 'closed_lost'
   const [closeDate, setCloseDate]       = useState('')
+
+  // Payment link
+  const [paymentLink,      setPaymentLink]      = useState('')
+  const [generatingLink,   setGeneratingLink]   = useState(false)
+  const [linkCopied,       setLinkCopied]       = useState(false)
+  const [linkError,        setLinkError]        = useState('')
   const [gmailId,       setGmailId]       = useState('')
   const [gmailSaved,    setGmailSaved]    = useState(false)
   const [gmailThread,   setGmailThread]   = useState(null)
@@ -107,6 +113,7 @@ export default function DealRecord() {
       setRunStart(d.run_start ?? '')
       setRunEnd(d.run_end ?? '')
       setInvoiceStatus(d.invoice_status ?? 'none')
+      setPaymentLink(d.stripe_payment_link ?? '')
       setLoading(false)
       return
     }
@@ -125,6 +132,7 @@ export default function DealRecord() {
         setRunStart(data.run_start ?? '')
         setRunEnd(data.run_end ?? '')
         setInvoiceStatus(data.invoice_status ?? 'none')
+        setPaymentLink(data.stripe_payment_link ?? '')
       }
       setLoading(false)
     }
@@ -208,6 +216,30 @@ export default function DealRecord() {
       const parsed = parseGmailThreadId(gmailId || deal.gmail_thread_id)
       if (parsed) fetchThread(parsed)
     } catch (e) { console.warn('Google auth failed', e) }
+  }
+
+  async function generatePaymentLink() {
+    setGeneratingLink(true)
+    setLinkError('')
+    const { data, error } = await supabase.functions.invoke('stripe-payment-link', {
+      body: { amount: deal.total_value, title: deal.title },
+    }).catch(e => ({ data: null, error: e }))
+    setGeneratingLink(false)
+    if (error || data?.error) {
+      setLinkError(data?.error ?? 'Could not generate link — check that the Edge Function is deployed and STRIPE_SECRET_KEY is set.')
+      return
+    }
+    setPaymentLink(data.url)
+    await supabase.from('deals').update({ stripe_payment_link: data.url }).eq('id', deal.id).catch(() => null)
+    await supabase.from('activity_log').insert({
+      type: 'note', body: 'Stripe payment link generated', deal_id: deal.id, partner_id: deal.partner_id ?? null,
+    }).catch(() => null)
+  }
+
+  async function copyLink() {
+    await navigator.clipboard.writeText(paymentLink).catch(() => null)
+    setLinkCopied(true)
+    setTimeout(() => setLinkCopied(false), 2000)
   }
 
   async function deleteDeal() {
@@ -502,6 +534,78 @@ export default function DealRecord() {
           <PlacementSelector deal={deal} onUpdate={handleUpdate} />
           <CreativeTracker deal={deal} onUpdate={handleUpdate} />
           <CanvaLink       deal={deal} onUpdate={handleUpdate} />
+
+          {/* Payment link */}
+          <div className="bg-white rounded-lg border border-gray-100 p-4">
+            <div className="flex items-center justify-between mb-1">
+              <h3
+                className="text-sm font-semibold text-[#010100]"
+                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              >
+                Payment Link
+              </h3>
+              {deal.total_value > 0 && (
+                <span
+                  className="text-xs text-gray-400"
+                  style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                >
+                  {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(deal.total_value)}
+                </span>
+              )}
+            </div>
+            <p
+              className="text-xs text-gray-400 mb-3"
+              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+            >
+              Generate a Stripe payment link to include in your proposal email.
+            </p>
+
+            {paymentLink ? (
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-100 rounded-lg">
+                  <a
+                    href={paymentLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 text-xs text-[#02348E] hover:underline truncate"
+                    style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                  >
+                    {paymentLink}
+                  </a>
+                  <button
+                    onClick={copyLink}
+                    className="text-xs font-medium text-white bg-[#02348E] hover:bg-[#02348E]/90 px-3 py-1 rounded shrink-0 transition-colors"
+                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                  >
+                    {linkCopied ? 'Copied ✓' : 'Copy'}
+                  </button>
+                </div>
+                <button
+                  onClick={generatePaymentLink}
+                  disabled={generatingLink || !deal.total_value}
+                  className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                >
+                  {generatingLink ? 'Generating…' : 'Regenerate link'}
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={generatePaymentLink}
+                disabled={generatingLink || !deal.total_value}
+                className="w-full text-sm font-medium text-white bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 px-4 py-2 rounded transition-colors"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              >
+                {generatingLink ? 'Generating…' : deal.total_value ? 'Generate Payment Link' : 'Set a deal total first'}
+              </button>
+            )}
+
+            {linkError && (
+              <p className="text-xs text-red-500 mt-2" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                {linkError}
+              </p>
+            )}
+          </div>
 
           {/* Gmail thread */}
           <div className="bg-white rounded-lg border border-gray-100 p-4">
