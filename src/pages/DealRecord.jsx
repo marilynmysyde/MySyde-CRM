@@ -73,6 +73,8 @@ export default function DealRecord() {
   const [deal, setDeal]         = useState(null)
   const [loading, setLoading]   = useState(true)
   const [stageOpen, setStageOpen] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [deleting, setDeleting]           = useState(false)
   const [gmailId,       setGmailId]       = useState('')
   const [gmailSaved,    setGmailSaved]    = useState(false)
   const [gmailThread,   setGmailThread]   = useState(null)
@@ -185,6 +187,13 @@ export default function DealRecord() {
     } catch (e) { console.warn('Google auth failed', e) }
   }
 
+  async function deleteDeal() {
+    if (deal.id?.startsWith('sample-')) { navigate('/board'); return }
+    setDeleting(true)
+    await supabase.from('deals').delete().eq('id', deal.id).catch(() => null)
+    navigate('/board')
+  }
+
   async function saveTitle() {
     const trimmed = titleDraft.trim()
     if (!trimmed || trimmed === deal.title) { setEditingTitle(false); return }
@@ -240,14 +249,45 @@ export default function DealRecord() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-4">
 
-      {/* Back nav */}
-      <button
-        onClick={() => navigate('/board')}
-        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#02348E] mb-4 transition-colors"
-        style={{ fontFamily: 'Roboto, sans-serif' }}
-      >
-        ← Sales Pipeline
-      </button>
+      {/* Back nav + delete */}
+      <div className="flex items-center justify-between mb-4">
+        <button
+          onClick={() => navigate('/board')}
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#02348E] transition-colors"
+          style={{ fontFamily: 'Roboto, sans-serif' }}
+        >
+          ← Sales Pipeline
+        </button>
+
+        {confirmDelete ? (
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>Delete this deal?</span>
+            <button
+              onClick={() => setConfirmDelete(false)}
+              className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1 rounded"
+              style={{ fontFamily: 'Roboto, sans-serif' }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={deleteDeal}
+              disabled={deleting}
+              className="text-xs text-white bg-red-500 hover:bg-red-600 disabled:opacity-50 px-3 py-1 rounded transition-colors"
+              style={{ fontFamily: 'Roboto, sans-serif' }}
+            >
+              {deleting ? 'Deleting…' : 'Yes, delete'}
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setConfirmDelete(true)}
+            className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+            style={{ fontFamily: 'Roboto, sans-serif' }}
+          >
+            Delete deal
+          </button>
+        )}
+      </div>
 
       {/* Renewal alert */}
       <RenewalAlert deal={deal} />

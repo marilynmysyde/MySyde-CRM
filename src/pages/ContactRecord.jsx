@@ -191,6 +191,9 @@ export default function ContactRecord() {
   const [infoForm,    setInfoForm]    = useState({ name: '', role: '', email: '', phone: '', partner_id: '' })
   const [savingInfo,  setSavingInfo]  = useState(false)
 
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [deleting, setDeleting]           = useState(false)
+
   useEffect(() => {
     if (SAMPLE_CONTACTS[id]) {
       const c = SAMPLE_CONTACTS[id]
@@ -217,6 +220,13 @@ export default function ContactRecord() {
     }
     load()
   }, [id])
+
+  async function deleteContact() {
+    if (SAMPLE_CONTACTS[id]) { navigate('/contacts'); return }
+    setDeleting(true)
+    await supabase.from('contacts').delete().eq('id', id).catch(() => null)
+    navigate('/contacts')
+  }
 
   async function saveNotes() {
     setSavingNotes(true)
@@ -259,14 +269,45 @@ export default function ContactRecord() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-4">
 
-      {/* Back */}
-      <button
-        onClick={() => navigate('/contacts')}
-        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#02348E] mb-4 transition-colors"
-        style={{ fontFamily: 'Roboto, sans-serif' }}
-      >
-        ← Contacts
-      </button>
+      {/* Back nav + delete */}
+      <div className="flex items-center justify-between mb-4">
+        <button
+          onClick={() => navigate('/contacts')}
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#02348E] transition-colors"
+          style={{ fontFamily: 'Roboto, sans-serif' }}
+        >
+          ← Contacts
+        </button>
+
+        {confirmDelete ? (
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>Delete this contact?</span>
+            <button
+              onClick={() => setConfirmDelete(false)}
+              className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1 rounded"
+              style={{ fontFamily: 'Roboto, sans-serif' }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={deleteContact}
+              disabled={deleting}
+              className="text-xs text-white bg-red-500 hover:bg-red-600 disabled:opacity-50 px-3 py-1 rounded transition-colors"
+              style={{ fontFamily: 'Roboto, sans-serif' }}
+            >
+              {deleting ? 'Deleting…' : 'Yes, delete'}
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setConfirmDelete(true)}
+            className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+            style={{ fontFamily: 'Roboto, sans-serif' }}
+          >
+            Delete contact
+          </button>
+        )}
+      </div>
 
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
