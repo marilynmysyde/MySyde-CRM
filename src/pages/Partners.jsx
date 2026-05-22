@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import PartnerTypeTag from '../components/shared/PartnerTypeTag'
+import NewPartnerModal from '../components/partners/NewPartnerModal'
+import { exportCsv, todaySlug } from '../lib/csvExport'
 
 const SAMPLE_PARTNERS = [
   { id: 'p1', name: 'Morgan Hill Chamber of Commerce', type: 'chamber',        website: 'mhchamber.com',   active: true },
@@ -23,9 +26,24 @@ const TYPE_FILTERS = [
 ]
 
 export default function Partners() {
-  const [partners, setPartners]   = useState(SAMPLE_PARTNERS)
-  const [filter, setFilter]       = useState('all')
-  const [search, setSearch]       = useState('')
+  const navigate                      = useNavigate()
+  const [partners, setPartners]       = useState(SAMPLE_PARTNERS)
+  const [filter, setFilter]           = useState('all')
+  const [search, setSearch]           = useState('')
+  const [showNewPartner, setShowNewPartner] = useState(false)
+
+  function handlePartnerCreated(newPartner) {
+    setPartners(prev => [...prev, newPartner].sort((a, b) => a.name.localeCompare(b.name)))
+  }
+
+  function handleExport() {
+    exportCsv(
+      partners,
+      ['name', 'type', 'website', 'active'],
+      { name: 'Name', type: 'Type', website: 'Website', active: 'Active' },
+      `partners-${todaySlug()}.csv`
+    )
+  }
 
   useEffect(() => {
     async function fetchPartners() {
@@ -56,12 +74,22 @@ export default function Partners() {
         >
           Partners
         </h1>
-        <button
-          className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
-        >
-          + Add Partner
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExport}
+            className="text-sm text-gray-500 hover:text-[#02348E] border border-gray-200 hover:border-[#02348E] px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Roboto, sans-serif' }}
+          >
+            ↓ Export CSV
+          </button>
+          <button
+            onClick={() => setShowNewPartner(true)}
+            className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Roboto, sans-serif' }}
+          >
+            + Add Partner
+          </button>
+        </div>
       </div>
 
       {/* Search + filter */}
@@ -103,6 +131,7 @@ export default function Partners() {
         {visible.map(partner => (
           <div
             key={partner.id}
+            onClick={() => navigate(`/partner/${partner.id}`)}
             className="bg-white rounded-lg border border-gray-100 px-4 py-3 flex items-center justify-between hover:shadow-sm transition-shadow cursor-pointer"
           >
             <div className="flex items-center gap-3">
@@ -130,6 +159,12 @@ export default function Partners() {
           </div>
         ))}
       </div>
+      {showNewPartner && (
+        <NewPartnerModal
+          onClose={() => setShowNewPartner(false)}
+          onCreated={handlePartnerCreated}
+        />
+      )}
     </div>
   )
 }

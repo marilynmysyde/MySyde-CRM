@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import PartnerTypeTag from '../components/shared/PartnerTypeTag'
+import NewContactModal from '../components/contacts/NewContactModal'
+import { exportCsv, todaySlug } from '../lib/csvExport'
 
 const SAMPLE_CONTACTS = [
   { id: 'c1', name: 'Sandra Lee',    role: 'Executive Director', email: 'sandra@mhchamber.com', partners: { name: 'Morgan Hill Chamber', type: 'chamber' } },
@@ -9,8 +12,23 @@ const SAMPLE_CONTACTS = [
 ]
 
 export default function Contacts() {
-  const [contacts, setContacts] = useState(SAMPLE_CONTACTS)
-  const [search, setSearch]     = useState('')
+  const navigate                        = useNavigate()
+  const [contacts, setContacts]         = useState(SAMPLE_CONTACTS)
+  const [search, setSearch]             = useState('')
+  const [showNewContact, setShowNewContact] = useState(false)
+
+  function handleContactCreated(newContact) {
+    setContacts(prev => [...prev, newContact].sort((a, b) => a.name.localeCompare(b.name)))
+  }
+
+  function handleExport() {
+    exportCsv(
+      contacts.map(c => ({ ...c, partner: c.partners?.name ?? '' })),
+      ['name', 'role', 'email', 'phone', 'partner'],
+      { name: 'Name', role: 'Role', email: 'Email', phone: 'Phone', partner: 'Partner' },
+      `contacts-${todaySlug()}.csv`
+    )
+  }
 
   useEffect(() => {
     async function fetchContacts() {
@@ -39,12 +57,22 @@ export default function Contacts() {
         >
           Contacts
         </h1>
-        <button
-          className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
-        >
-          + Add Contact
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExport}
+            className="text-sm text-gray-500 hover:text-[#02348E] border border-gray-200 hover:border-[#02348E] px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Roboto, sans-serif' }}
+          >
+            ↓ Export CSV
+          </button>
+          <button
+            onClick={() => setShowNewContact(true)}
+            className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Roboto, sans-serif' }}
+          >
+            + Add Contact
+          </button>
+        </div>
       </div>
 
       <input
@@ -65,6 +93,7 @@ export default function Contacts() {
         {visible.map((contact, i) => (
           <div
             key={contact.id}
+            onClick={() => navigate(`/contacts/${contact.id}`)}
             className={`flex items-center justify-between px-4 py-3 hover:bg-gray-50 cursor-pointer ${i > 0 ? 'border-t border-gray-50' : ''}`}
           >
             <div className="flex items-center gap-3">
@@ -95,6 +124,12 @@ export default function Contacts() {
           </div>
         ))}
       </div>
+      {showNewContact && (
+        <NewContactModal
+          onClose={() => setShowNewContact(false)}
+          onCreated={handleContactCreated}
+        />
+      )}
     </div>
   )
 }

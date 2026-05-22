@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import GlobalSearch from './GlobalSearch'
 
 const NAV_TABS = [
   { label: 'Board',     to: '/board' },
@@ -19,11 +20,11 @@ export default function Topbar() {
         className="text-white font-bold text-lg tracking-tight shrink-0 mr-2"
         style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
       >
-        MySyde CRM
+        MySyde Connect
       </span>
 
       {/* Nav tabs */}
-      <nav className="flex items-center gap-1 overflow-x-auto scrollbar-none">
+      <nav className="flex items-center gap-1 overflow-x-auto scrollbar-none flex-1">
         {NAV_TABS.map(({ label, to }) => (
           <NavLink
             key={to}
@@ -42,6 +43,11 @@ export default function Topbar() {
           </NavLink>
         ))}
       </nav>
+
+      {/* Global search */}
+      <div className="shrink-0">
+        <GlobalSearch />
+      </div>
     </header>
   )
 }
