@@ -68,7 +68,7 @@ Connect your Google Calendar to see today's events and upcoming meetings in the 
 - Today's meetings and events with times
 - Tasks due today pulled from the CRM Tasks module
 
-The connection is stored in your browser session. If it disconnects, click **+ Connect Google** again to re-authorize.
+The connection is saved in your browser and will persist between visits on the same device. If it ever disconnects, click **+ Connect Google** again to re-authorize.
 
 ---
 
@@ -267,7 +267,8 @@ Click the **Export** button on any of these pages. The file downloads instantly 
 - **Search everything** — press **Ctrl+K** to search deals, partners, contacts, and kiosks from anywhere in the app
 - **Sample data** — the Board and other pages show sample records when no real data exists. Once you add real records, the samples disappear
 - **Direct URLs work** — you can bookmark any page (e.g. `/contacts`, `/board`) and navigate directly to it
-- **Every time you push to GitHub**, Vercel auto-deploys — no manual steps needed
+- **Session stays active** — you won't be logged out between visits; the magic link only needs to be clicked once per device
+- **Works on mobile** — on your phone, scroll to the bottom of any page and tap **Today's Agenda** to expand your calendar and tasks
 - **Back up your data** — run a CSV export at the end of each month
 
 ---
