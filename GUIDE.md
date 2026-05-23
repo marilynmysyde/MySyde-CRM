@@ -2,7 +2,8 @@
 
 **Your internal operating system for managing kiosk ad sales, partners, content, and renewals.**
 
-Live URL: https://mysyde-crm.vercel.app
+Live URL: https://crm.mysyde.com
+_(also accessible at https://mysyde-crm.vercel.app)_
 
 ---
 
@@ -28,7 +29,7 @@ Live URL: https://mysyde-crm.vercel.app
 The CRM requires a login. Access is by email magic link — no password needed.
 
 **How to sign in:**
-1. Go to **mysyde-crm.vercel.app**
+1. Go to **crm.mysyde.com**
 2. Enter your work email address
 3. Click **Send sign-in link**
 4. Check your inbox — click the link in the email
@@ -46,7 +47,7 @@ Click **Sign out** in the top-right corner of the topbar next to your initials.
 Any team member can access the CRM by signing in with their work email. No admin setup required — just send them the URL.
 
 **To add a new team member:**
-1. Send them the link: **mysyde-crm.vercel.app**
+1. Send them the link: **crm.mysyde.com**
 2. They enter their email and click the magic link
 3. That's it — they're in
 
