@@ -82,7 +82,7 @@ const FILTERS = ['all', 'active', 'pending', 'inactive']
 
 export default function Kiosks() {
   const navigate = useNavigate()
-  const [kiosks,  setKiosks]  = useState(SAMPLE_KIOSKS)
+  const [kiosks,  setKiosks]  = useState([])
   const [filter,  setFilter]  = useState('all')
   const [search,  setSearch]  = useState('')
   const [loading, setLoading] = useState(true)
@@ -108,10 +108,10 @@ export default function Kiosks() {
           .from('kiosks')
           .select('*, partners(name, type), deals(id)')
           .order('name')
-        if (data && data.length > 0) {
+        if (data) {
           setKiosks(data.map(k => ({ ...k, deal_count: k.deals?.length ?? 0 })))
         }
-      } catch { /* sample data stays */ }
+      } catch { /* ignore */ }
       setLoading(false)
     }
     load()

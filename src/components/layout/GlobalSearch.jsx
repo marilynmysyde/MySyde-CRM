@@ -4,18 +4,6 @@ import { supabase } from '../../lib/supabase'
 
 // ─── Sample data fallback ─────────────────────────────────────────────────────
 
-const SAMPLE_RESULTS = [
-  { type: 'deal',    id: 'sample-1', label: 'Top Banner — Screen 1',              sub: 'Prospect · MH Chamber',         to: '/deal/sample-1'          },
-  { type: 'deal',    id: 'sample-2', label: 'Start Screen Sponsor — Both Screens', sub: 'Proposal · Downtown MH',        to: '/deal/sample-2'          },
-  { type: 'partner', id: 'p1',       label: 'Morgan Hill Chamber of Commerce',     sub: 'Chamber',                       to: '/partner/p1'             },
-  { type: 'partner', id: 'p2',       label: 'City of Morgan Hill',                 sub: 'City / Gov',                    to: '/partner/p2'             },
-  { type: 'contact', id: 'c1',       label: 'Sandra Lee',                          sub: 'Executive Director · MH Chamber',to: '/contacts/c1'           },
-  { type: 'contact', id: 'c2',       label: 'James Ortega',                        sub: 'City Manager · City of MH',     to: '/contacts/c2'            },
-  { type: 'kiosk',   id: 'kiosk-1',  label: 'Kiosk 01 — Town Clock Plaza',         sub: 'Active',                        to: '/kiosks/kiosk-1'         },
-  { type: 'post',    id: 'sp-1',     label: 'Chamber Expo Highlight',              sub: 'Idea · Instagram, Facebook',    to: '/social'                 },
-  { type: 'post',    id: 'sp-2',     label: 'Kiosk Launch Announcement',           sub: 'Draft · Instagram, Facebook, LinkedIn', to: '/social'         },
-]
-
 const TYPE_CONFIG = {
   deal:    { label: 'Deal',    icon: '📋', color: 'text-purple-600' },
   partner: { label: 'Partner', icon: '🤝', color: 'text-[#02348E]' },
@@ -58,11 +46,7 @@ async function searchAll(q) {
 
     return results
   } catch {
-    // Fall back to filtering sample data
-    const lq = q.toLowerCase()
-    return SAMPLE_RESULTS.filter(r =>
-      r.label.toLowerCase().includes(lq) || r.sub.toLowerCase().includes(lq)
-    )
+    return []
   }
 }
 

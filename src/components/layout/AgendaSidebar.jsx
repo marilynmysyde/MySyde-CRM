@@ -5,14 +5,6 @@ import { fetchTodayEvents, fmtEventTime } from '../../lib/googleCalendar'
 
 // ─── Sample fallback tasks ────────────────────────────────────────────────────
 
-const SAMPLE_DUE = [
-  { id: 'sd-1', title: 'Send proposal — MH Chamber', due_date: new Date().toISOString().slice(0, 10), status: 'todo' },
-  { id: 'sd-2', title: 'Review creative — Downtown',  due_date: new Date().toISOString().slice(0, 10), status: 'in_progress' },
-]
-const SAMPLE_OVERDUE = [
-  { id: 'so-1', title: 'Design ad creative', due_date: '2026-05-17', status: 'todo' },
-]
-
 // Google event dot colors by colorId (Google Calendar color IDs 1–11)
 const GCAL_COLORS = {
   '1':  'bg-blue-400',    // Lavender → blue
@@ -32,8 +24,8 @@ const DEFAULT_EVENT_COLOR = 'bg-[#02348E]'
 // ─── AgendaSidebar ────────────────────────────────────────────────────────────
 
 export default function AgendaSidebar() {
-  const [dueToday,    setDueToday]    = useState(SAMPLE_DUE)
-  const [overdue,     setOverdue]     = useState(SAMPLE_OVERDUE)
+  const [dueToday,    setDueToday]    = useState([])
+  const [overdue,     setOverdue]     = useState([])
   const [renewals,    setRenewals]    = useState([])
   const [events,      setEvents]      = useState([])
   const [gcalConn,    setGcalConn]    = useState(isGoogleConnected())
@@ -57,7 +49,7 @@ export default function AgendaSidebar() {
         if (!data) return
         setDueToday(data.filter(t => t.due_date === todayStr))
         setOverdue(data.filter(t => t.due_date < todayStr))
-      } catch { /* sample data stays */ }
+      } catch { /* ignore */ }
     }
 
     async function fetchRenewals() {

@@ -5,16 +5,6 @@ import PartnerTypeTag from '../components/shared/PartnerTypeTag'
 import NewPartnerModal from '../components/partners/NewPartnerModal'
 import { exportCsv, todaySlug } from '../lib/csvExport'
 
-const SAMPLE_PARTNERS = [
-  { id: 'p1', name: 'Morgan Hill Chamber of Commerce', type: 'chamber',        website: 'mhchamber.com',   active: true },
-  { id: 'p2', name: 'City of Morgan Hill',             type: 'city_gov',       website: 'morgan-hill.ca.gov', active: true },
-  { id: 'p3', name: 'Downtown Morgan Hill',            type: 'downtown_assoc', website: null,              active: true },
-  { id: 'p4', name: 'Morgan Hill Community Foundation', type: 'community_org', website: null,              active: true },
-  { id: 'p5', name: 'Sunrise Bakery',                  type: 'local_business', website: null,              active: true },
-  { id: 'p6', name: 'MH Nonprofit Alliance',           type: 'nonprofit',      website: null,              active: true },
-  { id: 'p7', name: 'Gilroy Chamber of Commerce',      type: 'chamber',        website: null,              active: true },
-]
-
 const TYPE_FILTERS = [
   { value: 'all',            label: 'All' },
   { value: 'chamber',        label: 'Chambers' },
@@ -27,7 +17,7 @@ const TYPE_FILTERS = [
 
 export default function Partners() {
   const navigate                      = useNavigate()
-  const [partners, setPartners]       = useState(SAMPLE_PARTNERS)
+  const [partners, setPartners]       = useState([])
   const [filter, setFilter]           = useState('all')
   const [search, setSearch]           = useState('')
   const [showNewPartner, setShowNewPartner] = useState(false)
@@ -53,7 +43,7 @@ export default function Partners() {
         .eq('active', true)
         .order('name')
 
-      if (!error && data && data.length > 0) setPartners(data)
+      if (!error && data) setPartners(data)
     }
     fetchPartners()
   }, [])

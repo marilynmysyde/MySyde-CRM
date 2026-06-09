@@ -107,9 +107,9 @@ function StatCard({ label, value, sub, accent = false, to }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Dashboard() {
-  const [stats,    setStats]    = useState(SAMPLE_STATS)
-  const [activity, setActivity] = useState(SAMPLE_ACTIVITY)
-  const [renewals, setRenewals] = useState(SAMPLE_RENEWALS)
+  const [stats,    setStats]    = useState({ pipelineValue: 0, liveMRR: 0, activeKiosks: 0, dealsByStage: {}, tasksDueThisWeek: 0 })
+  const [activity, setActivity] = useState([])
+  const [renewals, setRenewals] = useState([])
   const [loading,  setLoading]  = useState(true)
 
   useEffect(() => {
@@ -168,8 +168,8 @@ export default function Dashboard() {
           })
         }
         if (renewalData) setRenewals(renewalData.map(d => ({ id: d.id, title: d.title, partner: d.partners?.name ?? '', run_end: d.run_end })))
-        if (actData && actData.length > 0) setActivity(actData)
-      } catch { /* sample data stays */ }
+        if (actData) setActivity(actData)
+      } catch { /* ignore */ }
       setLoading(false)
     }
     load()

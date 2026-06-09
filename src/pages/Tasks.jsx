@@ -3,62 +3,11 @@ import { supabase } from '../lib/supabase'
 import TaskBoard from '../components/tasks/TaskBoard'
 import NewTaskModal from '../components/tasks/NewTaskModal'
 
-// ─── Sample data ─────────────────────────────────────────────────────────────
-
-const SAMPLE_PARTNERS = [
-  { id: 'sample-partner-1', name: 'MH Chamber',   type: 'chamber' },
-  { id: 'sample-partner-2', name: 'Downtown MH',  type: 'downtown_assoc' },
-  { id: 'sample-partner-3', name: 'City of MH',   type: 'city_gov' },
-]
-
-const SAMPLE_TASKS = [
-  {
-    id: 'st-1', title: 'Send proposal deck', status: 'todo', priority: 'high',
-    due_date: '2026-05-19', assigned_to: 'Marilyn', is_recurring: false,
-    partner_id: 'sample-partner-1', partners: { id: 'sample-partner-1', name: 'MH Chamber', type: 'chamber' },
-  },
-  {
-    id: 'st-2', title: 'Design ad creative', status: 'todo', priority: 'high',
-    due_date: '2026-05-17', assigned_to: 'Marilyn', is_recurring: false,
-    partner_id: 'sample-partner-2', partners: { id: 'sample-partner-2', name: 'Downtown MH', type: 'downtown_assoc' },
-  },
-  {
-    id: 'st-3', title: 'Follow up on invoice', status: 'in_progress', priority: 'medium',
-    due_date: '2026-05-21', assigned_to: 'Marilyn', is_recurring: false,
-    partner_id: 'sample-partner-1', partners: { id: 'sample-partner-1', name: 'MH Chamber', type: 'chamber' },
-  },
-  {
-    id: 'st-4', title: 'Monthly check-in call', status: 'in_progress', priority: 'medium',
-    due_date: '2026-05-20', assigned_to: 'Marilyn', is_recurring: true, recurrence_rule: 'monthly',
-    partner_id: 'sample-partner-3', partners: { id: 'sample-partner-3', name: 'City of MH', type: 'city_gov' },
-  },
-  {
-    id: 'st-5', title: 'Review creative brief', status: 'review', priority: 'medium',
-    due_date: '2026-05-22', assigned_to: 'Marilyn', is_recurring: false,
-    partner_id: 'sample-partner-2', partners: { id: 'sample-partner-2', name: 'Downtown MH', type: 'downtown_assoc' },
-  },
-  {
-    id: 'st-6', title: 'Schedule kiosk walk-through', status: 'todo', priority: 'low',
-    due_date: '2026-05-28', assigned_to: null, is_recurring: false,
-    partner_id: 'sample-partner-3', partners: { id: 'sample-partner-3', name: 'City of MH', type: 'city_gov' },
-  },
-  {
-    id: 'st-7', title: 'Onboarding call — complete', status: 'done', priority: 'low',
-    due_date: '2026-05-14', assigned_to: 'Marilyn', is_recurring: false,
-    partner_id: 'sample-partner-1', partners: { id: 'sample-partner-1', name: 'MH Chamber', type: 'chamber' },
-  },
-  {
-    id: 'st-8', title: 'Weekly social content', status: 'todo', priority: 'medium',
-    due_date: '2026-05-19', assigned_to: 'Marilyn', is_recurring: true, recurrence_rule: 'weekly',
-    partner_id: null, partners: null,
-  },
-]
-
 // ─── Tasks page ───────────────────────────────────────────────────────────────
 
 export default function Tasks() {
-  const [tasks,    setTasks]    = useState(SAMPLE_TASKS)
-  const [partners, setPartners] = useState(SAMPLE_PARTNERS)
+  const [tasks,    setTasks]    = useState([])
+  const [partners, setPartners] = useState([])
   const [filter,   setFilter]   = useState('all')
   const [modal,    setModal]    = useState(false)
   const [loading,  setLoading]  = useState(true)
@@ -75,9 +24,9 @@ export default function Tasks() {
           .select('id, name, type')
           .eq('active', true)
           .order('name')
-        if (t && t.length > 0) setTasks(t)
-        if (p && p.length > 0) setPartners(p)
-      } catch { /* no Supabase — sample data stays */ }
+        if (t) setTasks(t)
+        if (p) setPartners(p)
+      } catch { /* ignore */ }
       setLoading(false)
     }
     load()

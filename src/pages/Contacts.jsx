@@ -5,15 +5,9 @@ import PartnerTypeTag from '../components/shared/PartnerTypeTag'
 import NewContactModal from '../components/contacts/NewContactModal'
 import { exportCsv, todaySlug } from '../lib/csvExport'
 
-const SAMPLE_CONTACTS = [
-  { id: 'c1', name: 'Sandra Lee',    role: 'Executive Director', email: 'sandra@mhchamber.com', partners: { name: 'Morgan Hill Chamber', type: 'chamber' } },
-  { id: 'c2', name: 'James Ortega',  role: 'City Manager',       email: 'jortega@morgan-hill.ca.gov', partners: { name: 'City of Morgan Hill', type: 'city_gov' } },
-  { id: 'c3', name: 'Priya Nair',    role: 'Events Coordinator', email: 'priya@downtownmh.org', partners: { name: 'Downtown Morgan Hill', type: 'downtown_assoc' } },
-]
-
 export default function Contacts() {
   const navigate                        = useNavigate()
-  const [contacts, setContacts]         = useState(SAMPLE_CONTACTS)
+  const [contacts, setContacts]         = useState([])
   const [search, setSearch]             = useState('')
   const [showNewContact, setShowNewContact] = useState(false)
 
@@ -37,7 +31,7 @@ export default function Contacts() {
         .select('*, partners(name, type)')
         .order('name')
 
-      if (!error && data && data.length > 0) setContacts(data)
+      if (!error && data) setContacts(data)
     }
     fetchContacts()
   }, [])

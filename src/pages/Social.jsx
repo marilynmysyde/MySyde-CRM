@@ -116,8 +116,8 @@ const SAMPLE_POSTS = [
 // ─── Social page ─────────────────────────────────────────────────────────────
 
 export default function Social() {
-  const [posts,     setPosts]     = useState(SAMPLE_POSTS)
-  const [partners,  setPartners]  = useState(SAMPLE_PARTNERS)
+  const [posts,     setPosts]     = useState([])
+  const [partners,  setPartners]  = useState([])
   const [platform,  setPlatform]  = useState('all')
   const [modal,     setModal]     = useState(false)
   const [editPost,  setEditPost]  = useState(null)
@@ -136,9 +136,9 @@ export default function Social() {
           .select('id, name, type')
           .eq('active', true)
           .order('name')
-        if (po && po.length > 0) setPosts(po)
-        if (pa && pa.length > 0) setPartners(pa)
-      } catch { /* sample data stays */ }
+        if (po) setPosts(po)
+        if (pa) setPartners(pa)
+      } catch { /* ignore */ }
       setLoading(false)
     }
     load()

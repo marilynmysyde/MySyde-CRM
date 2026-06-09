@@ -4,59 +4,8 @@ import NewDealModal from '../components/board/NewDealModal'
 import { supabase } from '../lib/supabase'
 import { exportCsv, todaySlug } from '../lib/csvExport'
 
-const SAMPLE_DEALS = [
-  {
-    id: 'sample-1',
-    title: 'Top Banner — Screen 1',
-    stage: 'prospect',
-    placement_type: 'top_banner',
-    screen: 'screen_1',
-    pricing_tier: 'option_1',
-    launch_pricing: true,
-    monthly_rate: 150,   // 50% of $300 (Option 1 launch)
-    months: 3,
-    total_value: 450,
-    run_start: null,
-    run_end: null,
-    partner_id: 'sample-partner-1',
-    partners: { id: 'sample-partner-1', name: 'Morgan Hill Chamber of Commerce', type: 'chamber' },
-  },
-  {
-    id: 'sample-2',
-    title: 'Start Screen Sponsor — Both Screens',
-    stage: 'proposal',
-    placement_type: 'start_screen',
-    screen: 'both',
-    pricing_tier: 'option_2',
-    launch_pricing: true,
-    monthly_rate: 3400,  // 50% of $6,800 (Option 2 both-screens launch)
-    months: 3,
-    total_value: 10200,
-    run_start: '2026-06-01',
-    run_end: '2026-08-31',
-    partner_id: 'sample-partner-2',
-    partners: { id: 'sample-partner-2', name: 'Downtown Morgan Hill', type: 'downtown_assoc' },
-  },
-  {
-    id: 'sample-3',
-    title: 'PDF Map Bundle',
-    stage: 'live',
-    placement_type: 'map_bundle',
-    screen: null,
-    pricing_tier: 'option_2',
-    launch_pricing: false,
-    monthly_rate: 250,
-    months: 3,
-    total_value: 750,
-    run_start: '2026-05-01',
-    run_end: '2026-07-25',
-    partner_id: 'sample-partner-3',
-    partners: { id: 'sample-partner-3', name: 'City of Morgan Hill', type: 'city_gov' },
-  },
-]
-
 export default function Board() {
-  const [deals, setDeals]         = useState(SAMPLE_DEALS)
+  const [deals, setDeals]         = useState([])
   const [loading, setLoading]     = useState(true)
   const [showNewDeal, setShowNewDeal] = useState(false)
   const [boardKey, setBoardKey]   = useState(0)
@@ -83,10 +32,7 @@ export default function Board() {
         .not('stage', 'in', '("closed_won","closed_lost")')
         .order('created_at', { ascending: false })
 
-      if (!error && data && data.length > 0) {
-        setDeals(data)
-      }
-      // If Supabase isn't connected yet, sample deals remain visible
+      if (!error && data) setDeals(data)
       setLoading(false)
     }
 

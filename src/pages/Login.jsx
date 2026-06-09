@@ -2,12 +2,31 @@ import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
 export default function Login() {
-  const [email, setEmail]     = useState('')
-  const [sent, setSent]       = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError]     = useState('')
+  const [email, setEmail]       = useState('')
+  const [password, setPassword] = useState('')
+  const [mode, setMode]         = useState('password') // 'password' | 'magic'
+  const [sent, setSent]         = useState(false)
+  const [loading, setLoading]   = useState(false)
+  const [error, setError]       = useState('')
 
-  async function submit(e) {
+  async function submitPassword(e) {
+    e.preventDefault()
+    if (!email.trim() || !password) return
+    setLoading(true)
+    setError('')
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    })
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+    } else {
+      window.location.href = '/'
+    }
+  }
+
+  async function submitMagic(e) {
     e.preventDefault()
     if (!email.trim()) return
     setLoading(true)
@@ -59,13 +78,66 @@ export default function Login() {
               Use a different email
             </button>
           </div>
-        ) : (
-          <form onSubmit={submit} className="space-y-4">
+        ) : mode === 'password' ? (
+          <form onSubmit={submitPassword} className="space-y-4">
             <div>
-              <label
-                className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1"
+              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                Email
+              </label>
+              <input
+                type="email"
+                required
+                autoFocus
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="you@mysyde.com"
+                className="w-full text-sm border border-gray-200 rounded px-3 py-2 focus:outline-none focus:border-[#02348E] text-[#010100]"
                 style={{ fontFamily: 'Roboto, sans-serif' }}
-              >
+              />
+            </div>
+            <div>
+              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                Password
+              </label>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full text-sm border border-gray-200 rounded px-3 py-2 focus:outline-none focus:border-[#02348E] text-[#010100]"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              />
+            </div>
+
+            {error && (
+              <p className="text-xs text-red-500 bg-red-50 border border-red-100 rounded px-3 py-2" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                {error}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading || !email.trim() || !password}
+              className="w-full bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-sm font-medium py-2.5 rounded transition-colors"
+              style={{ fontFamily: 'Roboto, sans-serif' }}
+            >
+              {loading ? 'Signing in…' : 'Sign in'}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setMode('magic'); setError('') }}
+              className="w-full text-xs text-gray-400 hover:text-[#02348E] text-center mt-1"
+              style={{ fontFamily: 'Roboto, sans-serif' }}
+            >
+              Use email link instead
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={submitMagic} className="space-y-4">
+            <div>
+              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>
                 Work Email
               </label>
               <input
@@ -93,6 +165,15 @@ export default function Login() {
               style={{ fontFamily: 'Roboto, sans-serif' }}
             >
               {loading ? 'Sending…' : 'Send sign-in link'}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setMode('password'); setError('') }}
+              className="w-full text-xs text-gray-400 hover:text-[#02348E] text-center mt-1"
+              style={{ fontFamily: 'Roboto, sans-serif' }}
+            >
+              Use password instead
             </button>
           </form>
         )}
