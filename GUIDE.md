@@ -1,4 +1,4 @@
-# MySyde Connect — How-To Guide
+# MySyde Connect — User Guide
 
 **Your internal operating system for managing kiosk ad sales, partners, content, and renewals.**
 
@@ -10,267 +10,296 @@ _(also accessible at https://mysyde-crm.vercel.app)_
 ## Table of Contents
 1. [Signing In](#signing-in)
 2. [Team Access](#team-access)
-3. [Google Calendar](#google-calendar)
-4. [Dashboard](#dashboard)
-5. [Sales Pipeline (Board)](#sales-pipeline)
-6. [Deal Record](#deal-record)
-7. [Partners](#partners)
-8. [Contacts](#contacts)
+3. [Your Daily Routine](#your-daily-routine)
+4. [Board — Sales Pipeline](#board--sales-pipeline)
+5. [Partners](#partners)
+6. [Contacts](#contacts)
+7. [Deals](#deals)
+8. [Tasks](#tasks)
 9. [Kiosks](#kiosks)
-10. [Tasks](#tasks)
-11. [Social Content](#social-content)
-12. [Renewal Alerts](#renewal-alerts)
-13. [CSV Export](#csv-export)
+10. [Calendar](#calendar)
+11. [Dashboard](#dashboard)
+12. [Social Content](#social-content)
+13. [Tips & Shortcuts](#tips--shortcuts)
 
 ---
 
 ## Signing In
 
-The CRM requires a login. Access is by email magic link — no password needed.
+Go to **crm.mysyde.com** and sign in with your email and password.
 
-**How to sign in:**
-1. Go to **crm.mysyde.com**
-2. Enter your work email address
-3. Click **Send sign-in link**
-4. Check your inbox — click the link in the email
-5. You'll land directly on the CRM, logged in
-
-The link expires after 24 hours. If it expires, just go back to the login page and request a new one.
+**If you forget your password:**
+Use "Use email link instead" on the login page to receive a magic link by email.
 
 **Signing out:**
-Click **Sign out** in the top-right corner of the topbar next to your initials.
+Click **Sign out** in the top-right corner next to your initials.
 
 ---
 
 ## Team Access
 
-Any team member can access the CRM by signing in with their work email. No admin setup required — just send them the URL.
+Any team member can access the CRM. Send them to **crm.mysyde.com** and have them sign in with their work email. They'll receive a magic link the first time, and can set a password from there.
 
-**To add a new team member:**
-1. Send them the link: **crm.mysyde.com**
-2. They enter their email and click the magic link
-3. That's it — they're in
-
-Access is all-or-nothing: every signed-in user can read and write all data. There are no separate permission levels at this time.
+Every signed-in user can read and write all data. There are no separate permission levels at this time.
 
 ---
 
-## Google Calendar
+## Your Daily Routine
 
-Connect your Google Calendar to see today's events and upcoming meetings in the right-hand sidebar.
+Three things every morning — takes under 5 minutes:
 
-**How to connect:**
-1. Click **+ Connect Google** in the right sidebar (visible from any page)
-2. A Google sign-in popup will appear — sign in and grant calendar access
-3. Your events will appear immediately in the **Today's Agenda** panel
+1. **Board** — What moved yesterday? What needs to move today?
+2. **Tasks** — What's due today? What's overdue?
+3. **Sidebar** — Any renewals coming up? Any meetings to prep for?
 
-**What you'll see:**
-- Today's meetings and events with times
-- Tasks due today pulled from the CRM Tasks module
-
-The connection is saved in your browser and will persist between visits on the same device. If it ever disconnects, click **+ Connect Google** again to re-authorize.
+Everything else (Partners, Contacts, Kiosks) you'll touch as needed, not daily.
 
 ---
 
-## Dashboard
+## Board — Sales Pipeline
 
-Your morning home base. Open this first every day.
+This is where you'll spend most of your time. Every advertiser conversation lives here as a **deal card** moving left to right.
 
-**What you'll see:**
-- **Live MRR** — total monthly revenue from all active (Live) deals
-- **Pipeline Value** — total value of all open deals
-- **Active Kiosks** — how many kiosks are live in the field
-- **Tasks Due This Week** — across all partners
+**The rule:** If an advertiser conversation isn't on the board, it doesn't exist.
 
-**Upcoming Renewals** section shows any deals with a run end date within 30 days, with a day countdown. Click any deal name to go directly to the record.
+### The 7 Columns
 
-**Recent Activity** shows the last 10 actions logged across the whole CRM.
+| Stage | When to use it |
+|---|---|
+| **Prospect** | You've identified a potential advertiser but haven't reached out yet |
+| **Pitched** | You've had a conversation and introduced MySyde/the kiosk |
+| **Proposal** | You've sent pricing or a formal proposal |
+| **Creative** | Deal is agreed — now designing their ad |
+| **Live** | Ad is running on the kiosk |
+| **Closed Won** | Completed and paid |
+| **Closed Lost** | Didn't close — keep these so you can see patterns over time |
 
----
+### How to Use It
 
-## Sales Pipeline
-
-The kanban board. Every deal in the system lives here.
-
-**Stages (left to right):**
-| Stage | What it means |
-|-------|--------------|
-| Prospect | New lead, not yet pitched |
-| Pitched | You've had a conversation |
-| Proposal | Formal proposal sent or in progress |
-| Creative | Ad design in progress |
-| Live | Ad is running on the kiosk |
-| Won | Deal closed successfully |
-| Lost | Deal did not close |
-
-**How to use:**
-- **Create a deal** — click **+ New Deal** at the top of any column
-- **Move a deal** — drag the card to a new column, or open the deal and change the stage badge
-- **Open a deal** — click any card to open the full Deal Record
-- **Filter/search** — use the search bar (Ctrl+K) to find any deal by name or partner
-- **Export to CSV** — click the **Export** button on the Board page to download all deals
-
----
-
-## Deal Record
-
-The full detail view for a single deal. Access by clicking any deal card on the Board.
-
-### Sections
-
-**Stage & Status** (top of page)
-- Click the colored stage badge to change the stage
-- Moving to Won or Lost will prompt you to enter the close date
-- Click the Invoice badge to update payment status (None / Deposit Pending / Paid / Overdue)
-
-**Run Dates**
-- Click the ✎ icon to set or edit campaign start and end dates
-- The renewal alert date is automatically calculated as 14 days before the end date
-
-**Placement**
-- Select the ad type (Top Banner, Bottom Banner, Premier Welcome, etc.)
-- Choose Screen 1, Screen 2, or Both
-- Select the pricing tier — the monthly rate and total value calculate automatically
-
-**Creative Status**
-- Track where the design is: None → Briefed → In Progress → Revised → Approved → Uploaded
-- Click each status bubble to advance the workflow
-
-**Canva File**
-- Paste the Canva design URL to link the creative file directly to the deal
-- The file name auto-populates from the URL
-
-**Payment Link**
-- Click **Generate Payment Link** to create a Stripe payment link for the exact deal total
-- The link is saved to the deal and can be copied anytime
-- Use this in proposals so the partner can pay online
-
-**Proposal Email**
-- Click **Draft Proposal Email** to generate a complete, ready-to-send email
-- Includes partner name, placement details, pricing, campaign dates, and the Stripe payment link
-- Click **Copy to Clipboard**, then paste directly into Gmail
-
-**Gmail Thread**
-- Paste a Gmail thread URL or thread ID to link the email conversation to the deal
-- Once linked, the thread summary shows directly in the record (when Google is connected)
-
-**Notes**
-- Internal notes only — not visible to partners
-- Click **Save notes** after editing
-
-**Activity Log**
-- Automatically logs stage changes, Canva updates, Gmail links, and payment link generation
-- Manually add notes, calls, or email summaries using the text box at the top of the log
+- **Add a deal** — click **+ New Deal** at the top right
+- **Move a deal** — drag the card to the next column as it progresses
+- **Open a deal** — click any card to see the full detail record
+- **Search** — press **Ctrl+K** to search from anywhere in the app
+- **Export** — click **Export CSV** to download all deals
 
 ---
 
 ## Partners
 
-A partner is any organization you work with — chamber, city, downtown association, etc.
+Partners are the **organizations** you work with — chambers, city government, associations, businesses.
 
-**How to use:**
-- **Add a partner** — click **+ New Partner** on the Partners page
-- **Partner types:** Chamber, City Government, Downtown Association, Community Org, Local Business, Nonprofit, Other
-- **Partner Record** shows all linked deals, contacts, kiosks, tasks, posts, and activity for that partner
-- **Deactivate** — toggle a partner inactive rather than deleting to preserve history
-- **Export** — click Export on the Partners page to download a CSV
+**When to add one:** Any organization you have a relationship with, whether you're selling them ad space, they're hosting a kiosk, or they're a community connection.
+
+**Add a partner before adding a deal or contact** — everything links back to a partner.
+
+### Partner Types
+
+| Type | Example |
+|---|---|
+| **Chamber** | Morgan Hill Chamber of Commerce |
+| **City / Gov** | City of Morgan Hill |
+| **Downtown Assoc** | Downtown Morgan Hill |
+| **Community Org** | Morgan Hill Community Foundation |
+| **Local Business** | A restaurant, salon, or shop buying ad space |
+| **Nonprofit** | A local nonprofit |
+
+### What to Fill In
+
+- **Name** — full organization name
+- **Type** — pick the closest match
+- **Website** — optional but useful
+- **Notes** — anything important about the relationship
+
+### How to Use It
+
+- Click **+ Add Partner** to create a new one
+- Click any partner to open their full record — you'll see all their linked deals, contacts, kiosks, tasks, and activity in one place
+- Use the type filter buttons to narrow the list
+- **Deactivate** a partner instead of deleting to preserve history
+- **Export CSV** downloads all partners
 
 ---
 
 ## Contacts
 
-Individual people at partner organizations.
+Contacts are the **people** at your partner organizations — the person you email, call, and pitch to.
 
-**How to use:**
-- **Add a contact** — click **+ New Contact**
-- Link them to a partner so they appear in that partner's record
-- Contact name and email will be used in proposal emails when linked to a deal
-- **Export** — CSV export available on the Contacts page
+**The rule:** One contact per real person. If you talk to two people at the same organization, add two contacts — both linked to the same partner.
+
+### What to Fill In
+
+| Field | Notes |
+|---|---|
+| **Name** | Full name |
+| **Role** | Their title — "Executive Director", "Owner", "Marketing Manager" |
+| **Email** | Primary contact email |
+| **Phone** | Optional |
+| **Partner** | Always link them to their organization |
+| **Notes** | Communication preferences, context, anything useful |
+
+### How to Use It
+
+- Click **+ Add Contact** to create a new one
+- Contacts link to partners and deals — when you open a deal, you'll see who the contact is
+- Contact name and email are used in auto-generated proposal emails
+- **Export CSV** downloads all contacts
 
 ---
 
-## Kiosks
+## Deals
 
-Physical kiosk units in the field.
+A deal is one **advertising placement** being sold to one partner. This is the heart of your sales process.
 
-**How to use:**
-- **Add a kiosk** — click **+ New Kiosk**
-- **Statuses:** Pending → Active → Inactive
-- Link each kiosk to the partner location it's installed at
-- Set the installation date to track how long it's been live
-- **Export** — CSV export available on the Kiosks page
+**When to create one:** The moment a real conversation starts — even if they haven't said yes. Start it at Prospect and move it forward.
+
+### What to Fill In
+
+| Field | Notes |
+|---|---|
+| **Title** | Describe it clearly — e.g. "Top Banner — Morgan Hill Chamber" |
+| **Partner** | Who you're selling to |
+| **Contact** | The person you're talking to |
+| **Kiosk** | Which kiosk the ad will run on |
+| **Stage** | Where it is in the pipeline |
+| **Placement type** | What kind of ad — banner, wrap, featured event, PDF map, etc. |
+| **Screen** | Screen 1, Screen 2, or Both |
+| **Pricing tier** | Option 1 (Launch), Option 2 (Market/Recommended), Option 3 (Premium) |
+| **Launch pricing** | Toggle on for the 50% intro discount |
+| **Months** | How long the campaign runs |
+| **Run dates** | When the ad starts and ends |
+| **Design status** | Briefed → In Progress → Revised → Approved → Uploaded |
+| **Invoice status** | None → Deposit Pending → Paid → Overdue |
+| **Notes** | Internal only — not visible to partners |
+
+**The rate card is built in** — once you pick placement type, screen, and pricing tier, the monthly rate and total value calculate automatically.
+
+### Inside the Deal Record
+
+- **Stage badge** — click it to change the stage
+- **Invoice badge** — click it to update payment status
+- **Run dates** — click the ✎ icon to set or edit
+- **Creative status** — click each bubble to advance the design workflow
+- **Canva file** — paste the Canva URL to link the creative directly to the deal
+- **Payment link** — click **Generate Payment Link** to create a Stripe link for the exact deal total; use this in proposals
+- **Proposal email** — click **Draft Proposal Email** to generate a ready-to-send email with all deal details and the payment link
+- **Gmail thread** — paste a Gmail thread URL to link the email conversation to the deal
+- **Activity log** — automatically logs stage changes, Canva updates, and payment links; manually add notes, calls, or email summaries
 
 ---
 
 ## Tasks
 
-Task boards for tracking action items across all partners and deals.
+Tasks are action items tied to your business. Every deal should have at least one task — the next action. No deal should sit on the board without a clear next step.
 
-**Columns:** To Do → In Progress → Review → Done
+### The 4 Columns
 
-**How to use:**
-- **Add a task** — click **+ New Task** on the Tasks page
-- Link tasks to a partner, deal, contact, or kiosk for full context
-- Set priority (Low, Medium, High) and a due date
-- **Recurring tasks** — toggle "Recurring" and set Weekly, Monthly, or Quarterly
-- Tasks due this week appear on the Dashboard
+| Column | Meaning |
+|---|---|
+| **To Do** | Not started yet |
+| **In Progress** | Actively working on it |
+| **Review** | Done but needs a check before closing |
+| **Done** | Complete |
+
+### What to Fill In
+
+| Field | Notes |
+|---|---|
+| **Title** | Be specific — "Follow up with Sandra re: proposal" not just "follow up" |
+| **Priority** | Low / Medium / High |
+| **Due date** | Always set one — tasks without due dates get ignored |
+| **Assigned to** | Who's responsible |
+| **Partner** | Link to the relevant organization |
+| **Deal** | Link to the specific deal if applicable |
+| **Recurring** | Toggle on for repeating tasks — Weekly, Monthly, or Quarterly |
+
+### How to Use It
+
+- Click **+ New Task** to add one
+- Drag cards across columns as you work through your day
+- Tasks due today and overdue tasks appear in the right sidebar on every page
+- Filter by partner using the tabs at the top of the page
+
+---
+
+## Kiosks
+
+Kiosks are your physical units in the field. Add one as soon as a location is confirmed — even before it's installed.
+
+### What to Fill In
+
+| Field | Notes |
+|---|---|
+| **Name** | Clear and specific — e.g. "Kiosk 01 — Morgan Hill Civic Center" |
+| **Location** | Street address or landmark |
+| **Status** | Pending → Active → Inactive |
+| **Partner** | Which organization is hosting it |
+| **Installed date** | When it went live |
+| **Notes** | Foot traffic, access, maintenance notes |
+
+### How to Use It
+
+- Click **+ New Kiosk** to add one
+- Deals link to a kiosk — so you always know which ads are running on which unit
+- Update status to **Active** once the kiosk is live
+- **Export CSV** downloads all kiosks
+
+---
+
+## Calendar
+
+Connect your Google Calendar to see today's meetings and events in the right sidebar — without leaving the CRM.
+
+**How to connect:**
+1. Click **+ Connect Google** in the right sidebar
+2. Sign in and grant calendar access
+3. Your events appear immediately in **Today's Agenda**
+
+The connection is saved in your browser. If it ever disconnects, click **+ Connect Google** again to re-authorize.
+
+**On mobile:** Scroll to the bottom of any page and tap **Today's Agenda** to expand your calendar and tasks.
+
+---
+
+## Dashboard
+
+High-level numbers at a glance. Check this weekly, not daily.
+
+**What you'll see:**
+- **Live MRR** — total monthly revenue from all active (Live) deals
+- **Pipeline Value** — total value of all open deals
+- **Active Kiosks** — how many kiosks are live
+- **Tasks Due This Week** — across all partners
+- **Upcoming Renewals** — deals with a run end date within 30 days
+- **Recent Activity** — last 10 actions logged across the CRM
+
+Click any deal in the Renewals section to go directly to that record.
 
 ---
 
 ## Social Content
 
-Manage your social media posts across platforms.
+Track your social media posts from idea to published. Not needed for daily use yet — it's ready when you are.
 
-**Statuses:** Idea → Draft → Review → Scheduled → Live → Archived
+**Post statuses:** Idea → Draft → Review → Scheduled → Live → Archived
 
 **How to use:**
-- **Add a post** — click **+ New Post**
-- Select platforms (Facebook, Instagram, LinkedIn, TikTok)
-- Write caption, add hashtags, set scheduled date
+- Click **+ New Post** to add one
+- Select platforms (Instagram, Facebook, LinkedIn, TikTok)
+- Write caption, add hashtags, set a scheduled date
 - Link a Canva file for the visual
 - Link to a partner or deal for context
-- **Content Calendar** — switch to Calendar view to see scheduled posts by date
+- Switch to **Calendar view** to see scheduled posts by date
 
 ---
 
-## Renewal Alerts
+## Tips & Shortcuts
 
-Automatic daily emails when deals are approaching their end date.
-
-**How it works:**
-- Every morning at 8am ET, the system checks for deals whose run end date is 14–28 days away (the 14-day renewal window)
-- If any are found, an email is sent to marilyn@mysyde.com from alerts@mysyde.com
-- The email lists each deal, the partner name, the run end date, and days remaining
-- Deals marked as Lost are excluded
-
-**No action needed** — it runs automatically. You can also trigger it manually from the Supabase Dashboard → Edge Functions → renewal-alerts → Test.
+- **Search everything** — press **Ctrl+K** from anywhere to search deals, partners, contacts, and kiosks
+- **Back up monthly** — run a CSV export at the end of each month from the Board, Partners, Contacts, and Kiosks pages
+- **Renewal alerts** — the system automatically checks for deals expiring within 14 days and sends an email alert to marilyn@mysyde.com each morning
+- **Direct URLs** — bookmark any page (e.g. `/board`, `/tasks`, `/contacts`) and navigate straight there
+- **Session stays active** — you won't be logged out between visits on the same device
 
 ---
 
-## CSV Export
-
-Download your data for reporting, sharing, or backup.
-
-| Page | What exports |
-|------|-------------|
-| Board | All deals with stage, partner, dates, and value |
-| Partners | All partners with type and status |
-| Contacts | All contacts with email, phone, and partner |
-| Kiosks | All kiosks with status, location, and partner |
-
-Click the **Export** button on any of these pages. The file downloads instantly as a CSV named with today's date.
-
----
-
-## Tips
-
-- **Search everything** — press **Ctrl+K** to search deals, partners, contacts, and kiosks from anywhere in the app
-- **Sample data** — the Board and other pages show sample records when no real data exists. Once you add real records, the samples disappear
-- **Direct URLs work** — you can bookmark any page (e.g. `/contacts`, `/board`) and navigate directly to it
-- **Session stays active** — you won't be logged out between visits; the magic link only needs to be clicked once per device
-- **Works on mobile** — on your phone, scroll to the bottom of any page and tap **Today's Agenda** to expand your calendar and tasks
-- **Back up your data** — run a CSV export at the end of each month
-
----
-
-*Last updated: May 22, 2026*
+*Last updated: June 9, 2026*
