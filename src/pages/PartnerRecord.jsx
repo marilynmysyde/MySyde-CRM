@@ -112,12 +112,13 @@ const PARTNER_TYPES = [
 function OverviewTab({ partner, contacts, onPartnerUpdate }) {
   const [editing, setEditing] = useState(false)
   const [form, setForm]       = useState({
-    name:    partner.name,
-    type:    partner.type,
-    website: partner.website ?? '',
-    address: partner.address ?? '',
-    notes:   partner.notes   ?? '',
-    active:  partner.active  ?? true,
+    name:             partner.name,
+    type:             partner.type,
+    website:          partner.website          ?? '',
+    address:          partner.address          ?? '',
+    drive_folder_url: partner.drive_folder_url ?? '',
+    notes:            partner.notes            ?? '',
+    active:           partner.active           ?? true,
   })
   const [saving, setSaving] = useState(false)
 
@@ -189,6 +190,41 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
               )}
             </div>
           ))}
+
+          {/* Drive Folder */}
+          <div>
+            <label
+              className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1"
+              style={{ fontFamily: 'Roboto, sans-serif' }}
+            >
+              Drive Folder
+            </label>
+            {editing ? (
+              <input
+                type="url"
+                value={form.drive_folder_url}
+                onChange={e => handleChange('drive_folder_url', e.target.value)}
+                placeholder="https://drive.google.com/drive/folders/…"
+                className="w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#02348E] text-[#010100]"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              />
+            ) : form.drive_folder_url ? (
+              <a
+                href={form.drive_folder_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm text-[#02348E] hover:underline"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19.35 10.04A7.49 7.49 0 0012 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 000 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
+                </svg>
+                Open partner folder
+              </a>
+            ) : (
+              <span className="text-sm text-gray-400 italic" style={{ fontFamily: 'Roboto, sans-serif' }}>Not set</span>
+            )}
+          </div>
 
           {/* Type + Active (only shown in edit mode) */}
           {editing && (
@@ -461,9 +497,7 @@ function TasksTab({ partnerId, partner }) {
 function NotesTab({ partnerId }) {
   const [notes, setNotes]     = useState([])
   const [entry, setEntry]     = useState('')
-  const [file, setFile]       = useState(null)
   const [posting, setPosting] = useState(false)
-  const [uploadErr, setUploadErr] = useState('')
 
   useEffect(() => {
     if (partnerId.startsWith('sample-')) return
@@ -474,41 +508,12 @@ function NotesTab({ partnerId }) {
 
   async function addNote() {
     const body = entry.trim()
-    if (!body && !file) return
+    if (!body) return
     setPosting(true)
-    setUploadErr('')
-
-    let attachment_url  = null
-    let attachment_name = null
-
-    if (file) {
-      const ext  = file.name.split('.').pop()
-      const path = `${partnerId}/${crypto.randomUUID()}.${ext}`
-      const { error } = await supabase.storage
-        .from('partner-attachments')
-        .upload(path, file, { contentType: file.type })
-      if (error) {
-        setUploadErr('Upload failed — make sure the "partner-attachments" storage bucket exists in Supabase.')
-        setPosting(false)
-        return
-      }
-      const { data: urlData } = supabase.storage
-        .from('partner-attachments')
-        .getPublicUrl(path)
-      attachment_url  = urlData.publicUrl
-      attachment_name = file.name
-    }
-
-    const payload = {
-      body: body || null,
-      partner_id: partnerId,
-      attachment_url,
-      attachment_name,
-    }
+    const payload = { body, partner_id: partnerId }
     const { data } = await supabase.from('notes').insert(payload).select().single()
     setNotes(prev => [data ?? { id: crypto.randomUUID(), ...payload, created_at: new Date().toISOString() }, ...prev])
     setEntry('')
-    setFile(null)
     setPosting(false)
   }
 
@@ -516,13 +521,8 @@ function NotesTab({ partnerId }) {
     return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
   }
 
-  function isImage(url) {
-    return /\.(png|jpe?g|gif|webp|svg)$/i.test(url)
-  }
-
   return (
     <div>
-      {/* Entry area */}
       <div className="bg-white rounded-lg border border-gray-100 p-4 mb-4">
         <h3
           className="text-sm font-semibold text-[#010100] mb-3"
@@ -536,43 +536,12 @@ function NotesTab({ partnerId }) {
           onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) addNote() }}
           placeholder="Meeting notes, call recap, follow-up reminders… (Ctrl+↵ to save)"
           rows={4}
-          className="w-full text-sm border border-gray-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-[#02348E] text-[#010100] mb-3"
+          className="w-full text-sm border border-gray-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-[#02348E] text-[#010100] mb-2"
           style={{ fontFamily: 'Roboto, sans-serif' }}
         />
-
-        {/* File attachment */}
-        <div className="mb-3">
-          <label
-            className="inline-flex items-center gap-1.5 text-sm text-[#02348E] cursor-pointer hover:underline"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 9.828A4 4 0 1012.343 4.17L5.757 10.757a6 6 0 108.485 8.485L20 13.485" />
-            </svg>
-            {file ? file.name : 'Attach image or PDF'}
-            <input
-              type="file"
-              accept="image/*,.pdf"
-              className="sr-only"
-              onChange={e => { setFile(e.target.files[0] ?? null); setUploadErr('') }}
-            />
-          </label>
-          {file && (
-            <button
-              onClick={() => setFile(null)}
-              className="ml-3 text-xs text-gray-400 hover:text-red-500"
-            >
-              Remove
-            </button>
-          )}
-          {uploadErr && (
-            <p className="mt-1 text-xs text-red-500" style={{ fontFamily: 'Roboto, sans-serif' }}>{uploadErr}</p>
-          )}
-        </div>
-
         <button
           onClick={addNote}
-          disabled={posting || (!entry.trim() && !file)}
+          disabled={posting || !entry.trim()}
           className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-sm font-medium px-4 py-1.5 rounded transition-colors"
           style={{ fontFamily: 'Roboto, sans-serif' }}
         >
@@ -580,59 +549,21 @@ function NotesTab({ partnerId }) {
         </button>
       </div>
 
-      {/* Notes list */}
       <div className="space-y-3">
         {notes.length === 0 ? (
           <div className="bg-white rounded-lg border border-gray-100 p-8 text-center">
-            <p
-              className="text-sm text-gray-400"
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
-            >
+            <p className="text-sm text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
               No notes yet — add meeting logs, call recaps, or reminders above
             </p>
           </div>
         ) : notes.map(note => (
           <div key={note.id} className="bg-white rounded-lg border border-gray-100 p-4">
-            <p
-              className="text-[10px] text-gray-400 mb-1.5 uppercase tracking-wide"
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
-            >
+            <p className="text-[10px] text-gray-400 mb-1.5 uppercase tracking-wide" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
               {fmtDate(note.created_at)}
             </p>
-            {note.body && (
-              <p
-                className="text-sm text-[#010100] leading-relaxed whitespace-pre-wrap"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
-              >
-                {note.body}
-              </p>
-            )}
-            {note.attachment_url && (
-              <div className={note.body ? 'mt-3' : ''}>
-                {isImage(note.attachment_url) ? (
-                  <a href={note.attachment_url} target="_blank" rel="noopener noreferrer">
-                    <img
-                      src={note.attachment_url}
-                      alt={note.attachment_name ?? 'attachment'}
-                      className="max-h-64 rounded border border-gray-100 object-contain"
-                    />
-                  </a>
-                ) : (
-                  <a
-                    href={note.attachment_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-sm text-[#02348E] hover:underline"
-                    style={{ fontFamily: 'Roboto, sans-serif' }}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
-                    {note.attachment_name ?? 'View attachment'}
-                  </a>
-                )}
-              </div>
-            )}
+            <p className="text-sm text-[#010100] leading-relaxed whitespace-pre-wrap" style={{ fontFamily: 'Roboto, sans-serif' }}>
+              {note.body}
+            </p>
           </div>
         ))}
       </div>

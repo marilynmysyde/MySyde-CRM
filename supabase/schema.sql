@@ -13,14 +13,15 @@ create extension if not exists "pgcrypto";
 -- ─────────────────────────────────────────────────────────
 
 create table partners (
-  id          uuid primary key default gen_random_uuid(),
-  name        text not null,
-  type        text not null check (type in ('chamber','city_gov','downtown_assoc','community_org','local_business','nonprofit','other')),
-  website     text,
-  address     text,
-  notes       text,
-  active      boolean not null default true,
-  created_at  timestamp with time zone default now()
+  id                uuid primary key default gen_random_uuid(),
+  name              text not null,
+  type              text not null check (type in ('chamber','city_gov','downtown_assoc','community_org','local_business','nonprofit','other')),
+  website           text,
+  address           text,
+  drive_folder_url  text,
+  notes             text,
+  active            boolean not null default true,
+  created_at        timestamp with time zone default now()
 );
 
 create table contacts (
@@ -168,13 +169,10 @@ create table activity_log (
 --   CHECK (type IN ('note','email','call','stage_change','canva_update','task_complete','post_published','gmail_linked'));
 
 -- ─────────────────────────────────────────────────────────
--- MIGRATION: Partner note attachments
+-- MIGRATION: Partner Drive folder link
 -- Run in Supabase SQL editor if upgrading an existing DB.
--- Also create a Storage bucket named "partner-attachments"
--- with public access enabled in the Supabase dashboard.
 -- ─────────────────────────────────────────────────────────
--- ALTER TABLE notes ADD COLUMN IF NOT EXISTS attachment_url  text;
--- ALTER TABLE notes ADD COLUMN IF NOT EXISTS attachment_name text;
+-- ALTER TABLE partners ADD COLUMN IF NOT EXISTS drive_folder_url text;
 
 
 -- ─────────────────────────────────────────────────────────
