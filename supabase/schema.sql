@@ -133,15 +133,17 @@ create table posts (
 );
 
 create table notes (
-  id          uuid primary key default gen_random_uuid(),
-  body        text not null,
-  partner_id  uuid references partners(id) on delete cascade,
-  contact_id  uuid references contacts(id) on delete set null,
-  deal_id     uuid references deals(id) on delete set null,
-  task_id     uuid references tasks(id) on delete set null,
-  post_id     uuid references posts(id) on delete set null,
-  created_by  text,
-  created_at  timestamp with time zone default now()
+  id              uuid primary key default gen_random_uuid(),
+  body            text,
+  partner_id      uuid references partners(id) on delete cascade,
+  contact_id      uuid references contacts(id) on delete set null,
+  deal_id         uuid references deals(id) on delete set null,
+  task_id         uuid references tasks(id) on delete set null,
+  post_id         uuid references posts(id) on delete set null,
+  attachment_url  text,
+  attachment_name text,
+  created_by      text,
+  created_at      timestamp with time zone default now()
 );
 
 create table activity_log (
@@ -164,6 +166,15 @@ create table activity_log (
 -- ALTER TABLE activity_log DROP CONSTRAINT activity_log_type_check;
 -- ALTER TABLE activity_log ADD CONSTRAINT activity_log_type_check
 --   CHECK (type IN ('note','email','call','stage_change','canva_update','task_complete','post_published','gmail_linked'));
+
+-- ─────────────────────────────────────────────────────────
+-- MIGRATION: Partner note attachments
+-- Run in Supabase SQL editor if upgrading an existing DB.
+-- Also create a Storage bucket named "partner-attachments"
+-- with public access enabled in the Supabase dashboard.
+-- ─────────────────────────────────────────────────────────
+-- ALTER TABLE notes ADD COLUMN IF NOT EXISTS attachment_url  text;
+-- ALTER TABLE notes ADD COLUMN IF NOT EXISTS attachment_name text;
 
 
 -- ─────────────────────────────────────────────────────────

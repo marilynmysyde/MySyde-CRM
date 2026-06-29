@@ -459,9 +459,11 @@ function TasksTab({ partnerId, partner }) {
 // ─── Notes tab ───────────────────────────────────────────────────────────────
 
 function NotesTab({ partnerId }) {
-  const [notes, setNotes]   = useState([])
-  const [entry, setEntry]   = useState('')
+  const [notes, setNotes]     = useState([])
+  const [entry, setEntry]     = useState('')
+  const [file, setFile]       = useState(null)
   const [posting, setPosting] = useState(false)
+  const [uploadErr, setUploadErr] = useState('')
 
   useEffect(() => {
     if (partnerId.startsWith('sample-')) return
@@ -472,17 +474,50 @@ function NotesTab({ partnerId }) {
 
   async function addNote() {
     const body = entry.trim()
-    if (!body) return
+    if (!body && !file) return
     setPosting(true)
-    const payload = { body, partner_id: partnerId }
+    setUploadErr('')
+
+    let attachment_url  = null
+    let attachment_name = null
+
+    if (file) {
+      const ext  = file.name.split('.').pop()
+      const path = `${partnerId}/${crypto.randomUUID()}.${ext}`
+      const { error } = await supabase.storage
+        .from('partner-attachments')
+        .upload(path, file, { contentType: file.type })
+      if (error) {
+        setUploadErr('Upload failed — make sure the "partner-attachments" storage bucket exists in Supabase.')
+        setPosting(false)
+        return
+      }
+      const { data: urlData } = supabase.storage
+        .from('partner-attachments')
+        .getPublicUrl(path)
+      attachment_url  = urlData.publicUrl
+      attachment_name = file.name
+    }
+
+    const payload = {
+      body: body || null,
+      partner_id: partnerId,
+      attachment_url,
+      attachment_name,
+    }
     const { data } = await supabase.from('notes').insert(payload).select().single()
     setNotes(prev => [data ?? { id: crypto.randomUUID(), ...payload, created_at: new Date().toISOString() }, ...prev])
     setEntry('')
+    setFile(null)
     setPosting(false)
   }
 
   function fmtDate(ts) {
     return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  }
+
+  function isImage(url) {
+    return /\.(png|jpe?g|gif|webp|svg)$/i.test(url)
   }
 
   return (
@@ -501,16 +536,47 @@ function NotesTab({ partnerId }) {
           onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) addNote() }}
           placeholder="Meeting notes, call recap, follow-up reminders… (Ctrl+↵ to save)"
           rows={4}
-          className="w-full text-sm border border-gray-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-[#02348E] text-[#010100] mb-2"
+          className="w-full text-sm border border-gray-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-[#02348E] text-[#010100] mb-3"
           style={{ fontFamily: 'Roboto, sans-serif' }}
         />
+
+        {/* File attachment */}
+        <div className="mb-3">
+          <label
+            className="inline-flex items-center gap-1.5 text-sm text-[#02348E] cursor-pointer hover:underline"
+            style={{ fontFamily: 'Roboto, sans-serif' }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 9.828A4 4 0 1012.343 4.17L5.757 10.757a6 6 0 108.485 8.485L20 13.485" />
+            </svg>
+            {file ? file.name : 'Attach image or PDF'}
+            <input
+              type="file"
+              accept="image/*,.pdf"
+              className="sr-only"
+              onChange={e => { setFile(e.target.files[0] ?? null); setUploadErr('') }}
+            />
+          </label>
+          {file && (
+            <button
+              onClick={() => setFile(null)}
+              className="ml-3 text-xs text-gray-400 hover:text-red-500"
+            >
+              Remove
+            </button>
+          )}
+          {uploadErr && (
+            <p className="mt-1 text-xs text-red-500" style={{ fontFamily: 'Roboto, sans-serif' }}>{uploadErr}</p>
+          )}
+        </div>
+
         <button
           onClick={addNote}
-          disabled={posting || !entry.trim()}
+          disabled={posting || (!entry.trim() && !file)}
           className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-sm font-medium px-4 py-1.5 rounded transition-colors"
           style={{ fontFamily: 'Roboto, sans-serif' }}
         >
-          Save Note
+          {posting ? 'Saving…' : 'Save Note'}
         </button>
       </div>
 
@@ -533,12 +599,40 @@ function NotesTab({ partnerId }) {
             >
               {fmtDate(note.created_at)}
             </p>
-            <p
-              className="text-sm text-[#010100] leading-relaxed whitespace-pre-wrap"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
-            >
-              {note.body}
-            </p>
+            {note.body && (
+              <p
+                className="text-sm text-[#010100] leading-relaxed whitespace-pre-wrap"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              >
+                {note.body}
+              </p>
+            )}
+            {note.attachment_url && (
+              <div className={note.body ? 'mt-3' : ''}>
+                {isImage(note.attachment_url) ? (
+                  <a href={note.attachment_url} target="_blank" rel="noopener noreferrer">
+                    <img
+                      src={note.attachment_url}
+                      alt={note.attachment_name ?? 'attachment'}
+                      className="max-h-64 rounded border border-gray-100 object-contain"
+                    />
+                  </a>
+                ) : (
+                  <a
+                    href={note.attachment_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm text-[#02348E] hover:underline"
+                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    {note.attachment_name ?? 'View attachment'}
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>
