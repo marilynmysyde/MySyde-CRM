@@ -15,8 +15,8 @@ const TIER_ORDER = ['option_1', 'option_2', 'option_3']
 
 const TIER_COLORS = {
   option_1: { selected: 'border-gray-400 bg-gray-50',   dot: 'bg-gray-400'   },
-  option_2: { selected: 'border-[#02348E] bg-[#02348E]/5', dot: 'bg-[#02348E]' },
-  option_3: { selected: 'border-[#FFEC00] bg-[#FFEC00]/10', dot: 'bg-yellow-400' },
+  option_2: { selected: 'border-[#1D4ED8] bg-[#1D4ED8]/5', dot: 'bg-[#1D4ED8]' },
+  option_3: { selected: 'border-[#F59E0B] bg-[#F59E0B]/10', dot: 'bg-yellow-400' },
 }
 
 export default function PlacementSelector({ deal, onUpdate }) {
@@ -95,13 +95,13 @@ export default function PlacementSelector({ deal, onUpdate }) {
     <div className="bg-white rounded-lg border border-gray-100 p-4">
       <div className="flex items-center justify-between mb-3">
         <h3
-          className="text-sm font-semibold text-[#010100]"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          className="text-sm font-semibold text-[#111827]"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           Placement
         </h3>
         {saving && (
-          <span className="text-xs text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+          <span className="text-xs text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
             Saving…
           </span>
         )}
@@ -115,10 +115,10 @@ export default function PlacementSelector({ deal, onUpdate }) {
             onClick={() => handleCategory(cat.key)}
             className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               category === cat.key
-                ? 'bg-[#02348E] text-white'
+                ? 'bg-[#1D4ED8] text-white'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             <span>{cat.icon}</span>
             {cat.label}
@@ -134,7 +134,7 @@ export default function PlacementSelector({ deal, onUpdate }) {
             onClick={() => handlePlacement(p.key)}
             className={`w-full text-left rounded-lg border px-3 py-2.5 transition-all ${
               placementType === p.key
-                ? 'border-[#02348E] bg-[#02348E]/5'
+                ? 'border-[#1D4ED8] bg-[#1D4ED8]/5'
                 : 'border-gray-200 hover:border-gray-300 bg-white'
             }`}
           >
@@ -142,15 +142,15 @@ export default function PlacementSelector({ deal, onUpdate }) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span
-                    className="text-xs font-semibold text-[#010100]"
-                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                    className="text-xs font-semibold text-[#111827]"
+                    style={{ fontFamily: 'Manrope, sans-serif' }}
                   >
                     {p.label}
                   </span>
                   {p.exclusive && (
                     <span
                       className="text-[9px] font-semibold px-1 py-0.5 rounded bg-yellow-100 text-yellow-700 uppercase tracking-wide"
-                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                      style={{ fontFamily: 'Manrope, sans-serif' }}
                     >
                       Exclusive
                     </span>
@@ -158,21 +158,21 @@ export default function PlacementSelector({ deal, onUpdate }) {
                 </div>
                 <p
                   className="text-[10px] text-gray-400 mt-0.5"
-                  style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                  style={{ fontFamily: "'Manrope', sans-serif" }}
                 >
                   {p.desc}
                 </p>
               </div>
               <div className="text-right shrink-0">
                 <span
-                  className="text-xs font-bold text-[#02348E]"
-                  style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                  className="text-xs font-bold text-[#1D4ED8]"
+                  style={{ fontFamily: "'Manrope', sans-serif" }}
                 >
                   {fmt(p.perScreen.option_2)}
                 </span>
                 <span
                   className="text-[10px] text-gray-400"
-                  style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                  style={{ fontFamily: "'Manrope', sans-serif" }}
                 >
                   /mo
                 </span>
@@ -191,7 +191,7 @@ export default function PlacementSelector({ deal, onUpdate }) {
             <div>
               <p
                 className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 Screen
               </p>
@@ -203,10 +203,10 @@ export default function PlacementSelector({ deal, onUpdate }) {
                     disabled={s.key === 'both' && !placement.both}
                     className={`flex-1 text-xs px-2 py-1.5 rounded-lg border transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
                       screen === s.key
-                        ? 'bg-[#02348E] text-white border-[#02348E]'
+                        ? 'bg-[#1D4ED8] text-white border-[#1D4ED8]'
                         : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
                     }`}
-                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                    style={{ fontFamily: 'Manrope, sans-serif' }}
                   >
                     {s.label}
                   </button>
@@ -214,8 +214,8 @@ export default function PlacementSelector({ deal, onUpdate }) {
               </div>
               {screen === 'both' && placement.both && (
                 <p
-                  className="text-[10px] text-[#02348E] mt-1"
-                  style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                  className="text-[10px] text-[#1D4ED8] mt-1"
+                  style={{ fontFamily: "'Manrope', sans-serif" }}
                 >
                   Bundle rate (1.7× — value vs buying separately)
                 </p>
@@ -227,7 +227,7 @@ export default function PlacementSelector({ deal, onUpdate }) {
           <div>
             <p
               className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-1.5"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Pricing Tier
             </p>
@@ -251,20 +251,20 @@ export default function PlacementSelector({ deal, onUpdate }) {
                       <div className={`w-1.5 h-1.5 rounded-full ${colors.dot}`} />
                       <span
                         className="text-[9px] font-semibold uppercase tracking-wide text-gray-500"
-                        style={{ fontFamily: 'Roboto, sans-serif' }}
+                        style={{ fontFamily: 'Manrope, sans-serif' }}
                       >
                         {t === 'option_1' ? 'Launch' : t === 'option_2' ? 'Market' : 'Premium'}
                       </span>
                     </div>
                     <span
-                      className="text-sm font-bold text-[#010100]"
-                      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                      className="text-sm font-bold text-[#111827]"
+                      style={{ fontFamily: "'Manrope', sans-serif" }}
                     >
                       {fmt(rate)}
                     </span>
                     <span
                       className="text-[9px] text-gray-400 block"
-                      style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                      style={{ fontFamily: "'Manrope', sans-serif" }}
                     >
                       /mo
                     </span>
@@ -275,17 +275,17 @@ export default function PlacementSelector({ deal, onUpdate }) {
           </div>
 
           {/* Launch pricing toggle */}
-          <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#FFEC00]/10 border border-[#FFEC00]/40">
+          <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#F59E0B]/10 border border-[#F59E0B]/40">
             <div>
               <p
-                className="text-xs font-semibold text-[#010100]"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                className="text-xs font-semibold text-[#111827]"
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 🚀 Launch Pricing (50% off)
               </p>
               <p
                 className="text-[10px] text-gray-500"
-                style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               >
                 First 6 months — limited window
               </p>
@@ -293,7 +293,7 @@ export default function PlacementSelector({ deal, onUpdate }) {
             <button
               onClick={() => handleLaunch(!launchPricing)}
               className={`w-10 h-6 rounded-full transition-colors relative ${
-                launchPricing ? 'bg-[#02348E]' : 'bg-gray-300'
+                launchPricing ? 'bg-[#1D4ED8]' : 'bg-gray-300'
               }`}
             >
               <span
@@ -309,15 +309,15 @@ export default function PlacementSelector({ deal, onUpdate }) {
             <div className="flex items-center gap-2">
               <label
                 className="text-xs text-gray-500"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 Term (months)
               </label>
               <select
                 value={months}
                 onChange={e => handleMonths(Number(e.target.value))}
-                className="text-sm border border-gray-200 rounded px-2 py-1 text-[#010100] focus:outline-none focus:border-[#02348E]"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                className="text-sm border border-gray-200 rounded px-2 py-1 text-[#111827] focus:outline-none focus:border-[#1D4ED8]"
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {placement.termOptions.map(m => (
                   <option key={m} value={m}>{m} mo{m > 1 ? 's' : ''}</option>
@@ -332,13 +332,13 @@ export default function PlacementSelector({ deal, onUpdate }) {
             <div className="flex items-baseline gap-3 ml-auto">
               <span
                 className="text-xs text-gray-500"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {fmt(monthlyRate)}/mo
               </span>
               <span
-                className="text-base font-bold text-[#02348E]"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                className="text-base font-bold text-[#1D4ED8]"
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               >
                 {fmt(totalValue)} total
               </span>
@@ -349,7 +349,7 @@ export default function PlacementSelector({ deal, onUpdate }) {
           {setupFee > 0 && (
             <p
               className="text-xs text-gray-500 bg-gray-50 rounded-lg px-3 py-2"
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               + {fmt(setupFee)} one-time setup fee (billed separately)
             </p>
@@ -359,7 +359,7 @@ export default function PlacementSelector({ deal, onUpdate }) {
           {placement.category !== 'wrap' && (
             <p
               className="text-[10px] text-gray-400"
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Month-to-month available at +20% — add a note in the activity log if applicable.
             </p>

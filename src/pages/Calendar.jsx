@@ -53,7 +53,7 @@ const GCAL_BG = {
   '7': 'bg-teal-50 border-teal-200 text-teal-800',
   '9': 'bg-blue-100 border-blue-300 text-blue-900',
 }
-const DEFAULT_EVENT_BG = 'bg-[#02348E]/10 border-[#02348E]/20 text-[#02348E]'
+const DEFAULT_EVENT_BG = 'bg-[#1D4ED8]/10 border-[#1D4ED8]/20 text-[#1D4ED8]'
 
 // ─── Fetch events for a full week ─────────────────────────────────────────────
 
@@ -91,7 +91,7 @@ async function fetchWeekEvents(weekStart) {
 function EventCard({ event }) {
   const bg = GCAL_BG[event.colorId] ?? DEFAULT_EVENT_BG
   return (
-    <div className={`text-[11px] rounded px-2 py-1 border leading-snug ${bg}`} style={{ fontFamily: 'Roboto, sans-serif' }}>
+    <div className={`text-[11px] rounded px-2 py-1 border leading-snug ${bg}`} style={{ fontFamily: 'Manrope, sans-serif' }}>
       {!event.allDay && (
         <span className="font-semibold mr-1">{fmtEventTime(event.start)}</span>
       )}
@@ -162,14 +162,14 @@ export default function Calendar() {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <h1
-            className="text-xl font-semibold text-[#010100]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+            className="text-xl font-semibold text-[#111827]"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Calendar
           </h1>
           <span
             className="text-sm text-gray-500"
-            style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             {fmtMonthYear(weekStart)}
           </span>
@@ -177,7 +177,7 @@ export default function Calendar() {
 
         <div className="flex items-center gap-2">
           {loading && (
-            <span className="text-xs text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            <span className="text-xs text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
               Loading…
             </span>
           )}
@@ -194,8 +194,8 @@ export default function Calendar() {
             {!isCurrentWeek && (
               <button
                 onClick={goToday}
-                className="text-xs px-2.5 py-1 rounded border border-gray-200 text-gray-600 hover:border-[#02348E] hover:text-[#02348E] transition-colors"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                className="text-xs px-2.5 py-1 rounded border border-gray-200 text-gray-600 hover:border-[#1D4ED8] hover:text-[#1D4ED8] transition-colors"
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 Today
               </button>
@@ -214,13 +214,13 @@ export default function Calendar() {
             <button
               onClick={connect}
               disabled={loading}
-              className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-50 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 disabled:opacity-50 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Connect Google Calendar
             </button>
           ) : (
-            <span className="text-xs text-green-600 font-medium" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <span className="text-xs text-green-600 font-medium" style={{ fontFamily: 'Manrope, sans-serif' }}>
               ✓ Google Calendar
             </span>
           )}
@@ -233,27 +233,27 @@ export default function Calendar() {
           <div className="text-center max-w-sm">
             <p className="text-4xl mb-3">📅</p>
             <h2
-              className="text-base font-semibold text-[#010100] mb-2"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              className="text-base font-semibold text-[#111827] mb-2"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Connect Google Calendar
             </h2>
             <p
               className="text-sm text-gray-500 mb-4"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               See all your meetings and events alongside your deals, tasks, and posts.
             </p>
             <button
               onClick={connect}
               disabled={loading}
-              className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-50 text-white text-sm font-medium px-5 py-2 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 disabled:opacity-50 text-white text-sm font-medium px-5 py-2 rounded transition-colors"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {loading ? 'Connecting…' : 'Connect Google Calendar'}
             </button>
             {authError && (
-              <p className="text-xs text-red-500 mt-3 max-w-xs" style={{ fontFamily: 'Roboto, sans-serif' }}>
+              <p className="text-xs text-red-500 mt-3 max-w-xs" style={{ fontFamily: 'Manrope, sans-serif' }}>
                 {authError}
               </p>
             )}
@@ -273,16 +273,16 @@ export default function Calendar() {
                 <div key={day.toISOString()} className="text-center pb-2">
                   <p
                     className="text-[10px] text-gray-400 uppercase tracking-wide"
-                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                    style={{ fontFamily: 'Manrope, sans-serif' }}
                   >
                     {fmtDayLabel(day)}
                   </p>
                   <div className={`inline-flex items-center justify-center w-8 h-8 rounded-full mx-auto mt-0.5 ${
-                    isToday ? 'bg-[#02348E] text-white' : 'text-[#010100]'
+                    isToday ? 'bg-[#1D4ED8] text-white' : 'text-[#111827]'
                   }`}>
                     <span
                       className="text-sm font-semibold"
-                      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                      style={{ fontFamily: "'Manrope', sans-serif" }}
                     >
                       {fmtDayNum(day)}
                     </span>
@@ -299,13 +299,13 @@ export default function Calendar() {
                 <div
                   key={day.toISOString() + '-col'}
                   className={`min-h-[400px] rounded-lg p-2 space-y-1.5 ${
-                    isToday ? 'bg-[#02348E]/5 ring-1 ring-[#02348E]/20' : 'bg-white border border-gray-100'
+                    isToday ? 'bg-[#1D4ED8]/5 ring-1 ring-[#1D4ED8]/20' : 'bg-white border border-gray-100'
                   }`}
                 >
                   {dayEvs.length === 0 && (
                     <p
                       className="text-[10px] text-gray-300 italic text-center pt-4"
-                      style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                      style={{ fontFamily: "'Manrope', sans-serif" }}
                     >
                       —
                     </p>

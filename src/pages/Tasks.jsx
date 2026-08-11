@@ -2,15 +2,20 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import TaskBoard from '../components/tasks/TaskBoard'
 import NewTaskModal from '../components/tasks/NewTaskModal'
+import TaskDetailModal from '../components/tasks/TaskDetailModal'
+import ConfettiBurst from '../components/tasks/ConfettiBurst'
+import CelebrateToast from '../components/tasks/CelebrateToast'
 
 // ─── Tasks page ───────────────────────────────────────────────────────────────
 
 export default function Tasks() {
-  const [tasks,    setTasks]    = useState([])
-  const [partners, setPartners] = useState([])
-  const [filter,   setFilter]   = useState('all')
-  const [modal,    setModal]    = useState(false)
-  const [loading,  setLoading]  = useState(true)
+  const [tasks,       setTasks]       = useState([])
+  const [partners,    setPartners]    = useState([])
+  const [filter,      setFilter]      = useState('all')
+  const [modal,       setModal]       = useState(false)
+  const [openTask,    setOpenTask]    = useState(null)
+  const [celebrating, setCelebrating] = useState(false)
+  const [loading,     setLoading]     = useState(true)
 
   useEffect(() => {
     async function load() {
@@ -44,27 +49,35 @@ export default function Tasks() {
     setTasks(prev => [task, ...prev])
   }
 
+  function handleUpdated(updated) {
+    setTasks(prev => prev.map(t => t.id === updated.id ? { ...t, ...updated } : t))
+  }
+
+  function celebrate() {
+    setCelebrating(true)
+  }
+
   return (
     <div className="px-4 py-4">
 
       {/* Page header */}
       <div className="flex items-center justify-between mb-4">
         <h1
-          className="text-xl font-semibold text-[#010100]"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          className="text-xl font-semibold text-[#111827]"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           Tasks
         </h1>
         <div className="flex items-center gap-2">
           {loading && (
-            <span className="text-xs text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            <span className="text-xs text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
               Loading…
             </span>
           )}
           <button
             onClick={() => setModal(true)}
-            className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             + New Task
           </button>
@@ -79,10 +92,10 @@ export default function Tasks() {
             onClick={() => setFilter(p.id)}
             className={`px-3 py-2 text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap ${
               filter === p.id
-                ? 'border-[#02348E] text-[#02348E]'
-                : 'border-transparent text-gray-500 hover:text-[#010100]'
+                ? 'border-[#1D4ED8] text-[#1D4ED8]'
+                : 'border-transparent text-gray-500 hover:text-[#111827]'
             }`}
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             {p.name}
             {p.id !== 'all' && (
@@ -95,7 +108,13 @@ export default function Tasks() {
       </div>
 
       {/* Board */}
-      <TaskBoard tasks={visibleTasks} setTasks={setTasks} showPartner={filter === 'all'} />
+      <TaskBoard
+        tasks={visibleTasks}
+        setTasks={setTasks}
+        showPartner={filter === 'all'}
+        onOpenTask={setOpenTask}
+        onCelebrate={celebrate}
+      />
 
       {/* New task modal */}
       {modal && (
@@ -105,6 +124,25 @@ export default function Tasks() {
           onCreated={handleCreated}
         />
       )}
+
+      {/* Task detail modal */}
+      {openTask && (
+        <TaskDetailModal
+          task={openTask}
+          partners={partners}
+          onClose={() => setOpenTask(null)}
+          onUpdated={handleUpdated}
+          onCelebrate={celebrate}
+        />
+      )}
+
+      {/* Celebration overlays */}
+      {celebrating && (
+        <>
+          <ConfettiBurst onDone={() => setCelebrating(false)} />
+          <CelebrateToast onDone={() => { /* handled by confetti unmount */ }} />
+        </>
+      )}
     </div>
   )
 }
@@ -112,16 +150,16 @@ export default function Tasks() {
 export function ComingSoon({ title, phase, description }) {
   return (
     <div className="flex flex-col items-center justify-center h-[60vh] text-center px-8">
-      <div className="w-12 h-12 rounded-full bg-[#02348E]/10 flex items-center justify-center mb-4">
-        <span className="text-[#02348E] text-xl">⚙</span>
+      <div className="w-12 h-12 rounded-full bg-[#1D4ED8]/10 flex items-center justify-center mb-4">
+        <span className="text-[#1D4ED8] text-xl">⚙</span>
       </div>
-      <h2 className="text-lg font-semibold text-[#010100] mb-1" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+      <h2 className="text-lg font-semibold text-[#111827] mb-1" style={{ fontFamily: "'Manrope', sans-serif" }}>
         {title}
       </h2>
-      <p className="text-sm text-gray-400 max-w-xs" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+      <p className="text-sm text-gray-400 max-w-xs" style={{ fontFamily: "'Manrope', sans-serif" }}>
         {description}
       </p>
-      <span className="mt-4 text-xs font-medium text-[#02348E] bg-[#02348E]/10 px-3 py-1 rounded-full" style={{ fontFamily: 'Roboto, sans-serif' }}>
+      <span className="mt-4 text-xs font-medium text-[#1D4ED8] bg-[#1D4ED8]/10 px-3 py-1 rounded-full" style={{ fontFamily: 'Manrope, sans-serif' }}>
         Coming in Phase {phase}
       </span>
     </div>

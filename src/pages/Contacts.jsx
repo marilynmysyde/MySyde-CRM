@@ -46,23 +46,23 @@ export default function Contacts() {
     <div className="p-4">
       <div className="flex items-center justify-between mb-4">
         <h1
-          className="text-xl font-semibold text-[#010100]"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          className="text-xl font-semibold text-[#111827]"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           Contacts
         </h1>
         <div className="flex items-center gap-2">
           <button
             onClick={handleExport}
-            className="text-sm text-gray-500 hover:text-[#02348E] border border-gray-200 hover:border-[#02348E] px-3 py-1.5 rounded transition-colors"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            className="text-sm text-gray-500 hover:text-[#1D4ED8] border border-gray-200 hover:border-[#1D4ED8] px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             ↓ Export CSV
           </button>
           <button
             onClick={() => setShowNewContact(true)}
-            className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             + Add Contact
           </button>
@@ -74,13 +74,13 @@ export default function Contacts() {
         placeholder="Search contacts…"
         value={search}
         onChange={e => setSearch(e.target.value)}
-        className="border border-gray-200 rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#02348E]/30 w-64 mb-4 block"
-        style={{ fontFamily: 'Roboto, sans-serif' }}
+        className="border border-gray-200 rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1D4ED8]/30 w-64 mb-4 block"
+        style={{ fontFamily: 'Manrope, sans-serif' }}
       />
 
       <div className="bg-white rounded-lg border border-gray-100 overflow-hidden">
         {visible.length === 0 && (
-          <div className="text-center py-12 text-gray-400 text-sm" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+          <div className="text-center py-12 text-gray-400 text-sm" style={{ fontFamily: "'Manrope', sans-serif" }}>
             No contacts found.
           </div>
         )}
@@ -92,21 +92,21 @@ export default function Contacts() {
           >
             <div className="flex items-center gap-3">
               {/* Avatar initials */}
-              <div className="w-8 h-8 rounded-full bg-[#02348E] flex items-center justify-center shrink-0">
-                <span className="text-white text-xs font-semibold" style={{ fontFamily: 'Roboto, sans-serif' }}>
+              <div className="w-8 h-8 rounded-full bg-[#1D4ED8] flex items-center justify-center shrink-0">
+                <span className="text-white text-xs font-semibold" style={{ fontFamily: 'Manrope, sans-serif' }}>
                   {contact.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                 </span>
               </div>
               <div>
                 <p
-                  className="text-sm font-medium text-[#010100]"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  className="text-sm font-medium text-[#111827]"
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   {contact.name}
                 </p>
                 <p
                   className="text-xs text-gray-400"
-                  style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                  style={{ fontFamily: "'Manrope', sans-serif" }}
                 >
                   {contact.role}{contact.email ? ` · ${contact.email}` : ''}
                 </p>

@@ -5,7 +5,7 @@ import PlatformBadge, { ALL_PLATFORMS, PLATFORM_LABELS } from './PlatformBadge'
 const STATUSES = ['idea', 'draft', 'review', 'scheduled', 'live']
 const STATUS_LABELS = { idea: 'Idea', draft: 'Draft', review: 'Review', scheduled: 'Scheduled', live: 'Live' }
 
-const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#02348E] text-[#010100] bg-white'
+const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#1D4ED8] text-[#111827] bg-white'
 const labelCls = 'text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1'
 
 export default function NewPostModal({ partners = [], post = null, onClose, onSaved }) {
@@ -91,8 +91,8 @@ export default function NewPostModal({ partners = [], post = null, onClose, onSa
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <h2
-            className="text-base font-semibold text-[#010100]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+            className="text-base font-semibold text-[#111827]"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             {isEdit ? 'Edit Post' : 'New Post'}
           </h2>
@@ -103,7 +103,7 @@ export default function NewPostModal({ partners = [], post = null, onClose, onSa
 
           {/* Title */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Title *</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Title *</label>
             <input
               autoFocus
               required
@@ -112,26 +112,26 @@ export default function NewPostModal({ partners = [], post = null, onClose, onSa
               onChange={e => set('title', e.target.value)}
               placeholder="Post title…"
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
           {/* Caption */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Caption</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Caption</label>
             <textarea
               value={form.caption}
               onChange={e => set('caption', e.target.value)}
               rows={3}
               placeholder="Write your post caption…"
               className={`${inputCls} resize-none`}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
           {/* Platforms */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Platforms</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Platforms</label>
             <div className="flex gap-2 flex-wrap">
               {ALL_PLATFORMS.map(p => (
                 <button
@@ -140,10 +140,10 @@ export default function NewPostModal({ partners = [], post = null, onClose, onSa
                   onClick={() => togglePlatform(p)}
                   className={`flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-full border font-medium transition-all ${
                     form.platforms.includes(p)
-                      ? 'border-[#02348E] bg-[#02348E]/5 text-[#02348E]'
+                      ? 'border-[#1D4ED8] bg-[#1D4ED8]/5 text-[#1D4ED8]'
                       : 'border-gray-200 text-gray-500 hover:border-gray-300'
                   }`}
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   <PlatformBadge platform={p} size="xs" />
                   {PLATFORM_LABELS[p]}
@@ -155,12 +155,12 @@ export default function NewPostModal({ partners = [], post = null, onClose, onSa
           {/* Status + Scheduled at */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Status</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Status</label>
               <select
                 value={form.status}
                 onChange={e => set('status', e.target.value)}
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {STATUSES.map(s => (
                   <option key={s} value={s}>{STATUS_LABELS[s]}</option>
@@ -168,25 +168,25 @@ export default function NewPostModal({ partners = [], post = null, onClose, onSa
               </select>
             </div>
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Scheduled At</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Scheduled At</label>
               <input
                 type="datetime-local"
                 value={form.scheduled_at}
                 onChange={e => set('scheduled_at', e.target.value)}
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               />
             </div>
           </div>
 
           {/* Partner */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Partner</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Partner</label>
             <select
               value={form.partner_id}
               onChange={e => set('partner_id', e.target.value)}
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               <option value="">— No partner —</option>
               {partners.map(p => (
@@ -197,17 +197,17 @@ export default function NewPostModal({ partners = [], post = null, onClose, onSa
 
           {/* Canva URL */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Canva Design URL</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Canva Design URL</label>
             <input
               type="url"
               value={form.canva_file_url}
               onChange={e => set('canva_file_url', e.target.value)}
               placeholder="https://www.canva.com/design/…"
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
             {form.canva_file_url && (
-              <p className="text-[10px] text-[#02348E] mt-1" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+              <p className="text-[10px] text-[#1D4ED8] mt-1" style={{ fontFamily: "'Manrope', sans-serif" }}>
                 ✦ {extractCanvaName(form.canva_file_url) || 'Canva Design'}
               </p>
             )}
@@ -215,27 +215,27 @@ export default function NewPostModal({ partners = [], post = null, onClose, onSa
 
           {/* Hashtags */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Hashtags (comma-separated)</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Hashtags (comma-separated)</label>
             <input
               type="text"
               value={form.hashtags}
               onChange={e => set('hashtags', e.target.value)}
               placeholder="#MorganHill, #LocalBusiness…"
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
           {/* Notes */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Notes</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Notes</label>
             <textarea
               value={form.notes}
               onChange={e => set('notes', e.target.value)}
               rows={2}
               placeholder="Internal notes…"
               className={`${inputCls} resize-none`}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
@@ -245,15 +245,15 @@ export default function NewPostModal({ partners = [], post = null, onClose, onSa
               type="button"
               onClick={onClose}
               className="text-sm text-gray-500 hover:text-gray-700 px-4 py-2 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving || !form.title.trim()}
-              className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-sm font-medium px-5 py-2 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 disabled:opacity-40 text-white text-sm font-medium px-5 py-2 rounded transition-colors"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {saving ? 'Saving…' : isEdit ? 'Save Changes' : 'Create Post'}
             </button>

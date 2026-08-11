@@ -76,11 +76,11 @@ const STAGE_LABELS = {
 const STAGE_COLORS = {
   prospect: 'bg-gray-100 text-gray-600',   pitched:     'bg-blue-100 text-blue-700',
   proposal: 'bg-purple-100 text-purple-700', creative:  'bg-orange-100 text-orange-700',
-  live:     'bg-green-100 text-green-700', closed_won:   'bg-[#02348E] text-white',
+  live:     'bg-green-100 text-green-700', closed_won:   'bg-[#1D4ED8] text-white',
   closed_lost: 'bg-red-100 text-red-600',
 }
 const PACKAGE_COLORS = {
-  starter: 'bg-gray-100 text-gray-600', standard: 'bg-blue-50 text-[#02348E]', premium: 'bg-yellow-50 text-yellow-700',
+  starter: 'bg-gray-100 text-gray-600', standard: 'bg-blue-50 text-[#1D4ED8]', premium: 'bg-yellow-50 text-yellow-700',
 }
 const PRIORITY_COLORS = {
   high: 'text-red-500', medium: 'text-orange-400', low: 'text-gray-400',
@@ -140,8 +140,8 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
       <div className="lg:col-span-2 bg-white rounded-lg border border-gray-100 p-4">
         <div className="flex items-center justify-between mb-4">
           <h3
-            className="text-sm font-semibold text-[#010100]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+            className="text-sm font-semibold text-[#111827]"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Partner Details
           </h3>
@@ -150,10 +150,10 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
             disabled={saving}
             className={`text-xs font-medium px-3 py-1.5 rounded transition-colors ${
               editing
-                ? 'bg-[#02348E] text-white hover:bg-[#02348E]/90'
+                ? 'bg-[#1D4ED8] text-white hover:bg-[#1D4ED8]/90'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             {saving ? 'Saving…' : editing ? 'Save' : 'Edit'}
           </button>
@@ -168,7 +168,7 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
             <div key={field}>
               <label
                 className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {label}
               </label>
@@ -177,13 +177,13 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
                   type={type}
                   value={form[field]}
                   onChange={e => handleChange(field, e.target.value)}
-                  className="w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#02348E] text-[#010100]"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  className="w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#1D4ED8] text-[#111827]"
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 />
               ) : (
                 <p
-                  className="text-sm text-[#010100]"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  className="text-sm text-[#111827]"
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   {form[field] || <span className="text-gray-400 italic">Not set</span>}
                 </p>
@@ -195,7 +195,7 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
           <div>
             <label
               className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Drive Folder
             </label>
@@ -205,16 +205,16 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
                 value={form.drive_folder_url}
                 onChange={e => handleChange('drive_folder_url', e.target.value)}
                 placeholder="https://drive.google.com/drive/folders/…"
-                className="w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#02348E] text-[#010100]"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                className="w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#1D4ED8] text-[#111827]"
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               />
             ) : form.drive_folder_url ? (
               <a
                 href={form.drive_folder_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm text-[#02348E] hover:underline"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                className="inline-flex items-center gap-1.5 text-sm text-[#1D4ED8] hover:underline"
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M19.35 10.04A7.49 7.49 0 0012 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 000 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
@@ -222,7 +222,7 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
                 Open partner folder
               </a>
             ) : (
-              <span className="text-sm text-gray-400 italic" style={{ fontFamily: 'Roboto, sans-serif' }}>Not set</span>
+              <span className="text-sm text-gray-400 italic" style={{ fontFamily: 'Manrope, sans-serif' }}>Not set</span>
             )}
           </div>
 
@@ -230,7 +230,7 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
           {editing && (
             <>
               <div>
-                <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Manrope, sans-serif' }}>
                   Partner Type
                 </label>
                 <div className="flex gap-1.5 flex-wrap">
@@ -241,10 +241,10 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
                       onClick={() => handleChange('type', pt.value)}
                       className={`text-xs px-2.5 py-1 rounded font-medium transition-colors ${
                         form.type === pt.value
-                          ? 'bg-[#02348E] text-white'
+                          ? 'bg-[#1D4ED8] text-white'
                           : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                       }`}
-                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                      style={{ fontFamily: 'Manrope, sans-serif' }}
                     >
                       {pt.label}
                     </button>
@@ -252,7 +252,7 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
                 </div>
               </div>
               <div>
-                <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Manrope, sans-serif' }}>
                   Status
                 </label>
                 <div className="flex gap-2">
@@ -266,7 +266,7 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
                           ? val ? 'bg-green-500 text-white border-green-500' : 'bg-gray-400 text-white border-gray-400'
                           : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'
                       }`}
-                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                      style={{ fontFamily: 'Manrope, sans-serif' }}
                     >
                       {val ? 'Active' : 'Inactive'}
                     </button>
@@ -279,7 +279,7 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
           <div>
             <label
               className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Notes
             </label>
@@ -288,13 +288,13 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
                 value={form.notes}
                 onChange={e => handleChange('notes', e.target.value)}
                 rows={3}
-                className="w-full text-sm border border-gray-200 rounded px-3 py-1.5 resize-none focus:outline-none focus:border-[#02348E] text-[#010100]"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                className="w-full text-sm border border-gray-200 rounded px-3 py-1.5 resize-none focus:outline-none focus:border-[#1D4ED8] text-[#111827]"
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               />
             ) : (
               <p
-                className="text-sm text-[#010100]"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                className="text-sm text-[#111827]"
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {form.notes || <span className="text-gray-400 italic">No notes</span>}
               </p>
@@ -305,7 +305,7 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
             <button
               onClick={() => setEditing(false)}
               className="text-xs text-gray-400 hover:text-gray-600"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Cancel
             </button>
@@ -316,8 +316,8 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
       {/* Contact list */}
       <div className="bg-white rounded-lg border border-gray-100 p-4">
         <h3
-          className="text-sm font-semibold text-[#010100] mb-3"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          className="text-sm font-semibold text-[#111827] mb-3"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           Contacts
         </h3>
@@ -325,29 +325,29 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
           {contacts.length === 0 ? (
             <p
               className="text-xs text-gray-400"
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               No contacts yet
             </p>
           ) : contacts.map(c => (
             <div key={c.id} className="flex items-start gap-2.5">
               <div
-                className="w-8 h-8 rounded-full bg-[#02348E] text-white text-xs font-semibold flex items-center justify-center shrink-0"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                className="w-8 h-8 rounded-full bg-[#1D4ED8] text-white text-xs font-semibold flex items-center justify-center shrink-0"
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               >
                 {initials(c.name)}
               </div>
               <div className="flex-1 min-w-0">
                 <p
-                  className="text-sm font-medium text-[#010100] leading-snug"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  className="text-sm font-medium text-[#111827] leading-snug"
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   {c.name}
                 </p>
                 {c.role && (
                   <p
                     className="text-[10px] text-gray-400"
-                    style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                    style={{ fontFamily: "'Manrope', sans-serif" }}
                   >
                     {c.role}
                   </p>
@@ -355,8 +355,8 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
                 {c.email && (
                   <a
                     href={`mailto:${c.email}`}
-                    className="text-xs text-[#02348E] hover:underline truncate block"
-                    style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                    className="text-xs text-[#1D4ED8] hover:underline truncate block"
+                    style={{ fontFamily: "'Manrope', sans-serif" }}
                   >
                     {c.email}
                   </a>
@@ -376,7 +376,7 @@ function DealsTab({ deals }) {
   if (deals.length === 0) {
     return (
       <div className="bg-white rounded-lg border border-gray-100 p-8 text-center">
-        <p className="text-sm text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+        <p className="text-sm text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
           No deals linked to this partner yet
         </p>
       </div>
@@ -389,19 +389,19 @@ function DealsTab({ deals }) {
         <Link
           key={d.id}
           to={`/deal/${d.id}`}
-          className="bg-white rounded-lg border border-gray-100 p-4 flex items-center gap-4 hover:border-[#02348E]/30 hover:shadow-sm transition-all block"
+          className="bg-white rounded-lg border border-gray-100 p-4 flex items-center gap-4 hover:border-[#1D4ED8]/30 hover:shadow-sm transition-all block"
         >
           <div className="flex-1 min-w-0">
             <p
-              className="text-sm font-medium text-[#010100] truncate"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="text-sm font-medium text-[#111827] truncate"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {d.title}
             </p>
             {d.run_start && (
               <p
                 className="text-xs text-gray-400 mt-0.5"
-                style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               >
                 {d.run_start} → {d.run_end ?? '—'}
               </p>
@@ -414,7 +414,7 @@ function DealsTab({ deals }) {
                 className={`text-[10px] font-semibold px-1.5 py-0.5 rounded uppercase tracking-wide ${
                   PACKAGE_COLORS[d.package] ?? 'bg-gray-100 text-gray-600'
                 }`}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {d.package}
               </span>
@@ -423,14 +423,14 @@ function DealsTab({ deals }) {
               className={`text-[10px] font-semibold px-2 py-1 rounded-full uppercase tracking-wide ${
                 STAGE_COLORS[d.stage] ?? 'bg-gray-100 text-gray-600'
               }`}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {STAGE_LABELS[d.stage] ?? d.stage}
             </span>
             {d.total_value && (
               <span
-                className="text-sm font-semibold text-[#02348E]"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                className="text-sm font-semibold text-[#1D4ED8]"
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               >
                 {fmt(d.total_value)}
               </span>
@@ -471,8 +471,8 @@ function TasksTab({ partnerId, partner }) {
       <div className="flex justify-end mb-3">
         <button
           onClick={() => setModal(true)}
-          className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         >
           + New Task
         </button>
@@ -525,8 +525,8 @@ function NotesTab({ partnerId }) {
     <div>
       <div className="bg-white rounded-lg border border-gray-100 p-4 mb-4">
         <h3
-          className="text-sm font-semibold text-[#010100] mb-3"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          className="text-sm font-semibold text-[#111827] mb-3"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           Add Note
         </h3>
@@ -536,14 +536,14 @@ function NotesTab({ partnerId }) {
           onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) addNote() }}
           placeholder="Meeting notes, call recap, follow-up reminders… (Ctrl+↵ to save)"
           rows={4}
-          className="w-full text-sm border border-gray-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-[#02348E] text-[#010100] mb-2"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="w-full text-sm border border-gray-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-[#1D4ED8] text-[#111827] mb-2"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         />
         <button
           onClick={addNote}
           disabled={posting || !entry.trim()}
-          className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-sm font-medium px-4 py-1.5 rounded transition-colors"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 disabled:opacity-40 text-white text-sm font-medium px-4 py-1.5 rounded transition-colors"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         >
           {posting ? 'Saving…' : 'Save Note'}
         </button>
@@ -552,16 +552,16 @@ function NotesTab({ partnerId }) {
       <div className="space-y-3">
         {notes.length === 0 ? (
           <div className="bg-white rounded-lg border border-gray-100 p-8 text-center">
-            <p className="text-sm text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            <p className="text-sm text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
               No notes yet — add meeting logs, call recaps, or reminders above
             </p>
           </div>
         ) : notes.map(note => (
           <div key={note.id} className="bg-white rounded-lg border border-gray-100 p-4">
-            <p className="text-[10px] text-gray-400 mb-1.5 uppercase tracking-wide" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            <p className="text-[10px] text-gray-400 mb-1.5 uppercase tracking-wide" style={{ fontFamily: "'Manrope', sans-serif" }}>
               {fmtDate(note.created_at)}
             </p>
-            <p className="text-sm text-[#010100] leading-relaxed whitespace-pre-wrap" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <p className="text-sm text-[#111827] leading-relaxed whitespace-pre-wrap" style={{ fontFamily: 'Manrope, sans-serif' }}>
               {note.body}
             </p>
           </div>
@@ -618,7 +618,7 @@ export default function PartnerRecord() {
 
   if (loading) {
     return (
-      <div className="p-6 text-sm text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+      <div className="p-6 text-sm text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
         Loading…
       </div>
     )
@@ -627,13 +627,13 @@ export default function PartnerRecord() {
   if (!partner) {
     return (
       <div className="p-6">
-        <p className="text-sm text-gray-500 mb-2" style={{ fontFamily: 'Roboto, sans-serif' }}>
+        <p className="text-sm text-gray-500 mb-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
           Partner not found.
         </p>
         <button
           onClick={() => navigate('/partners')}
-          className="text-sm text-[#02348E] hover:underline"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="text-sm text-[#1D4ED8] hover:underline"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         >
           ← Back to partners
         </button>
@@ -648,19 +648,19 @@ export default function PartnerRecord() {
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={() => navigate('/partners')}
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#02348E] transition-colors"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#1D4ED8] transition-colors"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         >
           ← Partners
         </button>
 
         {confirmDelete ? (
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>Delete this partner?</span>
+            <span className="text-xs text-gray-500" style={{ fontFamily: 'Manrope, sans-serif' }}>Delete this partner?</span>
             <button
               onClick={() => setConfirmDelete(false)}
               className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1 rounded"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Cancel
             </button>
@@ -668,7 +668,7 @@ export default function PartnerRecord() {
               onClick={deletePartner}
               disabled={deleting}
               className="text-xs text-white bg-red-500 hover:bg-red-600 disabled:opacity-50 px-3 py-1 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {deleting ? 'Deleting…' : 'Yes, delete'}
             </button>
@@ -677,7 +677,7 @@ export default function PartnerRecord() {
           <button
             onClick={() => setConfirmDelete(true)}
             className="text-xs text-gray-400 hover:text-red-500 transition-colors"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             Delete partner
           </button>
@@ -692,15 +692,15 @@ export default function PartnerRecord() {
             {!partner.active && (
               <span
                 className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-red-100 text-red-600 uppercase tracking-wide"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 Inactive
               </span>
             )}
           </div>
           <h1
-            className="text-2xl font-semibold text-[#010100]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+            className="text-2xl font-semibold text-[#111827]"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             {partner.name}
           </h1>
@@ -709,8 +709,8 @@ export default function PartnerRecord() {
               href={`https://${partner.website.replace(/^https?:\/\//, '')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-[#02348E] hover:underline"
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              className="text-sm text-[#1D4ED8] hover:underline"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               {partner.website}
             </a>
@@ -719,18 +719,18 @@ export default function PartnerRecord() {
 
         <div className="flex items-center gap-4 shrink-0">
           <div className="text-right">
-            <p className="text-[10px] text-gray-400 uppercase tracking-wide" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <p className="text-[10px] text-gray-400 uppercase tracking-wide" style={{ fontFamily: 'Manrope, sans-serif' }}>
               Deals
             </p>
-            <p className="text-xl font-bold text-[#02348E]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+            <p className="text-xl font-bold text-[#1D4ED8]" style={{ fontFamily: "'Manrope', sans-serif" }}>
               {deals.length}
             </p>
           </div>
           <div className="text-right">
-            <p className="text-[10px] text-gray-400 uppercase tracking-wide" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <p className="text-[10px] text-gray-400 uppercase tracking-wide" style={{ fontFamily: 'Manrope, sans-serif' }}>
               Contacts
             </p>
-            <p className="text-xl font-bold text-[#02348E]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+            <p className="text-xl font-bold text-[#1D4ED8]" style={{ fontFamily: "'Manrope', sans-serif" }}>
               {contacts.length}
             </p>
           </div>
@@ -745,10 +745,10 @@ export default function PartnerRecord() {
             onClick={() => setTab(t)}
             className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px ${
               tab === t
-                ? 'border-[#02348E] text-[#02348E]'
-                : 'border-transparent text-gray-500 hover:text-[#010100]'
+                ? 'border-[#1D4ED8] text-[#1D4ED8]'
+                : 'border-transparent text-gray-500 hover:text-[#111827]'
             }`}
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             {t}
             {t === 'Deals' && deals.length > 0 && (

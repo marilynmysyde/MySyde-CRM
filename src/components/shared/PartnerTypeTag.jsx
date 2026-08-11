@@ -25,7 +25,7 @@ export default function PartnerTypeTag({ type, className = '' }) {
   return (
     <span
       className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide ${style} ${className}`}
-      style={{ fontFamily: 'Roboto, sans-serif' }}
+      style={{ fontFamily: 'Manrope, sans-serif' }}
     >
       {label}
     </span>

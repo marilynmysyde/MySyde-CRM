@@ -55,13 +55,13 @@ const SAMPLE_ACTIVITY = [
 
 const ACTIVITY_ICONS = {
   note:           { icon: '📝', color: 'text-gray-500'   },
-  email:          { icon: '📧', color: 'text-[#02348E]'  },
+  email:          { icon: '📧', color: 'text-[#1D4ED8]'  },
   call:           { icon: '📞', color: 'text-green-600'  },
   stage_change:   { icon: '🔀', color: 'text-purple-600' },
   canva_update:   { icon: '🎨', color: 'text-pink-600'   },
   task_complete:  { icon: '✅', color: 'text-green-600'  },
   post_published: { icon: '📣', color: 'text-orange-500' },
-  gmail_linked:   { icon: '📧', color: 'text-[#02348E]'  },
+  gmail_linked:   { icon: '📧', color: 'text-[#1D4ED8]'  },
 }
 
 const STAGE_LABELS = {
@@ -81,21 +81,21 @@ const STAGE_COLORS = {
 
 function StatCard({ label, value, sub, accent = false, to }) {
   const inner = (
-    <div className={`bg-white rounded-lg border p-4 ${accent ? 'border-[#02348E]/20' : 'border-gray-100'} ${to ? 'hover:shadow-md transition-shadow cursor-pointer' : ''}`}>
+    <div className={`bg-white rounded-lg border p-4 ${accent ? 'border-[#1D4ED8]/20' : 'border-gray-100'} ${to ? 'hover:shadow-md transition-shadow cursor-pointer' : ''}`}>
       <p
-        className={`text-2xl font-bold mb-0.5 ${accent ? 'text-[#02348E]' : 'text-[#010100]'}`}
-        style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+        className={`text-2xl font-bold mb-0.5 ${accent ? 'text-[#1D4ED8]' : 'text-[#111827]'}`}
+        style={{ fontFamily: "'Manrope', sans-serif" }}
       >
         {value}
       </p>
       <p
         className="text-xs text-gray-500 font-medium"
-        style={{ fontFamily: 'Roboto, sans-serif' }}
+        style={{ fontFamily: 'Manrope, sans-serif' }}
       >
         {label}
       </p>
       {sub && (
-        <p className="text-[10px] text-gray-400 mt-1" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+        <p className="text-[10px] text-gray-400 mt-1" style={{ fontFamily: "'Manrope', sans-serif" }}>
           {sub}
         </p>
       )}
@@ -186,13 +186,13 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h1
-          className="text-xl font-semibold text-[#010100]"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          className="text-xl font-semibold text-[#111827]"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           Dashboard
         </h1>
         {loading && (
-          <span className="text-xs text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+          <span className="text-xs text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
             Loading…
           </span>
         )}
@@ -234,22 +234,22 @@ export default function Dashboard() {
           <div className="bg-white rounded-lg border border-gray-100 p-4 mb-4">
             <div className="flex items-center justify-between mb-4">
               <h2
-                className="text-sm font-semibold text-[#010100]"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                className="text-sm font-semibold text-[#111827]"
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               >
                 Open Deals by Stage
               </h2>
               <Link
                 to="/board"
-                className="text-xs text-[#02348E] hover:underline"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                className="text-xs text-[#1D4ED8] hover:underline"
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 View board →
               </Link>
             </div>
 
             {openDeals.length === 0 ? (
-              <p className="text-xs text-gray-400 italic py-4 text-center" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+              <p className="text-xs text-gray-400 italic py-4 text-center" style={{ fontFamily: "'Manrope', sans-serif" }}>
                 No open deals.
               </p>
             ) : (
@@ -258,7 +258,7 @@ export default function Dashboard() {
                   <div key={stage} className="flex items-center gap-3">
                     <span
                       className="text-xs text-gray-500 w-18 shrink-0"
-                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                      style={{ fontFamily: 'Manrope, sans-serif' }}
                     >
                       {STAGE_LABELS[stage]}
                     </span>
@@ -269,8 +269,8 @@ export default function Dashboard() {
                       />
                     </div>
                     <span
-                      className="text-xs font-semibold text-[#010100] w-4 text-right shrink-0"
-                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                      className="text-xs font-semibold text-[#111827] w-4 text-right shrink-0"
+                      style={{ fontFamily: 'Manrope, sans-serif' }}
                     >
                       {count}
                     </span>
@@ -278,7 +278,7 @@ export default function Dashboard() {
                 ))}
                 <p
                   className="text-[10px] text-gray-400 pt-1"
-                  style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                  style={{ fontFamily: "'Manrope', sans-serif" }}
                 >
                   {totalOpen} open deals total
                 </p>
@@ -291,14 +291,14 @@ export default function Dashboard() {
             <div className="bg-white rounded-lg border border-amber-100 p-4 mb-4">
               <div className="flex items-center justify-between mb-3">
                 <h2
-                  className="text-sm font-semibold text-[#010100]"
-                  style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                  className="text-sm font-semibold text-[#111827]"
+                  style={{ fontFamily: "'Manrope', sans-serif" }}
                 >
                   Renewals in Next 30 Days
                 </h2>
                 <span
                   className="text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded-full"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   {renewals.length}
                 </span>
@@ -313,10 +313,10 @@ export default function Dashboard() {
                       className="flex items-center justify-between gap-3 p-2.5 rounded-lg hover:bg-amber-50/60 transition-colors group"
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-medium text-[#010100] truncate" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                        <p className="text-xs font-medium text-[#111827] truncate" style={{ fontFamily: 'Manrope, sans-serif' }}>
                           {r.title}
                         </p>
-                        <p className="text-[10px] text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                        <p className="text-[10px] text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
                           {r.partner}
                         </p>
                       </div>
@@ -324,7 +324,7 @@ export default function Dashboard() {
                         className={`text-[10px] font-semibold shrink-0 px-2 py-0.5 rounded-full ${
                           daysLeft <= 7 ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-700'
                         }`}
-                        style={{ fontFamily: 'Roboto, sans-serif' }}
+                        style={{ fontFamily: 'Manrope, sans-serif' }}
                       >
                         {daysLeft}d
                       </span>
@@ -345,10 +345,10 @@ export default function Dashboard() {
               <Link
                 key={l.to}
                 to={l.to}
-                className="bg-white rounded-lg border border-gray-100 p-3 flex items-center gap-2 hover:border-[#02348E]/30 hover:bg-[#02348E]/5 transition-colors"
+                className="bg-white rounded-lg border border-gray-100 p-3 flex items-center gap-2 hover:border-[#1D4ED8]/30 hover:bg-[#1D4ED8]/5 transition-colors"
               >
                 <span>{l.icon}</span>
-                <span className="text-xs font-medium text-[#010100]" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                <span className="text-xs font-medium text-[#111827]" style={{ fontFamily: 'Manrope, sans-serif' }}>
                   {l.label}
                 </span>
               </Link>
@@ -360,14 +360,14 @@ export default function Dashboard() {
         <div className="lg:col-span-1">
           <div className="bg-white rounded-lg border border-gray-100 p-4">
             <h2
-              className="text-sm font-semibold text-[#010100] mb-3"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              className="text-sm font-semibold text-[#111827] mb-3"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Recent Activity
             </h2>
 
             {activity.length === 0 ? (
-              <p className="text-xs text-gray-400 italic py-4 text-center" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+              <p className="text-xs text-gray-400 italic py-4 text-center" style={{ fontFamily: "'Manrope', sans-serif" }}>
                 No activity yet.
               </p>
             ) : (
@@ -379,14 +379,14 @@ export default function Dashboard() {
                       <span className="text-base mt-0.5 shrink-0 leading-none">{cfg.icon}</span>
                       <div className="flex-1 min-w-0">
                         <p
-                          className="text-xs text-[#010100] leading-snug"
-                          style={{ fontFamily: 'Roboto, sans-serif' }}
+                          className="text-xs text-[#111827] leading-snug"
+                          style={{ fontFamily: 'Manrope, sans-serif' }}
                         >
                           {entry.body}
                         </p>
                         <p
                           className="text-[10px] text-gray-400 mt-0.5"
-                          style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                          style={{ fontFamily: "'Manrope', sans-serif" }}
                         >
                           {fmtActivity(entry.created_at)}
                         </p>

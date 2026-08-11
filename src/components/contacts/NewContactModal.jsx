@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 
-const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#02348E] text-[#010100] bg-white'
+const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#1D4ED8] text-[#111827] bg-white'
 const labelCls = 'text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1'
 
 export default function NewContactModal({ onClose, onCreated }) {
@@ -76,8 +76,8 @@ export default function NewContactModal({ onClose, onCreated }) {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <h2
-            className="text-base font-semibold text-[#010100]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+            className="text-base font-semibold text-[#111827]"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Add Contact
           </h2>
@@ -94,7 +94,7 @@ export default function NewContactModal({ onClose, onCreated }) {
 
           {/* Name */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Full Name *</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Full Name *</label>
             <input
               autoFocus
               required
@@ -103,57 +103,57 @@ export default function NewContactModal({ onClose, onCreated }) {
               onChange={e => set('name', e.target.value)}
               placeholder="First and last name"
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
           {/* Role */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Role / Title</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Role / Title</label>
             <input
               type="text"
               value={form.role}
               onChange={e => set('role', e.target.value)}
               placeholder="e.g. Executive Director"
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
           {/* Email + Phone */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Email</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Email</label>
               <input
                 type="email"
                 value={form.email}
                 onChange={e => set('email', e.target.value)}
                 placeholder="name@example.com"
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               />
             </div>
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Phone</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Phone</label>
               <input
                 type="tel"
                 value={form.phone}
                 onChange={e => set('phone', e.target.value)}
                 placeholder="(408) 555-0100"
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               />
             </div>
           </div>
 
           {/* Partner */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Partner Organization</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Partner Organization</label>
             <select
               value={form.partner_id}
               onChange={e => set('partner_id', e.target.value)}
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               <option value="">— No partner —</option>
               {partners.map(p => (
@@ -164,20 +164,20 @@ export default function NewContactModal({ onClose, onCreated }) {
 
           {/* Notes */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Notes</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Notes</label>
             <textarea
               value={form.notes}
               onChange={e => set('notes', e.target.value)}
               rows={2}
               placeholder="Relationship notes, communication preferences…"
               className={`${inputCls} resize-none`}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
           {/* Save error */}
           {saveError && (
-            <p className="text-xs text-red-500 bg-red-50 border border-red-100 rounded px-3 py-2" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <p className="text-xs text-red-500 bg-red-50 border border-red-100 rounded px-3 py-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
               {saveError}
             </p>
           )}
@@ -188,15 +188,15 @@ export default function NewContactModal({ onClose, onCreated }) {
               type="button"
               onClick={onClose}
               className="text-sm text-gray-500 hover:text-gray-700 px-4 py-2 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving || !form.name.trim()}
-              className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-sm font-medium px-5 py-2 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 disabled:opacity-40 text-white text-sm font-medium px-5 py-2 rounded transition-colors"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {saving ? 'Saving…' : 'Add Contact'}
             </button>

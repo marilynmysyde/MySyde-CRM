@@ -23,7 +23,7 @@ const PLACEMENT_OPTIONS = [
   { value: 'map_bundle',        label: 'PDF Map Bundle' },
 ]
 
-const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#02348E] text-[#010100] bg-white'
+const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#1D4ED8] text-[#111827] bg-white'
 const labelCls = 'text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1'
 
 export default function NewDealModal({ onClose, onCreated }) {
@@ -109,8 +109,8 @@ export default function NewDealModal({ onClose, onCreated }) {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <h2
-            className="text-base font-semibold text-[#010100]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+            className="text-base font-semibold text-[#111827]"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             New Deal
           </h2>
@@ -127,7 +127,7 @@ export default function NewDealModal({ onClose, onCreated }) {
 
           {/* Title */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Deal Title *</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Deal Title *</label>
             <input
               autoFocus
               required
@@ -136,19 +136,19 @@ export default function NewDealModal({ onClose, onCreated }) {
               onChange={e => set('title', e.target.value)}
               placeholder="e.g. Spring Campaign — Top Banner"
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
           {/* Partner + Stage */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Partner</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Partner</label>
               <select
                 value={form.partner_id}
                 onChange={e => set('partner_id', e.target.value)}
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 <option value="">— No partner —</option>
                 {partners.map(p => (
@@ -157,12 +157,12 @@ export default function NewDealModal({ onClose, onCreated }) {
               </select>
             </div>
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Stage</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Stage</label>
               <select
                 value={form.stage}
                 onChange={e => set('stage', e.target.value)}
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {STAGES.map(s => (
                   <option key={s} value={s}>{STAGE_LABELS[s]}</option>
@@ -173,12 +173,12 @@ export default function NewDealModal({ onClose, onCreated }) {
 
           {/* Placement */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Placement Type</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Placement Type</label>
             <select
               value={form.placement_type}
               onChange={e => set('placement_type', e.target.value)}
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {PLACEMENT_OPTIONS.map(o => (
                 <option key={o.value} value={o.value}>{o.label}</option>
@@ -189,7 +189,7 @@ export default function NewDealModal({ onClose, onCreated }) {
           {/* Rate + Months */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Monthly Rate ($)</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Monthly Rate ($)</label>
               <input
                 type="number"
                 min="0"
@@ -198,18 +198,18 @@ export default function NewDealModal({ onClose, onCreated }) {
                 onChange={e => set('monthly_rate', e.target.value)}
                 placeholder="0.00"
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               />
             </div>
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Months</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Months</label>
               <input
                 type="number"
                 min="1"
                 value={form.months}
                 onChange={e => set('months', e.target.value)}
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               />
             </div>
           </div>
@@ -217,8 +217,8 @@ export default function NewDealModal({ onClose, onCreated }) {
           {/* Total value preview */}
           {totalPreview !== null && (
             <div
-              className="bg-[#02348E]/5 border border-[#02348E]/15 rounded-lg px-3 py-2 text-sm font-semibold text-[#02348E]"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              className="bg-[#1D4ED8]/5 border border-[#1D4ED8]/15 rounded-lg px-3 py-2 text-sm font-semibold text-[#1D4ED8]"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Total value: ${totalPreview.toLocaleString()}
             </div>
@@ -227,37 +227,37 @@ export default function NewDealModal({ onClose, onCreated }) {
           {/* Run dates */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Run Start</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Run Start</label>
               <input
                 type="date"
                 value={form.run_start}
                 onChange={e => set('run_start', e.target.value)}
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               />
             </div>
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Run End</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Run End</label>
               <input
                 type="date"
                 value={form.run_end}
                 onChange={e => set('run_end', e.target.value)}
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               />
             </div>
           </div>
 
           {/* Notes */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Notes</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Notes</label>
             <textarea
               value={form.notes}
               onChange={e => set('notes', e.target.value)}
               rows={2}
               placeholder="Internal notes, context…"
               className={`${inputCls} resize-none`}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
@@ -267,15 +267,15 @@ export default function NewDealModal({ onClose, onCreated }) {
               type="button"
               onClick={onClose}
               className="text-sm text-gray-500 hover:text-gray-700 px-4 py-2 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving || !form.title.trim()}
-              className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-sm font-medium px-5 py-2 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 disabled:opacity-40 text-white text-sm font-medium px-5 py-2 rounded transition-colors"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {saving ? 'Creating…' : 'Create Deal'}
             </button>

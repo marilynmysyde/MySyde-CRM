@@ -35,7 +35,7 @@ export default function PostCard({ post, onClick }) {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className="bg-white rounded-md border border-gray-100 p-2.5 shadow-sm group cursor-pointer hover:shadow-md transition-shadow"
+      className="bg-white rounded-[14px] border border-gray-100 p-3 shadow-sm group cursor-pointer hover:shadow-md hover:border-gray-200 transition-all"
       onClick={onClick}
     >
       {/* Top row: grip + platform badges */}
@@ -54,9 +54,9 @@ export default function PostCard({ post, onClick }) {
         </div>
         {post.canva_file_url && (
           <span
-            className="text-[9px] text-[#02348E] font-semibold uppercase tracking-wide shrink-0"
+            className="text-[9px] text-[#1D4ED8] font-semibold uppercase tracking-wide shrink-0"
             title="Canva design linked"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             ✦ Canva
           </span>
@@ -65,8 +65,8 @@ export default function PostCard({ post, onClick }) {
 
       {/* Title */}
       <p
-        className="text-xs font-medium text-[#010100] leading-snug mb-1 group-hover:text-[#02348E] transition-colors"
-        style={{ fontFamily: 'Roboto, sans-serif' }}
+        className="text-xs font-medium text-[#111827] leading-snug mb-1 group-hover:text-[#1D4ED8] transition-colors"
+        style={{ fontFamily: 'Manrope, sans-serif' }}
       >
         {post.title}
       </p>
@@ -75,7 +75,7 @@ export default function PostCard({ post, onClick }) {
       {post.caption && (
         <p
           className="text-[10px] text-gray-400 leading-snug line-clamp-2 mb-1.5"
-          style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           {post.caption}
         </p>
@@ -86,7 +86,7 @@ export default function PostCard({ post, onClick }) {
         {scheduledLabel ? (
           <span
             className="text-[10px] text-gray-400"
-            style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             {scheduledLabel}
           </span>

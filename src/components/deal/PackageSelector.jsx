@@ -38,13 +38,13 @@ export default function PackageSelector({ deal, onUpdate }) {
     <div className="bg-white rounded-lg border border-gray-100 p-4">
       <div className="flex items-center justify-between mb-3">
         <h3
-          className="text-sm font-semibold text-[#010100]"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          className="text-sm font-semibold text-[#111827]"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           Package
         </h3>
         {saving && (
-          <span className="text-xs text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+          <span className="text-xs text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
             Saving…
           </span>
         )}
@@ -57,30 +57,30 @@ export default function PackageSelector({ deal, onUpdate }) {
             onClick={() => selectPkg(p.key)}
             className={`rounded-lg border-2 p-3 text-left transition-all ${
               pkg === p.key
-                ? 'border-[#02348E] bg-[#02348E]/5'
+                ? 'border-[#1D4ED8] bg-[#1D4ED8]/5'
                 : 'border-gray-200 hover:border-gray-300 bg-white'
             }`}
           >
             <div
               className="text-[10px] font-semibold uppercase tracking-wide mb-1"
-              style={{ fontFamily: 'Roboto, sans-serif', color: pkg === p.key ? '#02348E' : '#9ca3af' }}
+              style={{ fontFamily: 'Manrope, sans-serif', color: pkg === p.key ? '#1D4ED8' : '#9ca3af' }}
             >
               {p.label}
             </div>
             <div
-              className="text-xl font-bold text-[#010100] leading-none mb-1"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              className="text-xl font-bold text-[#111827] leading-none mb-1"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               {fmt(p.rate)}
               <span className="text-xs font-normal text-gray-400">/mo</span>
             </div>
             <div
               className="text-[10px] text-gray-400 leading-tight"
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               {p.slot} · {p.loops}
               {p.design && (
-                <span className="ml-1 text-[#02348E] font-medium">Design ✓</span>
+                <span className="ml-1 text-[#1D4ED8] font-medium">Design ✓</span>
               )}
             </div>
           </button>
@@ -91,26 +91,26 @@ export default function PackageSelector({ deal, onUpdate }) {
         <div className="flex items-center gap-2">
           <label
             className="text-xs text-gray-500"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             Months
           </label>
           <select
             value={months}
             onChange={e => changeMonths(Number(e.target.value))}
-            className="text-sm border border-gray-200 rounded px-2 py-1 text-[#010100] focus:outline-none focus:border-[#02348E]"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            className="text-sm border border-gray-200 rounded px-2 py-1 text-[#111827] focus:outline-none focus:border-[#1D4ED8]"
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             {MONTH_OPTIONS.map(m => <option key={m} value={m}>{m}</option>)}
           </select>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="text-xs text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>
+          <span className="text-xs text-gray-500" style={{ fontFamily: 'Manrope, sans-serif' }}>
             3-month total
           </span>
           <span
-            className="text-base font-bold text-[#02348E]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+            className="text-base font-bold text-[#1D4ED8]"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             {fmt(total)}
           </span>

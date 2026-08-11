@@ -42,21 +42,21 @@ export default function CanvaLink({ deal, onUpdate }) {
   return (
     <div className="bg-white rounded-lg border border-gray-100 p-4">
       <h3
-        className="text-sm font-semibold text-[#010100] mb-3"
-        style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+        className="text-sm font-semibold text-[#111827] mb-3"
+        style={{ fontFamily: "'Manrope', sans-serif" }}
       >
         Canva File
       </h3>
 
       {linked && (
-        <div className="flex items-center gap-2 mb-3 p-2.5 bg-[#02348E]/5 rounded-lg border border-[#02348E]/20">
+        <div className="flex items-center gap-2 mb-3 p-2.5 bg-[#1D4ED8]/5 rounded-lg border border-[#1D4ED8]/20">
           <span className="text-lg shrink-0">🎨</span>
           <a
             href={linked}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-[#02348E] hover:underline truncate flex-1"
-            style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+            className="text-sm text-[#1D4ED8] hover:underline truncate flex-1"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             {deal.canva_file_name || 'View Canva file →'}
           </a>
@@ -69,8 +69,8 @@ export default function CanvaLink({ deal, onUpdate }) {
           value={url}
           onChange={e => handleUrlChange(e.target.value)}
           placeholder={linked ? 'Paste new Canva URL to update…' : 'Paste Canva URL…'}
-          className="text-sm border border-gray-200 rounded px-3 py-2 w-full focus:outline-none focus:border-[#02348E] text-[#010100]"
-          style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+          className="text-sm border border-gray-200 rounded px-3 py-2 w-full focus:outline-none focus:border-[#1D4ED8] text-[#111827]"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         />
         {url && (
           <>
@@ -79,14 +79,14 @@ export default function CanvaLink({ deal, onUpdate }) {
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="File name (auto-detected)…"
-              className="text-sm border border-gray-200 rounded px-3 py-2 w-full focus:outline-none focus:border-[#02348E] text-[#010100]"
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              className="text-sm border border-gray-200 rounded px-3 py-2 w-full focus:outline-none focus:border-[#1D4ED8] text-[#111827]"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             />
             <button
               onClick={save}
               disabled={saving}
-              className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-50 text-white text-sm font-medium px-4 py-1.5 rounded transition-colors self-start"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 disabled:opacity-50 text-white text-sm font-medium px-4 py-1.5 rounded transition-colors self-start"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {saving ? 'Saving…' : saved ? 'Saved ✓' : 'Save Link'}
             </button>

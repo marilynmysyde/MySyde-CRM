@@ -19,7 +19,7 @@ const GCAL_COLORS = {
   '10': 'bg-green-600',   // Basil
   '11': 'bg-red-600',     // Tomato
 }
-const DEFAULT_EVENT_COLOR = 'bg-[#02348E]'
+const DEFAULT_EVENT_COLOR = 'bg-[#1D4ED8]'
 
 // ─── AgendaSidebar ────────────────────────────────────────────────────────────
 
@@ -127,12 +127,12 @@ export default function AgendaSidebar() {
       >
         <div>
           <h2
-            className="text-sm font-semibold text-[#02348E] uppercase tracking-wide"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+            className="text-sm font-semibold text-[#1D4ED8] uppercase tracking-wide"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Today's Agenda
           </h2>
-          <p className="text-xs text-gray-400 mt-0.5" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+          <p className="text-xs text-gray-400 mt-0.5" style={{ fontFamily: "'Manrope', sans-serif" }}>
             {todayLabel}
           </p>
         </div>
@@ -147,7 +147,7 @@ export default function AgendaSidebar() {
           <div className="flex items-center justify-between mb-2">
             <h3
               className="text-xs font-semibold text-gray-400 uppercase tracking-wide"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Events
             </h3>
@@ -155,7 +155,7 @@ export default function AgendaSidebar() {
               <button
                 onClick={disconnect}
                 className="text-[10px] text-gray-400 hover:text-red-400 transition-colors"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
                 title="Disconnect Google Calendar"
               >
                 Disconnect
@@ -164,8 +164,8 @@ export default function AgendaSidebar() {
               <button
                 onClick={connectGoogle}
                 disabled={gcalLoading}
-                className="text-[10px] text-[#02348E] hover:underline disabled:opacity-50"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                className="text-[10px] text-[#1D4ED8] hover:underline disabled:opacity-50"
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {gcalLoading ? 'Connecting…' : '+ Connect Google'}
               </button>
@@ -173,19 +173,19 @@ export default function AgendaSidebar() {
           </div>
 
           {gcalLoading && (
-            <p className="text-xs text-gray-400 italic" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            <p className="text-xs text-gray-400 italic" style={{ fontFamily: "'Manrope', sans-serif" }}>
               Loading events…
             </p>
           )}
 
           {gcalError && (
-            <p className="text-[10px] text-red-500 leading-snug" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            <p className="text-[10px] text-red-500 leading-snug" style={{ fontFamily: "'Manrope', sans-serif" }}>
               {gcalError}
             </p>
           )}
 
           {!gcalLoading && gcalConn && events.length === 0 && (
-            <p className="text-xs text-gray-300 italic" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            <p className="text-xs text-gray-300 italic" style={{ fontFamily: "'Manrope', sans-serif" }}>
               No events today
             </p>
           )}
@@ -214,7 +214,7 @@ export default function AgendaSidebar() {
           <section>
             <h3
               className="text-xs font-semibold text-red-400 uppercase tracking-wide mb-2"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Overdue
             </h3>
@@ -235,13 +235,13 @@ export default function AgendaSidebar() {
         <section>
           <h3
             className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             Due Today
           </h3>
           <div className="space-y-1.5">
             {dueToday.length === 0 ? (
-              <p className="text-xs text-gray-300 italic" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+              <p className="text-xs text-gray-300 italic" style={{ fontFamily: "'Manrope', sans-serif" }}>
                 Nothing due today
               </p>
             ) : dueToday.map(t => (
@@ -259,7 +259,7 @@ export default function AgendaSidebar() {
           <section>
             <h3
               className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Renewal Alerts
             </h3>
@@ -284,7 +284,7 @@ export default function AgendaSidebar() {
 
       {gcalConn && (
         <div className={`p-4 border-t border-gray-100 ${mobileOpen ? 'block' : 'hidden'} lg:block`}>
-          <p className="text-[10px] text-green-500 text-center" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+          <p className="text-[10px] text-green-500 text-center" style={{ fontFamily: "'Manrope', sans-serif" }}>
             ✓ Google Calendar connected
           </p>
         </div>
@@ -299,7 +299,7 @@ function AgendaItem({ color, label, overdue = false }) {
       <span className={`w-1.5 h-1.5 rounded-full shrink-0 mt-1 ${color}`} />
       <span
         className={`text-xs leading-tight ${overdue ? 'text-red-500 font-medium' : 'text-gray-600'}`}
-        style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+        style={{ fontFamily: "'Manrope', sans-serif" }}
       >
         {label}
       </span>

@@ -4,7 +4,7 @@ import AgendaSidebar from './AgendaSidebar'
 
 export default function Shell() {
   return (
-    <div className="min-h-screen bg-[#F2F3F7] flex flex-col">
+    <div className="min-h-screen bg-[#F9FAFB] flex flex-col">
       <Topbar />
 
       {/* Desktop: side-by-side with independent scroll. Mobile: stacked, full-page scroll */}

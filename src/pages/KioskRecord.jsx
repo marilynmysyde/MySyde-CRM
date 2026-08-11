@@ -85,7 +85,7 @@ function StatusBadge({ status }) {
   return (
     <span
       className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border ${cfg.pill}`}
-      style={{ fontFamily: 'Roboto, sans-serif' }}
+      style={{ fontFamily: 'Manrope, sans-serif' }}
     >
       <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${cfg.dot}`} />
       {cfg.label}
@@ -103,13 +103,13 @@ const STAGE_COLORS = {
   proposal:    'bg-purple-100 text-purple-700',
   creative:    'bg-orange-100 text-orange-700',
   live:        'bg-green-100 text-green-700',
-  closed_won:  'bg-[#02348E] text-white',
+  closed_won:  'bg-[#1D4ED8] text-white',
   closed_lost: 'bg-red-100 text-red-600',
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#02348E] text-[#010100] bg-white'
+const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#1D4ED8] text-[#111827] bg-white'
 
 export default function KioskRecord() {
   const { id }      = useParams()
@@ -195,7 +195,7 @@ export default function KioskRecord() {
 
   if (loading) {
     return (
-      <div className="p-6 text-sm text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+      <div className="p-6 text-sm text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
         Loading…
       </div>
     )
@@ -204,10 +204,10 @@ export default function KioskRecord() {
   if (!kiosk) {
     return (
       <div className="p-6">
-        <p className="text-sm text-gray-500 mb-2" style={{ fontFamily: 'Roboto, sans-serif' }}>
+        <p className="text-sm text-gray-500 mb-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
           Kiosk not found.
         </p>
-        <button onClick={() => navigate('/kiosks')} className="text-sm text-[#02348E] hover:underline" style={{ fontFamily: 'Roboto, sans-serif' }}>
+        <button onClick={() => navigate('/kiosks')} className="text-sm text-[#1D4ED8] hover:underline" style={{ fontFamily: 'Manrope, sans-serif' }}>
           ← Back to Kiosks
         </button>
       </div>
@@ -225,19 +225,19 @@ export default function KioskRecord() {
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={() => navigate('/kiosks')}
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#02348E] transition-colors"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#1D4ED8] transition-colors"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         >
           ← Kiosks
         </button>
 
         {confirmDelete ? (
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>Delete this kiosk?</span>
+            <span className="text-xs text-gray-500" style={{ fontFamily: 'Manrope, sans-serif' }}>Delete this kiosk?</span>
             <button
               onClick={() => setConfirmDelete(false)}
               className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1 rounded"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Cancel
             </button>
@@ -245,7 +245,7 @@ export default function KioskRecord() {
               onClick={deleteKiosk}
               disabled={deleting}
               className="text-xs text-white bg-red-500 hover:bg-red-600 disabled:opacity-50 px-3 py-1 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {deleting ? 'Deleting…' : 'Yes, delete'}
             </button>
@@ -254,7 +254,7 @@ export default function KioskRecord() {
           <button
             onClick={() => setConfirmDelete(true)}
             className="text-xs text-gray-400 hover:text-red-500 transition-colors"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             Delete kiosk
           </button>
@@ -265,8 +265,8 @@ export default function KioskRecord() {
       <div className="flex items-start justify-between gap-4 mb-6">
         <div>
           <h1
-            className="text-2xl font-semibold text-[#010100] mb-2"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+            className="text-2xl font-semibold text-[#111827] mb-2"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             {kiosk.name}
           </h1>
@@ -277,8 +277,8 @@ export default function KioskRecord() {
                 <PartnerTypeTag type={kiosk.partners.type} />
                 <Link
                   to={`/partner/${kiosk.partners.id}`}
-                  className="text-sm text-[#02348E] hover:underline"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  className="text-sm text-[#1D4ED8] hover:underline"
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   {kiosk.partners.name}
                 </Link>
@@ -290,10 +290,10 @@ export default function KioskRecord() {
         {/* Install date */}
         {kiosk.installed_at && (
           <div className="text-right shrink-0">
-            <p className="text-[10px] text-gray-400 uppercase tracking-wide mb-0.5" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <p className="text-[10px] text-gray-400 uppercase tracking-wide mb-0.5" style={{ fontFamily: 'Manrope, sans-serif' }}>
               Installed
             </p>
-            <p className="text-sm text-[#010100]" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            <p className="text-sm text-[#111827]" style={{ fontFamily: "'Manrope', sans-serif" }}>
               {new Date(kiosk.installed_at + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
             </p>
           </div>
@@ -302,7 +302,7 @@ export default function KioskRecord() {
 
       {/* Location */}
       {kiosk.location && (
-        <div className="flex items-center gap-2 mb-6 text-sm text-gray-500" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+        <div className="flex items-center gap-2 mb-6 text-sm text-gray-500" style={{ fontFamily: "'Manrope', sans-serif" }}>
           <span>📍</span>
           <span>{kiosk.location}</span>
         </div>
@@ -310,40 +310,40 @@ export default function KioskRecord() {
 
       {/* Edit details panel */}
       {editingInfo ? (
-        <div className="bg-white rounded-lg border border-[#02348E]/20 p-4 mb-6">
+        <div className="bg-white rounded-lg border border-[#1D4ED8]/20 p-4 mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-[#010100]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>Edit Kiosk Details</h3>
+            <h3 className="text-sm font-semibold text-[#111827]" style={{ fontFamily: "'Manrope', sans-serif" }}>Edit Kiosk Details</h3>
             <div className="flex gap-2">
-              <button onClick={() => setEditingInfo(false)} className="text-xs text-gray-400 hover:text-gray-600" style={{ fontFamily: 'Roboto, sans-serif' }}>Cancel</button>
-              <button onClick={saveInfo} disabled={savingInfo} className="text-xs font-medium bg-[#02348E] text-white px-3 py-1.5 rounded hover:bg-[#02348E]/90 disabled:opacity-40 transition-colors" style={{ fontFamily: 'Roboto, sans-serif' }}>
+              <button onClick={() => setEditingInfo(false)} className="text-xs text-gray-400 hover:text-gray-600" style={{ fontFamily: 'Manrope, sans-serif' }}>Cancel</button>
+              <button onClick={saveInfo} disabled={savingInfo} className="text-xs font-medium bg-[#1D4ED8] text-white px-3 py-1.5 rounded hover:bg-[#1D4ED8]/90 disabled:opacity-40 transition-colors" style={{ fontFamily: 'Manrope, sans-serif' }}>
                 {savingInfo ? 'Saving…' : 'Save'}
               </button>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="col-span-2">
-              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Name</label>
-              <input type="text" value={infoForm.name} onChange={e => setInfoForm(p => ({ ...p, name: e.target.value }))} className={inputCls} style={{ fontFamily: 'Roboto, sans-serif' }} />
+              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Manrope, sans-serif' }}>Name</label>
+              <input type="text" value={infoForm.name} onChange={e => setInfoForm(p => ({ ...p, name: e.target.value }))} className={inputCls} style={{ fontFamily: 'Manrope, sans-serif' }} />
             </div>
             <div className="col-span-2">
-              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Location</label>
-              <input type="text" value={infoForm.location} onChange={e => setInfoForm(p => ({ ...p, location: e.target.value }))} className={inputCls} style={{ fontFamily: 'Roboto, sans-serif' }} />
+              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Manrope, sans-serif' }}>Location</label>
+              <input type="text" value={infoForm.location} onChange={e => setInfoForm(p => ({ ...p, location: e.target.value }))} className={inputCls} style={{ fontFamily: 'Manrope, sans-serif' }} />
             </div>
             <div>
-              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Status</label>
-              <select value={infoForm.status} onChange={e => setInfoForm(p => ({ ...p, status: e.target.value }))} className={inputCls} style={{ fontFamily: 'Roboto, sans-serif' }}>
+              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Manrope, sans-serif' }}>Status</label>
+              <select value={infoForm.status} onChange={e => setInfoForm(p => ({ ...p, status: e.target.value }))} className={inputCls} style={{ fontFamily: 'Manrope, sans-serif' }}>
                 <option value="pending">Pending</option>
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
               </select>
             </div>
             <div>
-              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Install Date</label>
-              <input type="date" value={infoForm.installed_at} onChange={e => setInfoForm(p => ({ ...p, installed_at: e.target.value }))} className={inputCls} style={{ fontFamily: 'Roboto, sans-serif' }} />
+              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Manrope, sans-serif' }}>Install Date</label>
+              <input type="date" value={infoForm.installed_at} onChange={e => setInfoForm(p => ({ ...p, installed_at: e.target.value }))} className={inputCls} style={{ fontFamily: 'Manrope, sans-serif' }} />
             </div>
             <div className="col-span-2">
-              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Partner</label>
-              <select value={infoForm.partner_id} onChange={e => setInfoForm(p => ({ ...p, partner_id: e.target.value }))} className={inputCls} style={{ fontFamily: 'Roboto, sans-serif' }}>
+              <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Manrope, sans-serif' }}>Partner</label>
+              <select value={infoForm.partner_id} onChange={e => setInfoForm(p => ({ ...p, partner_id: e.target.value }))} className={inputCls} style={{ fontFamily: 'Manrope, sans-serif' }}>
                 <option value="">— No partner —</option>
                 {partners.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
               </select>
@@ -352,7 +352,7 @@ export default function KioskRecord() {
         </div>
       ) : (
         <div className="flex justify-end mb-4">
-          <button onClick={() => setEditingInfo(true)} className="text-xs text-gray-400 hover:text-[#02348E] border border-gray-200 hover:border-[#02348E] px-3 py-1.5 rounded transition-colors" style={{ fontFamily: 'Roboto, sans-serif' }}>
+          <button onClick={() => setEditingInfo(true)} className="text-xs text-gray-400 hover:text-[#1D4ED8] border border-gray-200 hover:border-[#1D4ED8] px-3 py-1.5 rounded transition-colors" style={{ fontFamily: 'Manrope, sans-serif' }}>
             ✎ Edit details
           </button>
         </div>
@@ -361,15 +361,15 @@ export default function KioskRecord() {
       {/* Stats strip */}
       <div className="grid grid-cols-3 gap-3 mb-6">
         {[
-          { label: 'Active Ad Slots', value: activeDeals.length, color: 'text-[#02348E]' },
+          { label: 'Active Ad Slots', value: activeDeals.length, color: 'text-[#1D4ED8]' },
           { label: 'Live Campaigns',  value: liveDeals.length,   color: 'text-green-600' },
-          { label: 'Monthly Revenue', value: `$${totalMRR.toLocaleString()}`, color: 'text-[#010100]' },
+          { label: 'Monthly Revenue', value: `$${totalMRR.toLocaleString()}`, color: 'text-[#111827]' },
         ].map(s => (
           <div key={s.label} className="bg-white rounded-lg border border-gray-100 p-4 text-center">
-            <p className={`text-2xl font-bold mb-1 ${s.color}`} style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+            <p className={`text-2xl font-bold mb-1 ${s.color}`} style={{ fontFamily: "'Manrope', sans-serif" }}>
               {s.value}
             </p>
-            <p className="text-[10px] text-gray-400 uppercase tracking-wide" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <p className="text-[10px] text-gray-400 uppercase tracking-wide" style={{ fontFamily: 'Manrope, sans-serif' }}>
               {s.label}
             </p>
           </div>
@@ -382,14 +382,14 @@ export default function KioskRecord() {
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg border border-gray-100 p-4">
             <h3
-              className="text-sm font-semibold text-[#010100] mb-3"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              className="text-sm font-semibold text-[#111827] mb-3"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Ad Slots ({deals.length})
             </h3>
 
             {deals.length === 0 ? (
-              <p className="text-xs text-gray-400 italic py-4 text-center" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+              <p className="text-xs text-gray-400 italic py-4 text-center" style={{ fontFamily: "'Manrope', sans-serif" }}>
                 No deals linked to this kiosk yet.
               </p>
             ) : (
@@ -398,20 +398,20 @@ export default function KioskRecord() {
                   <Link
                     key={deal.id}
                     to={`/deal/${deal.id}`}
-                    className="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:border-[#02348E]/30 hover:bg-[#02348E]/5 transition-colors group"
+                    className="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:border-[#1D4ED8]/30 hover:bg-[#1D4ED8]/5 transition-colors group"
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <span
                         className={`text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide shrink-0 ${
                           STAGE_COLORS[deal.stage] ?? 'bg-gray-100 text-gray-600'
                         }`}
-                        style={{ fontFamily: 'Roboto, sans-serif' }}
+                        style={{ fontFamily: 'Manrope, sans-serif' }}
                       >
                         {STAGE_LABELS[deal.stage] ?? deal.stage}
                       </span>
                       <span
-                        className="text-sm text-[#010100] truncate group-hover:text-[#02348E] transition-colors"
-                        style={{ fontFamily: 'Roboto, sans-serif' }}
+                        className="text-sm text-[#111827] truncate group-hover:text-[#1D4ED8] transition-colors"
+                        style={{ fontFamily: 'Manrope, sans-serif' }}
                       >
                         {deal.title}
                       </span>
@@ -419,7 +419,7 @@ export default function KioskRecord() {
                     {deal.monthly_rate && (
                       <span
                         className="text-xs text-gray-500 shrink-0 ml-3"
-                        style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                        style={{ fontFamily: "'Manrope', sans-serif" }}
                       >
                         ${deal.monthly_rate}/mo × {deal.months ?? '—'} mo
                       </span>
@@ -431,8 +431,8 @@ export default function KioskRecord() {
 
             <Link
               to="/board"
-              className="mt-3 inline-flex items-center gap-1 text-xs text-[#02348E] hover:underline"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="mt-3 inline-flex items-center gap-1 text-xs text-[#1D4ED8] hover:underline"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               + Link a deal from the sales board
             </Link>
@@ -443,8 +443,8 @@ export default function KioskRecord() {
         <div className="lg:col-span-1">
           <div className="bg-white rounded-lg border border-gray-100 p-4 h-full">
             <h3
-              className="text-sm font-semibold text-[#010100] mb-3"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              className="text-sm font-semibold text-[#111827] mb-3"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Notes
             </h3>
@@ -453,14 +453,14 @@ export default function KioskRecord() {
               onChange={e => setNotes(e.target.value)}
               rows={6}
               placeholder="Install notes, screen orientation, maintenance log…"
-              className="w-full text-sm border border-gray-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-[#02348E] text-[#010100]"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="w-full text-sm border border-gray-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-[#1D4ED8] text-[#111827]"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
             <button
               onClick={saveNotes}
               disabled={savingNotes}
-              className="mt-2 bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-xs font-medium px-4 py-1.5 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="mt-2 bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 disabled:opacity-40 text-white text-xs font-medium px-4 py-1.5 rounded transition-colors"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {savingNotes ? 'Saving…' : notesSaved ? 'Saved ✓' : 'Save Notes'}
             </button>

@@ -44,28 +44,28 @@ export default function Board() {
       {/* Page header */}
       <div className="px-4 pt-4 pb-2 flex items-center justify-between">
         <h1
-          className="text-xl font-semibold text-[#010100]"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          className="text-xl font-semibold text-[#111827]"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           Sales Pipeline
         </h1>
         <div className="flex items-center gap-2">
           {loading && (
-            <span className="text-xs text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            <span className="text-xs text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
               Loading…
             </span>
           )}
           <button
             onClick={handleExport}
-            className="text-sm text-gray-500 hover:text-[#02348E] border border-gray-200 hover:border-[#02348E] px-3 py-1.5 rounded transition-colors"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            className="text-sm text-gray-500 hover:text-[#1D4ED8] border border-gray-200 hover:border-[#1D4ED8] px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             ↓ Export CSV
           </button>
           <button
             onClick={() => setShowNewDeal(true)}
-            className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             + New Deal
           </button>

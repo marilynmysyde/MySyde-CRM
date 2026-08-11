@@ -59,23 +59,23 @@ export default function Partners() {
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h1
-          className="text-xl font-semibold text-[#010100]"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          className="text-xl font-semibold text-[#111827]"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           Partners
         </h1>
         <div className="flex items-center gap-2">
           <button
             onClick={handleExport}
-            className="text-sm text-gray-500 hover:text-[#02348E] border border-gray-200 hover:border-[#02348E] px-3 py-1.5 rounded transition-colors"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            className="text-sm text-gray-500 hover:text-[#1D4ED8] border border-gray-200 hover:border-[#1D4ED8] px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             ↓ Export CSV
           </button>
           <button
             onClick={() => setShowNewPartner(true)}
-            className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             + Add Partner
           </button>
@@ -89,8 +89,8 @@ export default function Partners() {
           placeholder="Search partners…"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="border border-gray-200 rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#02348E]/30 w-48"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="border border-gray-200 rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1D4ED8]/30 w-48"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         />
         <div className="flex gap-1 flex-wrap">
           {TYPE_FILTERS.map(({ value, label }) => (
@@ -100,10 +100,10 @@ export default function Partners() {
               className={[
                 'px-2.5 py-1 rounded text-xs font-medium transition-colors',
                 filter === value
-                  ? 'bg-[#02348E] text-white'
-                  : 'bg-white border border-gray-200 text-gray-600 hover:border-[#02348E] hover:text-[#02348E]',
+                  ? 'bg-[#1D4ED8] text-white'
+                  : 'bg-white border border-gray-200 text-gray-600 hover:border-[#1D4ED8] hover:text-[#1D4ED8]',
               ].join(' ')}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {label}
             </button>
@@ -114,7 +114,7 @@ export default function Partners() {
       {/* Partner list */}
       <div className="space-y-2">
         {visible.length === 0 && (
-          <div className="text-center py-12 text-gray-400 text-sm" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+          <div className="text-center py-12 text-gray-400 text-sm" style={{ fontFamily: "'Manrope', sans-serif" }}>
             No partners match your filter.
           </div>
         )}
@@ -128,22 +128,22 @@ export default function Partners() {
               <PartnerTypeTag type={partner.type} />
               <div>
                 <p
-                  className="text-sm font-medium text-[#010100]"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  className="text-sm font-medium text-[#111827]"
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   {partner.name}
                 </p>
                 {partner.website && (
                   <p
                     className="text-xs text-gray-400"
-                    style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                    style={{ fontFamily: "'Manrope', sans-serif" }}
                   >
                     {partner.website}
                   </p>
                 )}
               </div>
             </div>
-            <span className="text-xs text-[#02348E] font-medium" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <span className="text-xs text-[#1D4ED8] font-medium" style={{ fontFamily: 'Manrope, sans-serif' }}>
               View →
             </span>
           </div>

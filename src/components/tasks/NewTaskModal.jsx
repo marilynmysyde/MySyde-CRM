@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { supabase } from '../../lib/supabase'
+import { TEAM_MEMBERS } from '../../lib/team'
 
 const PRIORITIES   = ['high', 'medium', 'low']
 const RECURRENCES  = ['weekly', 'monthly', 'quarterly']
 
-const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#02348E] text-[#010100] bg-white'
+const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#1D4ED8] text-[#111827] bg-white'
 const labelCls = 'text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1'
 
 export default function NewTaskModal({ partners = [], defaultPartnerId = null, onClose, onCreated }) {
@@ -72,8 +73,8 @@ export default function NewTaskModal({ partners = [], defaultPartnerId = null, o
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <h2
-            className="text-base font-semibold text-[#010100]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+            className="text-base font-semibold text-[#111827]"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             New Task
           </h2>
@@ -90,7 +91,7 @@ export default function NewTaskModal({ partners = [], defaultPartnerId = null, o
 
           {/* Title */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Title *</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Title *</label>
             <input
               autoFocus
               required
@@ -99,42 +100,42 @@ export default function NewTaskModal({ partners = [], defaultPartnerId = null, o
               onChange={e => set('title', e.target.value)}
               placeholder="Task title…"
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Description</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Description</label>
             <textarea
               value={form.description}
               onChange={e => set('description', e.target.value)}
               rows={2}
               placeholder="Optional notes or context…"
               className={`${inputCls} resize-none`}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
           {/* Due date + priority */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Due Date</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Due Date</label>
               <input
                 type="date"
                 value={form.due_date}
                 onChange={e => set('due_date', e.target.value)}
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               />
             </div>
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Priority</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Priority</label>
               <select
                 value={form.priority}
                 onChange={e => set('priority', e.target.value)}
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {PRIORITIES.map(p => (
                   <option key={p} value={p}>{p.charAt(0).toUpperCase() + p.slice(1)}</option>
@@ -145,12 +146,12 @@ export default function NewTaskModal({ partners = [], defaultPartnerId = null, o
 
           {/* Partner */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Partner</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Partner</label>
             <select
               value={form.partner_id}
               onChange={e => set('partner_id', e.target.value)}
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               <option value="">— No partner —</option>
               {partners.map(p => (
@@ -162,25 +163,28 @@ export default function NewTaskModal({ partners = [], defaultPartnerId = null, o
           {/* Assigned to + tags */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Assigned To</label>
-              <input
-                type="text"
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Assigned To</label>
+              <select
                 value={form.assigned_to}
                 onChange={e => set('assigned_to', e.target.value)}
-                placeholder="Name…"
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
-              />
+                style={{ fontFamily: 'Manrope, sans-serif' }}
+              >
+                <option value="">— Unassigned —</option>
+                {TEAM_MEMBERS.map(m => (
+                  <option key={m} value={m}>{m}</option>
+                ))}
+              </select>
             </div>
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Tags</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Tags</label>
               <input
                 type="text"
                 value={form.tags}
                 onChange={e => set('tags', e.target.value)}
                 placeholder="design, follow-up…"
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               />
             </div>
           </div>
@@ -189,14 +193,14 @@ export default function NewTaskModal({ partners = [], defaultPartnerId = null, o
           <div className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-3">
             <div>
               <p
-                className="text-sm font-medium text-[#010100]"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                className="text-sm font-medium text-[#111827]"
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 Recurring Task
               </p>
               <p
                 className="text-[10px] text-gray-400 mt-0.5"
-                style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               >
                 Auto-generates next instance when marked Done
               </p>
@@ -205,7 +209,7 @@ export default function NewTaskModal({ partners = [], defaultPartnerId = null, o
               type="button"
               onClick={() => set('is_recurring', !form.is_recurring)}
               className="relative shrink-0 rounded-full transition-colors"
-              style={{ width: 40, height: 22, background: form.is_recurring ? '#02348E' : '#d1d5db' }}
+              style={{ width: 40, height: 22, background: form.is_recurring ? '#1D4ED8' : '#d1d5db' }}
             >
               <span
                 className="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform"
@@ -217,7 +221,7 @@ export default function NewTaskModal({ partners = [], defaultPartnerId = null, o
           {/* Recurrence rule */}
           {form.is_recurring && (
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Repeats</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Repeats</label>
               <div className="flex gap-2">
                 {RECURRENCES.map(r => (
                   <button
@@ -226,10 +230,10 @@ export default function NewTaskModal({ partners = [], defaultPartnerId = null, o
                     onClick={() => set('recurrence_rule', r)}
                     className={`flex-1 text-xs py-2 rounded font-medium transition-colors ${
                       form.recurrence_rule === r
-                        ? 'bg-[#02348E] text-white'
+                        ? 'bg-[#1D4ED8] text-white'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
-                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                    style={{ fontFamily: 'Manrope, sans-serif' }}
                   >
                     {r.charAt(0).toUpperCase() + r.slice(1)}
                   </button>
@@ -244,15 +248,15 @@ export default function NewTaskModal({ partners = [], defaultPartnerId = null, o
               type="button"
               onClick={onClose}
               className="text-sm text-gray-500 hover:text-gray-700 px-4 py-2 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving || !form.title.trim()}
-              className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-sm font-medium px-5 py-2 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 disabled:opacity-40 text-white text-sm font-medium px-5 py-2 rounded transition-colors"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {saving ? 'Creating…' : 'Create Task'}
             </button>

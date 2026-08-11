@@ -1,5 +1,6 @@
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
+import AssigneeChip from './AssigneeChip'
 
 const PRIORITY_DOT = {
   high:   'bg-red-500',
@@ -13,6 +14,15 @@ function GripIcon() {
       <circle cx="2" cy="2"  r="1.2" /><circle cx="8" cy="2"  r="1.2" />
       <circle cx="2" cy="7"  r="1.2" /><circle cx="8" cy="7"  r="1.2" />
       <circle cx="2" cy="12" r="1.2" /><circle cx="8" cy="12" r="1.2" />
+    </svg>
+  )
+}
+
+function CheckBadge() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="shrink-0">
+      <circle cx="6" cy="6" r="6" fill="#10b981" />
+      <path d="M3.5 6L5 7.5L8.5 4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -32,7 +42,7 @@ function dateStatus(dateStr) {
   return 'upcoming'
 }
 
-export default function TaskCard({ task, showPartner = false }) {
+export default function TaskCard({ task, showPartner = false, onOpen }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: task.id })
 
   const style = {
@@ -42,16 +52,22 @@ export default function TaskCard({ task, showPartner = false }) {
     position:  isDragging ? 'relative' : undefined,
   }
 
-  const ds = dateStatus(task.due_date)
+  const ds     = dateStatus(task.due_date)
+  const isDone = task.status === 'done'
 
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className="bg-white rounded-md border border-gray-100 p-2.5 shadow-sm"
+      onClick={() => onOpen?.(task)}
+      className={`rounded-[14px] border p-3 shadow-sm transition-colors cursor-pointer ${
+        isDone
+          ? 'bg-green-50 border-green-100 hover:bg-green-100/70'
+          : 'bg-white border-gray-100 hover:border-gray-200'
+      }`}
     >
-      {/* Top row: grip + priority dot + recurring badge */}
+      {/* Top row: grip + priority dot + done badge + recurring badge */}
       <div className="flex items-center gap-1.5 mb-1.5">
         <div
           {...listeners}
@@ -64,10 +80,11 @@ export default function TaskCard({ task, showPartner = false }) {
           className={`w-2 h-2 rounded-full shrink-0 ${PRIORITY_DOT[task.priority] ?? 'bg-gray-300'}`}
           title={`${task.priority ?? 'low'} priority`}
         />
+        {isDone && <CheckBadge />}
         {task.is_recurring && (
           <span
-            className="text-[9px] text-[#02348E] font-semibold uppercase tracking-wide ml-auto"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            className="text-[9px] text-[#1D4ED8] font-semibold uppercase tracking-wide ml-auto"
+            style={{ fontFamily: 'Manrope, sans-serif' }}
             title={`Repeats ${task.recurrence_rule}`}
           >
             ↻
@@ -77,8 +94,10 @@ export default function TaskCard({ task, showPartner = false }) {
 
       {/* Title */}
       <p
-        className="text-xs text-[#010100] leading-snug mb-1.5"
-        style={{ fontFamily: 'Roboto, sans-serif' }}
+        className={`text-xs leading-snug mb-1.5 ${
+          isDone ? 'text-gray-500 line-through' : 'text-[#111827]'
+        }`}
+        style={{ fontFamily: 'Manrope, sans-serif' }}
       >
         {task.title}
       </p>
@@ -89,32 +108,27 @@ export default function TaskCard({ task, showPartner = false }) {
           {task.due_date && (
             <span
               className={`text-[10px] font-medium ${
-                ds === 'overdue' ? 'text-red-500' :
-                ds === 'today'   ? 'text-amber-500' :
-                                   'text-gray-400'
+                isDone            ? 'text-gray-400' :
+                ds === 'overdue'  ? 'text-red-500'  :
+                ds === 'today'    ? 'text-amber-500':
+                                    'text-gray-400'
               }`}
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
-              {ds === 'overdue' ? '⚠ ' : ds === 'today' ? '● ' : ''}{fmtDate(task.due_date)}
+              {!isDone && ds === 'overdue' ? '⚠ ' : !isDone && ds === 'today' ? '● ' : ''}{fmtDate(task.due_date)}
             </span>
           )}
           {showPartner && task.partners?.name && (
             <span
               className="text-[10px] text-gray-400 truncate"
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               {task.partners.name}
             </span>
           )}
         </div>
-        {task.assigned_to && (
-          <span
-            className="text-[10px] text-gray-400 shrink-0"
-            style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
-          >
-            {task.assigned_to}
-          </span>
-        )}
+        <AssigneeChip name={task.assigned_to} />
+
       </div>
     </div>
   )

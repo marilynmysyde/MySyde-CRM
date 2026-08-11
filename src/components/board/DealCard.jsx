@@ -5,7 +5,7 @@ import PartnerTypeTag from '../shared/PartnerTypeTag'
 import { PLACEMENTS, CATEGORIES } from '../../lib/rateCard'
 
 const CATEGORY_STYLES = {
-  digital: 'bg-blue-50 text-[#02348E]',
+  digital: 'bg-blue-50 text-[#1D4ED8]',
   wrap:    'bg-amber-50 text-amber-700',
   event:   'bg-purple-50 text-purple-700',
   map:     'bg-teal-50 text-teal-700',
@@ -26,7 +26,7 @@ function PlacementBadge({ placementType }) {
   return (
     <span
       className={`text-[10px] font-semibold px-1.5 py-0.5 rounded uppercase tracking-wide shrink-0 ${style}`}
-      style={{ fontFamily: 'Roboto, sans-serif' }}
+      style={{ fontFamily: 'Manrope, sans-serif' }}
       title={p.label}
     >
       {cat?.icon} {short.length > 16 ? short.slice(0, 14) + '…' : short}
@@ -73,7 +73,7 @@ export default function DealCard({ deal }) {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className="bg-white rounded-lg shadow-sm border border-gray-100 p-3 hover:shadow-md transition-shadow group"
+      className="bg-white rounded-[14px] shadow-sm border border-gray-100 p-3 hover:shadow-md hover:border-gray-200 transition-all group"
     >
       {/* Top row: drag handle + partner tag + package badge */}
       <div className="flex items-center justify-between gap-2 mb-2">
@@ -97,8 +97,8 @@ export default function DealCard({ deal }) {
       <div onClick={handleCardClick} className="cursor-pointer">
         {/* Deal title */}
         <p
-          className="text-sm font-medium text-[#010100] leading-snug mb-1 group-hover:text-[#02348E] transition-colors"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="text-sm font-medium text-[#111827] leading-snug mb-1 group-hover:text-[#1D4ED8] transition-colors"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         >
           {deal.title}
         </p>
@@ -110,10 +110,10 @@ export default function DealCard({ deal }) {
             onClick={handlePartnerClick}
             className={`text-xs mb-2 truncate block transition-colors ${
               deal.partners?.id
-                ? 'text-[#02348E] hover:underline cursor-pointer'
+                ? 'text-[#1D4ED8] hover:underline cursor-pointer'
                 : 'text-gray-400 cursor-default'
             }`}
-            style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             {deal.partners.name}
           </span>
@@ -124,14 +124,14 @@ export default function DealCard({ deal }) {
           <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-50">
             <span
               className="text-xs text-gray-400"
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               {monthlyDisplay}/mo
             </span>
             {totalDisplay && (
               <span
-                className="text-xs font-semibold text-[#02348E]"
-                style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                className="text-xs font-semibold text-[#1D4ED8]"
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               >
                 {totalDisplay} total
               </span>
@@ -143,7 +143,7 @@ export default function DealCard({ deal }) {
         {deal.run_start && (
           <p
             className="text-[10px] text-gray-300 mt-1"
-            style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             {deal.run_start} → {deal.run_end ?? '—'}
           </p>

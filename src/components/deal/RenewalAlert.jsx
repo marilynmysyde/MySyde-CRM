@@ -17,14 +17,14 @@ export default function RenewalAlert({ deal }) {
       className={`flex items-start gap-3 rounded-lg px-4 py-3 mb-5 ${
         isExpired
           ? 'bg-red-50 border border-red-200'
-          : 'bg-[#FFEC00]/20 border border-[#FFEC00]'
+          : 'bg-[#F59E0B]/20 border border-[#F59E0B]'
       }`}
     >
       <span className="text-xl leading-none mt-0.5">{isExpired ? '🔴' : '⚠️'}</span>
       <div>
         <p
-          className="text-sm font-semibold text-[#010100]"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          className="text-sm font-semibold text-[#111827]"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           {isExpired
             ? 'Campaign has expired'
@@ -32,7 +32,7 @@ export default function RenewalAlert({ deal }) {
         </p>
         <p
           className="text-xs text-gray-600 mt-0.5"
-          style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           Run ends {deal.run_end}
           {deal.partners?.name && ` — follow up with ${deal.partners.name} to renew.`}

@@ -11,7 +11,7 @@ const PARTNER_TYPES = [
   { value: 'other',          label: 'Other' },
 ]
 
-const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#02348E] text-[#010100] bg-white'
+const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#1D4ED8] text-[#111827] bg-white'
 const labelCls = 'text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1'
 
 export default function NewPartnerModal({ onClose, onCreated }) {
@@ -69,8 +69,8 @@ export default function NewPartnerModal({ onClose, onCreated }) {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <h2
-            className="text-base font-semibold text-[#010100]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+            className="text-base font-semibold text-[#111827]"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Add Partner
           </h2>
@@ -87,7 +87,7 @@ export default function NewPartnerModal({ onClose, onCreated }) {
 
           {/* Name */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Organization Name *</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Organization Name *</label>
             <input
               autoFocus
               required
@@ -96,13 +96,13 @@ export default function NewPartnerModal({ onClose, onCreated }) {
               onChange={e => set('name', e.target.value)}
               placeholder="e.g. Morgan Hill Chamber of Commerce"
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
           {/* Type */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Partner Type</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Partner Type</label>
             <div className="grid grid-cols-2 gap-1.5">
               {PARTNER_TYPES.map(pt => (
                 <button
@@ -111,10 +111,10 @@ export default function NewPartnerModal({ onClose, onCreated }) {
                   onClick={() => set('type', pt.value)}
                   className={`text-xs px-3 py-2 rounded text-left font-medium transition-colors ${
                     form.type === pt.value
-                      ? 'bg-[#02348E] text-white'
+                      ? 'bg-[#1D4ED8] text-white'
                       : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'
                   }`}
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   {pt.label}
                 </button>
@@ -125,18 +125,18 @@ export default function NewPartnerModal({ onClose, onCreated }) {
           {/* Website + Status */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Website</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Website</label>
               <input
                 type="text"
                 value={form.website}
                 onChange={e => set('website', e.target.value)}
                 placeholder="example.com"
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               />
             </div>
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Status</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Status</label>
               <div className="flex gap-2 mt-1">
                 {[true, false].map(val => (
                   <button
@@ -150,7 +150,7 @@ export default function NewPartnerModal({ onClose, onCreated }) {
                           : 'bg-gray-400 text-white border-gray-400'
                         : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'
                     }`}
-                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                    style={{ fontFamily: 'Manrope, sans-serif' }}
                   >
                     {val ? 'Active' : 'Inactive'}
                   </button>
@@ -161,27 +161,27 @@ export default function NewPartnerModal({ onClose, onCreated }) {
 
           {/* Address */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Address</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Address</label>
             <input
               type="text"
               value={form.address}
               onChange={e => set('address', e.target.value)}
               placeholder="Street address…"
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
           {/* Notes */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Notes</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Notes</label>
             <textarea
               value={form.notes}
               onChange={e => set('notes', e.target.value)}
               rows={2}
               placeholder="Relationship context, key contacts…"
               className={`${inputCls} resize-none`}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
@@ -191,15 +191,15 @@ export default function NewPartnerModal({ onClose, onCreated }) {
               type="button"
               onClick={onClose}
               className="text-sm text-gray-500 hover:text-gray-700 px-4 py-2 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving || !form.name.trim()}
-              className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-sm font-medium px-5 py-2 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 disabled:opacity-40 text-white text-sm font-medium px-5 py-2 rounded transition-colors"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {saving ? 'Saving…' : 'Add Partner'}
             </button>

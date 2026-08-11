@@ -41,22 +41,31 @@ supabase/
 
 ## Brand design system
 
-All colors and fonts come from the parent workspace's `brand/overview.md`. Never deviate.
+All colors and fonts come from the parent workspace's `brand/overview.md` (v2, refreshed 2026-08-11). Never deviate.
 
 | Token | Value | Use for |
 |---|---|---|
-| MySyde Blue | `#02348E` | Topbar, primary buttons, column headers, links |
-| Community Yellow | `#FFEC00` | Active nav tab, accents, hover highlights |
-| Black | `#010100` | All body text and headings |
-| Light Gray | `#F2F3F7` | App background, column backgrounds |
+| Mysyde Blue (primary) | `#1D4ED8` | Topbar, primary buttons, column headers, links |
+| Mysyde Blue Dark | `#1E40AF` | Hover / pressed states |
+| Amber (accent) | `#F59E0B` | Highlights, warnings, celebratory moments |
+| Ink | `#111827` | All body text and headings |
+| Muted | `#6B7280` | Secondary text |
+| App Background | `#F9FAFB` | Page background, column backgrounds |
+| Border | `#E5E7EB` | Standard borders / dividers |
 | White | `#FFFFFF` | Cards, modals, sidebar |
+| Emerald | `#10B981` | Success / done tasks |
+| Rose | `#E11D48` | Danger / destructive actions |
 
-**Fonts** — loaded via Google Fonts in `src/index.css`:
-- `IBM Plex Sans` — page titles, column headers (`font-family: "'IBM Plex Sans', sans-serif"`)
-- `Roboto` — nav labels, buttons, form labels
-- `Roboto Condensed` — card body text, data values, timestamps
+**Retired:** `#02348E` (too dark), `#FFEC00` (community yellow), `#010100` (pure black), `#F2F3F7` (old bg). Do not reintroduce.
 
-Apply fonts inline (`style={{ fontFamily: ... }}`) since Tailwind v4 custom font utilities aren't yet configured.
+**Fonts** — **Manrope only**, loaded via Google Fonts in `src/index.css`. Weights: 400 · 500 · 600 · 700 · 800.
+
+Manrope is set as the default body font — inline `style={{ fontFamily: ... }}` overrides are no longer required for regular text. Use Tailwind weight utilities (`font-medium`, `font-semibold`, `font-bold`, `font-extrabold`) instead.
+
+**Radii** (available as CSS vars in `@theme`):
+- Buttons: `8px` (`--radius-btn`)
+- Cards: `14px` (`--radius-card`)
+- Pills / chips: full round (`--radius-pill`)
 
 **Partner type color pills** — always use `<PartnerTypeTag type={partner.type} />` from `src/components/shared/PartnerTypeTag.jsx`. Never inline partner type colors.
 

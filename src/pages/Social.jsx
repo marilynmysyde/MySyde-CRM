@@ -173,21 +173,21 @@ export default function Social() {
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h1
-          className="text-xl font-semibold text-[#010100]"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          className="text-xl font-semibold text-[#111827]"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           Social
         </h1>
         <div className="flex items-center gap-2">
           {loading && (
-            <span className="text-xs text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            <span className="text-xs text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
               Loading…
             </span>
           )}
           <button
             onClick={() => { setEditPost(null); setModal(true) }}
-            className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             + New Post
           </button>
@@ -202,10 +202,10 @@ export default function Social() {
             onClick={() => setPlatform(p.id)}
             className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap ${
               platform === p.id
-                ? 'border-[#02348E] text-[#02348E]'
-                : 'border-transparent text-gray-500 hover:text-[#010100]'
+                ? 'border-[#1D4ED8] text-[#1D4ED8]'
+                : 'border-transparent text-gray-500 hover:text-[#111827]'
             }`}
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             {p.id !== 'all' && <PlatformBadge platform={p.id} size="xs" />}
             {p.label}

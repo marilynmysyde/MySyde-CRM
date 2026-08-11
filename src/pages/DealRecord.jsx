@@ -63,7 +63,7 @@ const STAGE_COLORS = {
   proposal:    'bg-purple-100 text-purple-700',
   creative:    'bg-orange-100 text-orange-700',
   live:        'bg-green-100 text-green-700',
-  closed_won:  'bg-[#02348E] text-white',
+  closed_won:  'bg-[#1D4ED8] text-white',
   closed_lost: 'bg-red-100 text-red-600',
 }
 
@@ -349,7 +349,7 @@ export default function DealRecord() {
     return (
       <div
         className="p-6 text-sm text-gray-400"
-        style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+        style={{ fontFamily: "'Manrope', sans-serif" }}
       >
         Loading…
       </div>
@@ -359,13 +359,13 @@ export default function DealRecord() {
   if (!deal) {
     return (
       <div className="p-6">
-        <p className="text-sm text-gray-500 mb-2" style={{ fontFamily: 'Roboto, sans-serif' }}>
+        <p className="text-sm text-gray-500 mb-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
           Deal not found.
         </p>
         <button
           onClick={() => navigate('/board')}
-          className="text-sm text-[#02348E] hover:underline"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="text-sm text-[#1D4ED8] hover:underline"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         >
           ← Back to board
         </button>
@@ -380,19 +380,19 @@ export default function DealRecord() {
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={() => navigate('/board')}
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#02348E] transition-colors"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#1D4ED8] transition-colors"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         >
           ← Sales Pipeline
         </button>
 
         {confirmDelete ? (
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>Delete this deal?</span>
+            <span className="text-xs text-gray-500" style={{ fontFamily: 'Manrope, sans-serif' }}>Delete this deal?</span>
             <button
               onClick={() => setConfirmDelete(false)}
               className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1 rounded"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Cancel
             </button>
@@ -400,7 +400,7 @@ export default function DealRecord() {
               onClick={deleteDeal}
               disabled={deleting}
               className="text-xs text-white bg-red-500 hover:bg-red-600 disabled:opacity-50 px-3 py-1 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {deleting ? 'Deleting…' : 'Yes, delete'}
             </button>
@@ -409,7 +409,7 @@ export default function DealRecord() {
           <button
             onClick={() => setConfirmDelete(true)}
             className="text-xs text-gray-400 hover:text-red-500 transition-colors"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             Delete deal
           </button>
@@ -431,21 +431,21 @@ export default function DealRecord() {
                 onChange={e => setTitleDraft(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') saveTitle(); if (e.key === 'Escape') setEditingTitle(false) }}
                 onBlur={saveTitle}
-                className="flex-1 text-2xl font-semibold text-[#010100] border-b-2 border-[#02348E] bg-transparent focus:outline-none leading-snug"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                className="flex-1 text-2xl font-semibold text-[#111827] border-b-2 border-[#1D4ED8] bg-transparent focus:outline-none leading-snug"
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               />
             </div>
           ) : (
             <div className="flex items-start gap-2 mb-2 group">
               <h1
-                className="text-2xl font-semibold text-[#010100] leading-snug"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                className="text-2xl font-semibold text-[#111827] leading-snug"
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               >
                 {deal.title}
               </h1>
               <button
                 onClick={() => { setTitleDraft(deal.title); setEditingTitle(true) }}
-                className="opacity-0 group-hover:opacity-100 text-gray-300 hover:text-[#02348E] text-sm mt-1.5 transition-all shrink-0"
+                className="opacity-0 group-hover:opacity-100 text-gray-300 hover:text-[#1D4ED8] text-sm mt-1.5 transition-all shrink-0"
                 title="Edit title"
               >
                 ✎
@@ -461,7 +461,7 @@ export default function DealRecord() {
                 className={`text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wide transition-opacity hover:opacity-80 ${
                   STAGE_COLORS[deal.stage] ?? 'bg-gray-100 text-gray-600'
                 }`}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {STAGE_LABELS[deal.stage] ?? deal.stage} ▾
               </button>
@@ -478,9 +478,9 @@ export default function DealRecord() {
                         key={s}
                         onClick={() => changeStage(s)}
                         className={`block w-full text-left px-3 py-2 text-xs hover:bg-gray-50 transition-colors ${
-                          deal.stage === s ? 'font-semibold text-[#02348E]' : 'text-[#010100]'
+                          deal.stage === s ? 'font-semibold text-[#1D4ED8]' : 'text-[#111827]'
                         }`}
-                        style={{ fontFamily: 'Roboto, sans-serif' }}
+                        style={{ fontFamily: 'Manrope, sans-serif' }}
                       >
                         {STAGE_LABELS[s]}
                       </button>
@@ -497,7 +497,7 @@ export default function DealRecord() {
                 className={`text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wide transition-opacity hover:opacity-80 ${
                   INVOICE_COLORS[invoiceStatus] ?? INVOICE_COLORS.none
                 }`}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 💳 {INVOICE_LABELS[invoiceStatus]} ▾
               </button>
@@ -510,9 +510,9 @@ export default function DealRecord() {
                         key={s}
                         onClick={() => changeInvoiceStatus(s)}
                         className={`block w-full text-left px-3 py-2 text-xs hover:bg-gray-50 transition-colors ${
-                          invoiceStatus === s ? 'font-semibold text-[#02348E]' : 'text-[#010100]'
+                          invoiceStatus === s ? 'font-semibold text-[#1D4ED8]' : 'text-[#111827]'
                         }`}
-                        style={{ fontFamily: 'Roboto, sans-serif' }}
+                        style={{ fontFamily: 'Manrope, sans-serif' }}
                       >
                         {INVOICE_LABELS[s]}
                       </button>
@@ -528,8 +528,8 @@ export default function DealRecord() {
                 <PartnerTypeTag type={deal.partners.type} />
                 <Link
                   to={`/partner/${deal.partners.id}`}
-                  className="text-sm text-[#02348E] hover:underline"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  className="text-sm text-[#1D4ED8] hover:underline"
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   {deal.partners.name}
                 </Link>
@@ -547,47 +547,47 @@ export default function DealRecord() {
                   type="date"
                   value={runStart}
                   onChange={e => setRunStart(e.target.value)}
-                  className="text-xs border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-[#02348E]"
-                  style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                  className="text-xs border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-[#1D4ED8]"
+                  style={{ fontFamily: "'Manrope', sans-serif" }}
                 />
                 <span className="text-xs text-gray-400">→</span>
                 <input
                   type="date"
                   value={runEnd}
                   onChange={e => setRunEnd(e.target.value)}
-                  className="text-xs border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-[#02348E]"
-                  style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                  className="text-xs border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-[#1D4ED8]"
+                  style={{ fontFamily: "'Manrope', sans-serif" }}
                 />
               </div>
               <div className="flex gap-1.5">
-                <button onClick={() => setEditingDates(false)} className="text-[10px] text-gray-400 hover:text-gray-600" style={{ fontFamily: 'Roboto, sans-serif' }}>Cancel</button>
-                <button onClick={saveDates} className="text-[10px] text-[#02348E] font-semibold hover:underline" style={{ fontFamily: 'Roboto, sans-serif' }}>Save</button>
+                <button onClick={() => setEditingDates(false)} className="text-[10px] text-gray-400 hover:text-gray-600" style={{ fontFamily: 'Manrope, sans-serif' }}>Cancel</button>
+                <button onClick={saveDates} className="text-[10px] text-[#1D4ED8] font-semibold hover:underline" style={{ fontFamily: 'Manrope, sans-serif' }}>Save</button>
               </div>
             </div>
           ) : (
             <div className="group">
               <p
                 className="text-[10px] text-gray-400 uppercase tracking-wide mb-0.5"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 Run dates
                 <button
                   onClick={() => setEditingDates(true)}
-                  className="ml-1.5 opacity-0 group-hover:opacity-100 text-gray-300 hover:text-[#02348E] transition-all"
+                  className="ml-1.5 opacity-0 group-hover:opacity-100 text-gray-300 hover:text-[#1D4ED8] transition-all"
                   title="Edit dates"
                 >
                   ✎
                 </button>
               </p>
               <p
-                className="text-sm text-[#010100]"
-                style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                className="text-sm text-[#111827]"
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               >
                 {deal.run_start ? `${deal.run_start} → ${deal.run_end ?? '—'}` : (
                   <button
                     onClick={() => setEditingDates(true)}
-                    className="text-xs text-gray-400 hover:text-[#02348E] italic"
-                    style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                    className="text-xs text-gray-400 hover:text-[#1D4ED8] italic"
+                    style={{ fontFamily: "'Manrope', sans-serif" }}
                   >
                     + Set run dates
                   </button>
@@ -611,15 +611,15 @@ export default function DealRecord() {
           <div className="bg-white rounded-lg border border-gray-100 p-4">
             <div className="flex items-center justify-between mb-1">
               <h3
-                className="text-sm font-semibold text-[#010100]"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                className="text-sm font-semibold text-[#111827]"
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               >
                 Payment Link
               </h3>
               {deal.total_value > 0 && (
                 <span
                   className="text-xs text-gray-400"
-                  style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                  style={{ fontFamily: "'Manrope', sans-serif" }}
                 >
                   {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(deal.total_value)}
                 </span>
@@ -627,7 +627,7 @@ export default function DealRecord() {
             </div>
             <p
               className="text-xs text-gray-400 mb-3"
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Generate a Stripe payment link to include in your proposal email.
             </p>
@@ -639,15 +639,15 @@ export default function DealRecord() {
                     href={paymentLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 text-xs text-[#02348E] hover:underline truncate"
-                    style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                    className="flex-1 text-xs text-[#1D4ED8] hover:underline truncate"
+                    style={{ fontFamily: "'Manrope', sans-serif" }}
                   >
                     {paymentLink}
                   </a>
                   <button
                     onClick={copyLink}
-                    className="text-xs font-medium text-white bg-[#02348E] hover:bg-[#02348E]/90 px-3 py-1 rounded shrink-0 transition-colors"
-                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                    className="text-xs font-medium text-white bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 px-3 py-1 rounded shrink-0 transition-colors"
+                    style={{ fontFamily: 'Manrope, sans-serif' }}
                   >
                     {linkCopied ? 'Copied ✓' : 'Copy'}
                   </button>
@@ -656,7 +656,7 @@ export default function DealRecord() {
                   onClick={generatePaymentLink}
                   disabled={generatingLink || !deal.total_value}
                   className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   {generatingLink ? 'Generating…' : 'Regenerate link'}
                 </button>
@@ -665,15 +665,15 @@ export default function DealRecord() {
               <button
                 onClick={generatePaymentLink}
                 disabled={generatingLink || !deal.total_value}
-                className="w-full text-sm font-medium text-white bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 px-4 py-2 rounded transition-colors"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                className="w-full text-sm font-medium text-white bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 disabled:opacity-40 px-4 py-2 rounded transition-colors"
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {generatingLink ? 'Generating…' : deal.total_value ? 'Generate Payment Link' : 'Set a deal total first'}
               </button>
             )}
 
             {linkError && (
-              <p className="text-xs text-red-500 mt-2" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+              <p className="text-xs text-red-500 mt-2" style={{ fontFamily: "'Manrope', sans-serif" }}>
                 {linkError}
               </p>
             )}
@@ -683,22 +683,22 @@ export default function DealRecord() {
           <div className="bg-white rounded-lg border border-gray-100 p-4">
             <div className="flex items-center justify-between mb-1">
               <h3
-                className="text-sm font-semibold text-[#010100]"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                className="text-sm font-semibold text-[#111827]"
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               >
                 Proposal Email
               </h3>
             </div>
             <p
               className="text-xs text-gray-400 mb-3"
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Generate a ready-to-send proposal email with deal details{paymentLink ? ' and payment link' : ''}.
             </p>
             <button
               onClick={() => setProposalOpen(true)}
-              className="w-full text-sm font-medium text-[#02348E] border border-[#02348E] hover:bg-[#02348E] hover:text-white px-4 py-2 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="w-full text-sm font-medium text-[#1D4ED8] border border-[#1D4ED8] hover:bg-[#1D4ED8] hover:text-white px-4 py-2 rounded transition-colors"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Draft Proposal Email
             </button>
@@ -707,59 +707,59 @@ export default function DealRecord() {
           {/* Gmail thread */}
           <div className="bg-white rounded-lg border border-gray-100 p-4">
             <h3
-              className="text-sm font-semibold text-[#010100] mb-3"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              className="text-sm font-semibold text-[#111827] mb-3"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Gmail Thread
             </h3>
 
             {/* Linked thread card */}
             {deal.gmail_thread_id && (
-              <div className="mb-3 p-3 bg-[#02348E]/5 rounded-lg border border-[#02348E]/15">
+              <div className="mb-3 p-3 bg-[#1D4ED8]/5 rounded-lg border border-[#1D4ED8]/15">
                 {gmailLoading ? (
-                  <p className="text-xs text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                  <p className="text-xs text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
                     Loading thread…
                   </p>
                 ) : gmailThread ? (
                   <div className="space-y-1">
-                    <p className="text-sm font-medium text-[#010100]" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                    <p className="text-sm font-medium text-[#111827]" style={{ fontFamily: 'Manrope, sans-serif' }}>
                       {gmailThread.subject}
                     </p>
-                    <p className="text-[10px] text-gray-500" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                    <p className="text-[10px] text-gray-500" style={{ fontFamily: "'Manrope', sans-serif" }}>
                       {gmailThread.messageCount} messages · {gmailThread.participants} participants · Last: {gmailThread.lastDate}
                     </p>
                     <a
                       href={`https://mail.google.com/mail/u/0/#all/${deal.gmail_thread_id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[10px] text-[#02348E] hover:underline"
-                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                      className="text-[10px] text-[#1D4ED8] hover:underline"
+                      style={{ fontFamily: 'Manrope, sans-serif' }}
                     >
                       Open in Gmail ↗
                     </a>
                   </div>
                 ) : gcalConn ? (
                   <div className="flex items-center justify-between">
-                    <p className="text-xs text-gray-500" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                    <p className="text-xs text-gray-500" style={{ fontFamily: "'Manrope', sans-serif" }}>
                       Thread ID: <span className="font-mono">{deal.gmail_thread_id}</span>
                     </p>
                     <button
                       onClick={() => fetchThread(deal.gmail_thread_id)}
-                      className="text-[10px] text-[#02348E] hover:underline"
-                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                      className="text-[10px] text-[#1D4ED8] hover:underline"
+                      style={{ fontFamily: 'Manrope, sans-serif' }}
                     >
                       Load details
                     </button>
                   </div>
                 ) : (
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs text-gray-500" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                    <p className="text-xs text-gray-500" style={{ fontFamily: "'Manrope', sans-serif" }}>
                       Thread linked · Connect Google to see details
                     </p>
                     <button
                       onClick={connectGoogleAndFetch}
-                      className="text-[10px] text-[#02348E] hover:underline shrink-0"
-                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                      className="text-[10px] text-[#1D4ED8] hover:underline shrink-0"
+                      style={{ fontFamily: 'Manrope, sans-serif' }}
                     >
                       Connect Google
                     </button>
@@ -775,19 +775,19 @@ export default function DealRecord() {
                 value={gmailId}
                 onChange={e => setGmailId(e.target.value)}
                 placeholder={deal.gmail_thread_id ? 'Paste new thread ID or URL…' : 'Paste Gmail thread ID or URL…'}
-                className="flex-1 text-sm border border-gray-200 rounded px-3 py-2 focus:outline-none focus:border-[#02348E] text-[#010100]"
-                style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                className="flex-1 text-sm border border-gray-200 rounded px-3 py-2 focus:outline-none focus:border-[#1D4ED8] text-[#111827]"
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               />
               <button
                 onClick={saveGmailThread}
                 disabled={!gmailId.trim()}
-                className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors shrink-0"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 disabled:opacity-40 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors shrink-0"
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {gmailSaved ? 'Saved ✓' : 'Link'}
               </button>
             </div>
-            <p className="text-[10px] text-gray-400 mt-1.5" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            <p className="text-[10px] text-gray-400 mt-1.5" style={{ fontFamily: "'Manrope', sans-serif" }}>
               Paste the thread URL from Gmail or the 16-character thread ID
             </p>
           </div>
@@ -795,13 +795,13 @@ export default function DealRecord() {
           <div className="bg-white rounded-lg border border-gray-100 p-4">
             <div className="flex items-center justify-between mb-3">
               <h3
-                className="text-sm font-semibold text-[#010100]"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                className="text-sm font-semibold text-[#111827]"
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               >
                 Notes
               </h3>
               {notesSaved && (
-                <span className="text-[10px] text-green-500" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                <span className="text-[10px] text-green-500" style={{ fontFamily: "'Manrope', sans-serif" }}>
                   Saved ✓
                 </span>
               )}
@@ -811,14 +811,14 @@ export default function DealRecord() {
               onChange={e => setNotesDraft(e.target.value)}
               rows={4}
               placeholder="Internal notes, context, follow-up reminders…"
-              className="w-full text-sm border border-gray-200 rounded px-3 py-2 focus:outline-none focus:border-[#02348E] text-[#010100] resize-none"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="w-full text-sm border border-gray-200 rounded px-3 py-2 focus:outline-none focus:border-[#1D4ED8] text-[#111827] resize-none"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
             <div className="flex justify-end mt-2">
               <button
                 onClick={saveNotes}
-                className="text-xs text-[#02348E] hover:underline font-medium"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                className="text-xs text-[#1D4ED8] hover:underline font-medium"
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 Save notes
               </button>
@@ -840,8 +840,8 @@ export default function DealRecord() {
             <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl p-6 flex flex-col" style={{ maxHeight: '85vh' }}>
               <div className="flex items-center justify-between mb-4">
                 <h2
-                  className="text-lg font-semibold text-[#010100]"
-                  style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                  className="text-lg font-semibold text-[#111827]"
+                  style={{ fontFamily: "'Manrope', sans-serif" }}
                 >
                   Proposal Email
                 </h2>
@@ -853,8 +853,8 @@ export default function DealRecord() {
                 </button>
               </div>
               <pre
-                className="flex-1 overflow-y-auto text-sm text-[#010100] bg-[#F2F3F7] rounded-lg p-4 whitespace-pre-wrap leading-relaxed"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                className="flex-1 overflow-y-auto text-sm text-[#111827] bg-[#F9FAFB] rounded-lg p-4 whitespace-pre-wrap leading-relaxed"
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {buildProposalEmail()}
               </pre>
@@ -862,7 +862,7 @@ export default function DealRecord() {
                 <button
                   onClick={() => setProposalOpen(false)}
                   className="text-sm text-gray-500 hover:text-gray-700 px-4 py-2 rounded"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   Close
                 </button>
@@ -872,8 +872,8 @@ export default function DealRecord() {
                     setProposalCopied(true)
                     setTimeout(() => setProposalCopied(false), 2000)
                   }}
-                  className="text-sm font-medium text-white bg-[#02348E] hover:bg-[#02348E]/90 px-4 py-2 rounded transition-colors"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  className="text-sm font-medium text-white bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 px-4 py-2 rounded transition-colors"
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   {proposalCopied ? 'Copied ✓' : 'Copy to Clipboard'}
                 </button>
@@ -890,14 +890,14 @@ export default function DealRecord() {
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
               <h2
-                className="text-lg font-semibold text-[#010100] mb-1"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                className="text-lg font-semibold text-[#111827] mb-1"
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               >
                 {pendingClose === 'closed_won' ? '🏆 Close as Won' : '❌ Close as Lost'}
               </h2>
               <p
                 className="text-sm text-gray-500 mb-5"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {pendingClose === 'closed_won'
                   ? 'Great work! Record the date this deal was won.'
@@ -906,7 +906,7 @@ export default function DealRecord() {
 
               <label
                 className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1.5"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 Closed date
               </label>
@@ -914,15 +914,15 @@ export default function DealRecord() {
                 type="date"
                 value={closeDate}
                 onChange={e => setCloseDate(e.target.value)}
-                className="w-full text-sm border border-gray-200 rounded px-3 py-2 focus:outline-none focus:border-[#02348E] text-[#010100] mb-5"
-                style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                className="w-full text-sm border border-gray-200 rounded px-3 py-2 focus:outline-none focus:border-[#1D4ED8] text-[#111827] mb-5"
+                style={{ fontFamily: "'Manrope', sans-serif" }}
               />
 
               <div className="flex gap-2 justify-end">
                 <button
                   onClick={() => setPendingClose(null)}
                   className="text-sm text-gray-500 hover:text-gray-700 px-4 py-2 rounded transition-colors"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   Cancel
                 </button>
@@ -930,10 +930,10 @@ export default function DealRecord() {
                   onClick={confirmClose}
                   className={`text-sm font-medium text-white px-4 py-2 rounded transition-colors ${
                     pendingClose === 'closed_won'
-                      ? 'bg-[#02348E] hover:bg-[#02348E]/90'
+                      ? 'bg-[#1D4ED8] hover:bg-[#1D4ED8]/90'
                       : 'bg-red-500 hover:bg-red-600'
                   }`}
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   {pendingClose === 'closed_won' ? 'Mark as Won' : 'Mark as Lost'}
                 </button>

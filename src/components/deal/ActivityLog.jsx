@@ -3,7 +3,7 @@ import { supabase } from '../../lib/supabase'
 
 const TYPE_CONFIG = {
   note:           { icon: '📝', label: 'Note',           color: 'text-gray-500'    },
-  email:          { icon: '📧', label: 'Email',          color: 'text-[#02348E]'   },
+  email:          { icon: '📧', label: 'Email',          color: 'text-[#1D4ED8]'   },
   call:           { icon: '📞', label: 'Call',           color: 'text-green-600'   },
   stage_change:   { icon: '🔀', label: 'Stage Changed',  color: 'text-purple-600'  },
   canva_update:   { icon: '🎨', label: 'Canva Updated',  color: 'text-pink-600'    },
@@ -63,8 +63,8 @@ export default function ActivityLog({ deal }) {
   return (
     <div className="bg-white rounded-lg border border-gray-100 p-4 flex flex-col h-full">
       <h3
-        className="text-sm font-semibold text-[#010100] mb-3"
-        style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+        className="text-sm font-semibold text-[#111827] mb-3"
+        style={{ fontFamily: "'Manrope', sans-serif" }}
       >
         Activity Log
       </h3>
@@ -77,14 +77,14 @@ export default function ActivityLog({ deal }) {
           onKeyDown={handleKeyDown}
           placeholder="Add a note… (Ctrl+↵ to save)"
           rows={2}
-          className="flex-1 text-sm border border-gray-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-[#02348E] text-[#010100]"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="flex-1 text-sm border border-gray-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-[#1D4ED8] text-[#111827]"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         />
         <button
           onClick={addNote}
           disabled={posting || !note.trim()}
-          className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-xs font-medium px-3 py-2 rounded transition-colors self-start"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 disabled:opacity-40 text-white text-xs font-medium px-3 py-2 rounded transition-colors self-start"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         >
           Log
         </button>
@@ -95,7 +95,7 @@ export default function ActivityLog({ deal }) {
         {entries.length === 0 ? (
           <p
             className="text-xs text-gray-400 text-center py-6"
-            style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             No activity yet — add a note above
           </p>
@@ -108,20 +108,20 @@ export default function ActivityLog({ deal }) {
                 <div className="flex items-center gap-2 mb-0.5">
                   <span
                     className={`text-[10px] font-semibold uppercase tracking-wide ${cfg.color}`}
-                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                    style={{ fontFamily: 'Manrope, sans-serif' }}
                   >
                     {cfg.label}
                   </span>
                   <span
                     className="text-[10px] text-gray-400"
-                    style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+                    style={{ fontFamily: "'Manrope', sans-serif" }}
                   >
                     {fmtDate(entry.created_at)}
                   </span>
                 </div>
                 <p
-                  className="text-sm text-[#010100] leading-snug"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  className="text-sm text-[#111827] leading-snug"
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   {entry.body}
                 </p>

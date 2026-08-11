@@ -6,8 +6,8 @@ export default function RequireAuth({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F2F3F7] flex items-center justify-center">
-        <div className="text-sm text-gray-400" style={{ fontFamily: 'Roboto, sans-serif' }}>
+      <div className="min-h-screen bg-[#F9FAFB] flex items-center justify-center">
+        <div className="text-sm text-gray-400" style={{ fontFamily: 'Manrope, sans-serif' }}>
           Loading…
         </div>
       </div>

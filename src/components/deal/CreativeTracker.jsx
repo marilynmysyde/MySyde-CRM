@@ -32,13 +32,13 @@ export default function CreativeTracker({ deal, onUpdate }) {
     <div className="bg-white rounded-lg border border-gray-100 p-4">
       <div className="flex items-center justify-between mb-3">
         <h3
-          className="text-sm font-semibold text-[#010100]"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          className="text-sm font-semibold text-[#111827]"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           Creative Status
         </h3>
         {saving && (
-          <span className="text-xs text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+          <span className="text-xs text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
             Saving…
           </span>
         )}
@@ -63,18 +63,18 @@ export default function CreativeTracker({ deal, onUpdate }) {
                 }
                 className={`flex flex-col items-center gap-1 flex-1 py-2.5 px-1 rounded-lg transition-all ${
                   isActive
-                    ? 'bg-[#02348E] text-white shadow-sm'
+                    ? 'bg-[#1D4ED8] text-white shadow-sm'
                     : isDone
-                    ? 'bg-[#02348E]/10 text-[#02348E] hover:bg-[#02348E]/20'
+                    ? 'bg-[#1D4ED8]/10 text-[#1D4ED8] hover:bg-[#1D4ED8]/20'
                     : isNext
-                    ? 'bg-gray-50 text-gray-400 hover:bg-[#FFEC00]/30 hover:text-[#010100] border border-dashed border-gray-200'
+                    ? 'bg-gray-50 text-gray-400 hover:bg-[#F59E0B]/30 hover:text-[#111827] border border-dashed border-gray-200'
                     : 'bg-gray-50 text-gray-300 hover:bg-gray-100'
                 }`}
               >
                 <span className="text-sm leading-none">{step.icon}</span>
                 <span
                   className="text-[9px] font-semibold uppercase tracking-wide leading-none"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   {step.label}
                 </span>
@@ -82,7 +82,7 @@ export default function CreativeTracker({ deal, onUpdate }) {
               {idx < STEPS.length - 1 && (
                 <div
                   className={`h-0.5 w-1.5 shrink-0 rounded-full ${
-                    stepOrderIdx < currentIdx ? 'bg-[#02348E]/40' : 'bg-gray-200'
+                    stepOrderIdx < currentIdx ? 'bg-[#1D4ED8]/40' : 'bg-gray-200'
                   }`}
                 />
               )}
@@ -94,7 +94,7 @@ export default function CreativeTracker({ deal, onUpdate }) {
       {status === 'none' && (
         <p
           className="text-xs text-gray-400 mt-3 text-center"
-          style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           Click <strong>Brief</strong> to kick off the creative process
         </p>

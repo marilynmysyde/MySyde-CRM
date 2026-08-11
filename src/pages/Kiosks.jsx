@@ -68,7 +68,7 @@ function StatusBadge({ status }) {
   return (
     <span
       className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border ${cfg.pill}`}
-      style={{ fontFamily: 'Roboto, sans-serif' }}
+      style={{ fontFamily: 'Manrope, sans-serif' }}
     >
       <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${cfg.dot}`} />
       {cfg.label}
@@ -140,28 +140,28 @@ export default function Kiosks() {
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h1
-          className="text-xl font-semibold text-[#010100]"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          className="text-xl font-semibold text-[#111827]"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           Kiosks
         </h1>
         <div className="flex items-center gap-2">
           {loading && (
-            <span className="text-xs text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            <span className="text-xs text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
               Loading…
             </span>
           )}
           <button
             onClick={handleExport}
-            className="text-sm text-gray-500 hover:text-[#02348E] border border-gray-200 hover:border-[#02348E] px-3 py-1.5 rounded transition-colors"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            className="text-sm text-gray-500 hover:text-[#1D4ED8] border border-gray-200 hover:border-[#1D4ED8] px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             ↓ Export CSV
           </button>
           <button
             onClick={() => setShowNewKiosk(true)}
-            className="bg-[#02348E] hover:bg-[#02348E]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 text-white text-sm font-medium px-3 py-1.5 rounded transition-colors"
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             + Add Kiosk
           </button>
@@ -175,8 +175,8 @@ export default function Kiosks() {
           placeholder="Search kiosks…"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="border border-gray-200 rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#02348E] w-52"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="border border-gray-200 rounded px-3 py-1.5 text-sm bg-white focus:outline-none focus:border-[#1D4ED8] w-52"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         />
         <div className="flex gap-1.5 flex-wrap">
           {FILTERS.map(f => (
@@ -185,10 +185,10 @@ export default function Kiosks() {
               onClick={() => setFilter(f)}
               className={`text-xs px-3 py-1.5 rounded-full font-medium transition-colors ${
                 filter === f
-                  ? 'bg-[#02348E] text-white'
-                  : 'bg-white border border-gray-200 text-gray-500 hover:border-[#02348E] hover:text-[#02348E]'
+                  ? 'bg-[#1D4ED8] text-white'
+                  : 'bg-white border border-gray-200 text-gray-500 hover:border-[#1D4ED8] hover:text-[#1D4ED8]'
               }`}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)} ({counts[f]})
             </button>
@@ -201,8 +201,8 @@ export default function Kiosks() {
 
         {/* Column headers */}
         <div
-          className="grid grid-cols-[2fr_2fr_1.5fr_1fr_1fr_80px] gap-4 px-4 py-2 bg-[#F2F3F7] border-b border-gray-100 text-[10px] font-semibold text-gray-400 uppercase tracking-wide"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="grid grid-cols-[2fr_2fr_1.5fr_1fr_1fr_80px] gap-4 px-4 py-2 bg-[#F9FAFB] border-b border-gray-100 text-[10px] font-semibold text-gray-400 uppercase tracking-wide"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         >
           <span>Name</span>
           <span>Location</span>
@@ -213,7 +213,7 @@ export default function Kiosks() {
         </div>
 
         {visible.length === 0 && (
-          <div className="text-center py-12 text-gray-400 text-sm" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+          <div className="text-center py-12 text-gray-400 text-sm" style={{ fontFamily: "'Manrope', sans-serif" }}>
             No kiosks found.
           </div>
         )}
@@ -222,20 +222,20 @@ export default function Kiosks() {
           <div
             key={kiosk.id}
             onClick={() => navigate(`/kiosks/${kiosk.id}`)}
-            className={`grid grid-cols-[2fr_2fr_1.5fr_1fr_1fr_80px] gap-4 items-center px-4 py-3 cursor-pointer hover:bg-[#F2F3F7] transition-colors ${
+            className={`grid grid-cols-[2fr_2fr_1.5fr_1fr_1fr_80px] gap-4 items-center px-4 py-3 cursor-pointer hover:bg-[#F9FAFB] transition-colors ${
               i > 0 ? 'border-t border-gray-50' : ''
             }`}
           >
             <p
-              className="text-sm font-medium text-[#010100] truncate"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="text-sm font-medium text-[#111827] truncate"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {kiosk.name}
             </p>
 
             <p
               className="text-xs text-gray-500 truncate"
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               {kiosk.location ?? '—'}
             </p>
@@ -243,7 +243,7 @@ export default function Kiosks() {
             <div>
               {kiosk.partners
                 ? <PartnerTypeTag type={kiosk.partners.type} label={kiosk.partners.name} />
-                : <span className="text-xs text-gray-300" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>—</span>
+                : <span className="text-xs text-gray-300" style={{ fontFamily: "'Manrope', sans-serif" }}>—</span>
               }
             </div>
 
@@ -251,7 +251,7 @@ export default function Kiosks() {
 
             <span
               className="text-xs text-gray-500"
-              style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               {kiosk.installed_at
                 ? new Date(kiosk.installed_at + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
@@ -262,10 +262,10 @@ export default function Kiosks() {
               <span
                 className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                   (kiosk.deal_count ?? 0) > 0
-                    ? 'bg-[#02348E]/10 text-[#02348E]'
+                    ? 'bg-[#1D4ED8]/10 text-[#1D4ED8]'
                     : 'bg-gray-100 text-gray-400'
                 }`}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {kiosk.deal_count ?? 0}
               </span>
@@ -289,10 +289,10 @@ export default function Kiosks() {
           { label: 'Inactive', value: counts.inactive, color: 'text-gray-400'  },
         ].map(s => (
           <div key={s.label}>
-            <p className={`text-2xl font-bold ${s.color}`} style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+            <p className={`text-2xl font-bold ${s.color}`} style={{ fontFamily: "'Manrope', sans-serif" }}>
               {s.value}
             </p>
-            <p className="text-[10px] text-gray-400 uppercase tracking-wide" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <p className="text-[10px] text-gray-400 uppercase tracking-wide" style={{ fontFamily: 'Manrope, sans-serif' }}>
               {s.label}
             </p>
           </div>

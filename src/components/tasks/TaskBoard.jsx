@@ -15,7 +15,7 @@ function nextDueDate(due, rule) {
   return d.toISOString().slice(0, 10)
 }
 
-export default function TaskBoard({ tasks, setTasks, showPartner = false }) {
+export default function TaskBoard({ tasks, setTasks, showPartner = false, onOpenTask, onCelebrate }) {
   const [activeTask, setActiveTask] = useState(null)
 
   const sensors = useSensors(
@@ -42,6 +42,11 @@ export default function TaskBoard({ tasks, setTasks, showPartner = false }) {
 
     // Supabase
     await supabase.from('tasks').update({ status: newStatus }).eq('id', taskId)
+
+    // Celebrate when a task lands in Done (from any other column)
+    if (newStatus === 'done' && task.status !== 'done') {
+      onCelebrate?.()
+    }
 
     // Recurring: when moved to done, auto-generate the next instance
     if (newStatus === 'done' && task.is_recurring && task.recurrence_rule) {
@@ -79,6 +84,7 @@ export default function TaskBoard({ tasks, setTasks, showPartner = false }) {
             status={status}
             tasks={tasks.filter(t => t.status === status)}
             showPartner={showPartner}
+            onOpenTask={onOpenTask}
           />
         ))}
       </div>

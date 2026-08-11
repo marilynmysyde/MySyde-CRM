@@ -67,29 +67,29 @@ function MailerLitePanel({ email, mailerliteId }) {
     <div className="bg-white rounded-lg border border-gray-100 p-4">
       <div className="flex items-center justify-between mb-3">
         <h3
-          className="text-sm font-semibold text-[#010100]"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          className="text-sm font-semibold text-[#111827]"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
         >
           MailerLite
         </h3>
         <button
           onClick={fetchStats}
           disabled={loading || !email}
-          className="text-xs text-[#02348E] hover:underline disabled:opacity-40"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="text-xs text-[#1D4ED8] hover:underline disabled:opacity-40"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         >
           {loading ? 'Loading…' : data ? 'Refresh' : 'Load stats'}
         </button>
       </div>
 
       {error && (
-        <p className="text-xs text-red-500 mb-2" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+        <p className="text-xs text-red-500 mb-2" style={{ fontFamily: "'Manrope', sans-serif" }}>
           {error}
         </p>
       )}
 
       {!data && !loading && !error && (
-        <p className="text-xs text-gray-400 italic" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+        <p className="text-xs text-gray-400 italic" style={{ fontFamily: "'Manrope', sans-serif" }}>
           Click "Load stats" to fetch subscriber data from MailerLite.
         </p>
       )}
@@ -98,12 +98,12 @@ function MailerLitePanel({ email, mailerliteId }) {
         <div className="space-y-3">
           {/* Status */}
           <div className="flex items-center gap-2">
-            <span className="text-[10px] text-gray-400 uppercase tracking-wide w-20 shrink-0" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <span className="text-[10px] text-gray-400 uppercase tracking-wide w-20 shrink-0" style={{ fontFamily: 'Manrope, sans-serif' }}>
               Status
             </span>
             <span
               className={`text-xs font-medium px-2.5 py-0.5 rounded-full border ${statusCfg.pill}`}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {statusCfg.label}
             </span>
@@ -112,17 +112,17 @@ function MailerLitePanel({ email, mailerliteId }) {
           {/* Open rate */}
           {data.open_rate != null && (
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-gray-400 uppercase tracking-wide w-20 shrink-0" style={{ fontFamily: 'Roboto, sans-serif' }}>
+              <span className="text-[10px] text-gray-400 uppercase tracking-wide w-20 shrink-0" style={{ fontFamily: 'Manrope, sans-serif' }}>
                 Open Rate
               </span>
               <div className="flex items-center gap-2 flex-1">
                 <div className="flex-1 bg-gray-100 rounded-full h-1.5">
                   <div
-                    className="bg-[#02348E] h-1.5 rounded-full"
+                    className="bg-[#1D4ED8] h-1.5 rounded-full"
                     style={{ width: `${Math.min(data.open_rate * 100, 100)}%` }}
                   />
                 </div>
-                <span className="text-xs text-[#010100] shrink-0" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                <span className="text-xs text-[#111827] shrink-0" style={{ fontFamily: "'Manrope', sans-serif" }}>
                   {(data.open_rate * 100).toFixed(1)}%
                 </span>
               </div>
@@ -132,17 +132,17 @@ function MailerLitePanel({ email, mailerliteId }) {
           {/* Click rate */}
           {data.click_rate != null && (
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-gray-400 uppercase tracking-wide w-20 shrink-0" style={{ fontFamily: 'Roboto, sans-serif' }}>
+              <span className="text-[10px] text-gray-400 uppercase tracking-wide w-20 shrink-0" style={{ fontFamily: 'Manrope, sans-serif' }}>
                 Click Rate
               </span>
               <div className="flex items-center gap-2 flex-1">
                 <div className="flex-1 bg-gray-100 rounded-full h-1.5">
                   <div
-                    className="bg-[#FFEC00] h-1.5 rounded-full"
+                    className="bg-[#F59E0B] h-1.5 rounded-full"
                     style={{ width: `${Math.min(data.click_rate * 100, 100)}%` }}
                   />
                 </div>
-                <span className="text-xs text-[#010100] shrink-0" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                <span className="text-xs text-[#111827] shrink-0" style={{ fontFamily: "'Manrope', sans-serif" }}>
                   {(data.click_rate * 100).toFixed(1)}%
                 </span>
               </div>
@@ -152,17 +152,17 @@ function MailerLitePanel({ email, mailerliteId }) {
           {/* Last campaign */}
           {data.last_campaign && (
             <div className="flex items-start gap-2">
-              <span className="text-[10px] text-gray-400 uppercase tracking-wide w-20 shrink-0 pt-0.5" style={{ fontFamily: 'Roboto, sans-serif' }}>
+              <span className="text-[10px] text-gray-400 uppercase tracking-wide w-20 shrink-0 pt-0.5" style={{ fontFamily: 'Manrope, sans-serif' }}>
                 Last Campaign
               </span>
-              <span className="text-xs text-[#010100]" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+              <span className="text-xs text-[#111827]" style={{ fontFamily: "'Manrope', sans-serif" }}>
                 {data.last_campaign}
               </span>
             </div>
           )}
 
           {data.subscribed_at && (
-            <p className="text-[10px] text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+            <p className="text-[10px] text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
               Subscribed {new Date(data.subscribed_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
             </p>
           )}
@@ -174,7 +174,7 @@ function MailerLitePanel({ email, mailerliteId }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#02348E] text-[#010100] bg-white'
+const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#1D4ED8] text-[#111827] bg-white'
 
 export default function ContactRecord() {
   const { id }      = useParams()
@@ -252,14 +252,14 @@ export default function ContactRecord() {
   }
 
   if (loading) {
-    return <div className="p-6 text-sm text-gray-400" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>Loading…</div>
+    return <div className="p-6 text-sm text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>Loading…</div>
   }
 
   if (!contact) {
     return (
       <div className="p-6">
-        <p className="text-sm text-gray-500 mb-2" style={{ fontFamily: 'Roboto, sans-serif' }}>Contact not found.</p>
-        <button onClick={() => navigate('/contacts')} className="text-sm text-[#02348E] hover:underline" style={{ fontFamily: 'Roboto, sans-serif' }}>← Contacts</button>
+        <p className="text-sm text-gray-500 mb-2" style={{ fontFamily: 'Manrope, sans-serif' }}>Contact not found.</p>
+        <button onClick={() => navigate('/contacts')} className="text-sm text-[#1D4ED8] hover:underline" style={{ fontFamily: 'Manrope, sans-serif' }}>← Contacts</button>
       </div>
     )
   }
@@ -273,19 +273,19 @@ export default function ContactRecord() {
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={() => navigate('/contacts')}
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#02348E] transition-colors"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#1D4ED8] transition-colors"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
         >
           ← Contacts
         </button>
 
         {confirmDelete ? (
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>Delete this contact?</span>
+            <span className="text-xs text-gray-500" style={{ fontFamily: 'Manrope, sans-serif' }}>Delete this contact?</span>
             <button
               onClick={() => setConfirmDelete(false)}
               className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1 rounded"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Cancel
             </button>
@@ -293,7 +293,7 @@ export default function ContactRecord() {
               onClick={deleteContact}
               disabled={deleting}
               className="text-xs text-white bg-red-500 hover:bg-red-600 disabled:opacity-50 px-3 py-1 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {deleting ? 'Deleting…' : 'Yes, delete'}
             </button>
@@ -302,7 +302,7 @@ export default function ContactRecord() {
           <button
             onClick={() => setConfirmDelete(true)}
             className="text-xs text-gray-400 hover:text-red-500 transition-colors"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            style={{ fontFamily: 'Manrope, sans-serif' }}
           >
             Delete contact
           </button>
@@ -311,20 +311,20 @@ export default function ContactRecord() {
 
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
-        <div className="w-14 h-14 rounded-full bg-[#02348E] flex items-center justify-center shrink-0">
-          <span className="text-white text-lg font-semibold" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+        <div className="w-14 h-14 rounded-full bg-[#1D4ED8] flex items-center justify-center shrink-0">
+          <span className="text-white text-lg font-semibold" style={{ fontFamily: "'Manrope', sans-serif" }}>
             {initials}
           </span>
         </div>
         <div>
           <h1
-            className="text-2xl font-semibold text-[#010100]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+            className="text-2xl font-semibold text-[#111827]"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             {contact.name}
           </h1>
           <div className="flex items-center gap-2 flex-wrap mt-1">
-            <span className="text-sm text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <span className="text-sm text-gray-500" style={{ fontFamily: 'Manrope, sans-serif' }}>
               {contact.role}
             </span>
             {contact.partners && (
@@ -333,8 +333,8 @@ export default function ContactRecord() {
                 <PartnerTypeTag type={contact.partners.type} />
                 <Link
                   to={`/partner/${contact.partners.id}`}
-                  className="text-sm text-[#02348E] hover:underline"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  className="text-sm text-[#1D4ED8] hover:underline"
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   {contact.partners.name}
                 </Link>
@@ -352,20 +352,20 @@ export default function ContactRecord() {
           {/* Contact info */}
           <div className="bg-white rounded-lg border border-gray-100 p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-[#010100]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+              <h3 className="text-sm font-semibold text-[#111827]" style={{ fontFamily: "'Manrope', sans-serif" }}>
                 Contact Info
               </h3>
               <div className="flex gap-2">
                 {editingInfo && (
-                  <button onClick={() => setEditingInfo(false)} className="text-xs text-gray-400 hover:text-gray-600" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                  <button onClick={() => setEditingInfo(false)} className="text-xs text-gray-400 hover:text-gray-600" style={{ fontFamily: 'Manrope, sans-serif' }}>
                     Cancel
                   </button>
                 )}
                 <button
                   onClick={editingInfo ? saveInfo : () => setEditingInfo(true)}
                   disabled={savingInfo}
-                  className={`text-xs font-medium px-3 py-1.5 rounded transition-colors ${editingInfo ? 'bg-[#02348E] text-white hover:bg-[#02348E]/90' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  className={`text-xs font-medium px-3 py-1.5 rounded transition-colors ${editingInfo ? 'bg-[#1D4ED8] text-white hover:bg-[#1D4ED8]/90' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
                 >
                   {savingInfo ? 'Saving…' : editingInfo ? 'Save' : 'Edit'}
                 </button>
@@ -381,23 +381,23 @@ export default function ContactRecord() {
                   { label: 'Phone', field: 'phone', type: 'tel'   },
                 ].map(({ label, field, type }) => (
                   <div key={field}>
-                    <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>{label}</label>
+                    <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Manrope, sans-serif' }}>{label}</label>
                     <input
                       type={type}
                       value={infoForm[field]}
                       onChange={e => setInfoForm(prev => ({ ...prev, [field]: e.target.value }))}
                       className={inputCls}
-                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                      style={{ fontFamily: 'Manrope, sans-serif' }}
                     />
                   </div>
                 ))}
                 <div>
-                  <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Partner</label>
+                  <label className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1" style={{ fontFamily: 'Manrope, sans-serif' }}>Partner</label>
                   <select
                     value={infoForm.partner_id}
                     onChange={e => setInfoForm(prev => ({ ...prev, partner_id: e.target.value }))}
                     className={inputCls}
-                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                    style={{ fontFamily: 'Manrope, sans-serif' }}
                   >
                     <option value="">— No partner —</option>
                     {partners.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
@@ -408,22 +408,22 @@ export default function ContactRecord() {
               <div className="space-y-2">
                 {contact.email && (
                   <div className="flex items-center gap-3">
-                    <span className="text-[10px] text-gray-400 uppercase tracking-wide w-12 shrink-0" style={{ fontFamily: 'Roboto, sans-serif' }}>Email</span>
-                    <a href={`mailto:${contact.email}`} className="text-sm text-[#02348E] hover:underline" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                    <span className="text-[10px] text-gray-400 uppercase tracking-wide w-12 shrink-0" style={{ fontFamily: 'Manrope, sans-serif' }}>Email</span>
+                    <a href={`mailto:${contact.email}`} className="text-sm text-[#1D4ED8] hover:underline" style={{ fontFamily: "'Manrope', sans-serif" }}>
                       {contact.email}
                     </a>
                   </div>
                 )}
                 {contact.phone && (
                   <div className="flex items-center gap-3">
-                    <span className="text-[10px] text-gray-400 uppercase tracking-wide w-12 shrink-0" style={{ fontFamily: 'Roboto, sans-serif' }}>Phone</span>
-                    <a href={`tel:${contact.phone}`} className="text-sm text-[#010100] hover:text-[#02348E]" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>
+                    <span className="text-[10px] text-gray-400 uppercase tracking-wide w-12 shrink-0" style={{ fontFamily: 'Manrope, sans-serif' }}>Phone</span>
+                    <a href={`tel:${contact.phone}`} className="text-sm text-[#111827] hover:text-[#1D4ED8]" style={{ fontFamily: "'Manrope', sans-serif" }}>
                       {contact.phone}
                     </a>
                   </div>
                 )}
                 {!contact.email && !contact.phone && (
-                  <p className="text-xs text-gray-400 italic" style={{ fontFamily: "'Roboto Condensed', sans-serif" }}>No contact info yet — click Edit to add.</p>
+                  <p className="text-xs text-gray-400 italic" style={{ fontFamily: "'Manrope', sans-serif" }}>No contact info yet — click Edit to add.</p>
                 )}
               </div>
             )}
@@ -432,8 +432,8 @@ export default function ContactRecord() {
           {/* Notes */}
           <div className="bg-white rounded-lg border border-gray-100 p-4">
             <h3
-              className="text-sm font-semibold text-[#010100] mb-3"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              className="text-sm font-semibold text-[#111827] mb-3"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Notes
             </h3>
@@ -442,14 +442,14 @@ export default function ContactRecord() {
               onChange={e => setNotes(e.target.value)}
               rows={5}
               placeholder="Relationship notes, preferences, meeting summaries…"
-              className="w-full text-sm border border-gray-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-[#02348E] text-[#010100]"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="w-full text-sm border border-gray-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-[#1D4ED8] text-[#111827]"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
             <button
               onClick={saveNotes}
               disabled={savingNotes}
-              className="mt-2 bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-xs font-medium px-4 py-1.5 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="mt-2 bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 disabled:opacity-40 text-white text-xs font-medium px-4 py-1.5 rounded transition-colors"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {savingNotes ? 'Saving…' : notesSaved ? 'Saved ✓' : 'Save Notes'}
             </button>

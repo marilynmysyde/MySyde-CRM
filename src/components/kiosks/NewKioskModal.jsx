@@ -7,7 +7,7 @@ const STATUS_OPTIONS = [
   { value: 'inactive', label: 'Inactive' },
 ]
 
-const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#02348E] text-[#010100] bg-white'
+const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#1D4ED8] text-[#111827] bg-white'
 const labelCls = 'text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1'
 
 export default function NewKioskModal({ onClose, onCreated }) {
@@ -82,8 +82,8 @@ export default function NewKioskModal({ onClose, onCreated }) {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <h2
-            className="text-base font-semibold text-[#010100]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+            className="text-base font-semibold text-[#111827]"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Add Kiosk
           </h2>
@@ -100,7 +100,7 @@ export default function NewKioskModal({ onClose, onCreated }) {
 
           {/* Name */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Kiosk Name *</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Kiosk Name *</label>
             <input
               autoFocus
               required
@@ -109,31 +109,31 @@ export default function NewKioskModal({ onClose, onCreated }) {
               onChange={e => set('name', e.target.value)}
               placeholder="e.g. Kiosk 06 — Library Plaza"
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
           {/* Location */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Location</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Location</label>
             <input
               type="text"
               value={form.location}
               onChange={e => set('location', e.target.value)}
               placeholder="Address or landmark"
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
           {/* Partner */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Partner Organization</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Partner Organization</label>
             <select
               value={form.partner_id}
               onChange={e => set('partner_id', e.target.value)}
               className={inputCls}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               <option value="">— No partner —</option>
               {partners.map(p => (
@@ -145,12 +145,12 @@ export default function NewKioskModal({ onClose, onCreated }) {
           {/* Status + Install date */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Status</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Status</label>
               <select
                 value={form.status}
                 onChange={e => set('status', e.target.value)}
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 {STATUS_OPTIONS.map(o => (
                   <option key={o.value} value={o.value}>{o.label}</option>
@@ -158,27 +158,27 @@ export default function NewKioskModal({ onClose, onCreated }) {
               </select>
             </div>
             <div>
-              <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Install Date</label>
+              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Install Date</label>
               <input
                 type="date"
                 value={form.installed_at}
                 onChange={e => set('installed_at', e.target.value)}
                 className={inputCls}
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               />
             </div>
           </div>
 
           {/* Notes */}
           <div>
-            <label className={labelCls} style={{ fontFamily: 'Roboto, sans-serif' }}>Notes</label>
+            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Notes</label>
             <textarea
               value={form.notes}
               onChange={e => set('notes', e.target.value)}
               rows={2}
               placeholder="Site notes, access info, maintenance details…"
               className={`${inputCls} resize-none`}
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             />
           </div>
 
@@ -188,15 +188,15 @@ export default function NewKioskModal({ onClose, onCreated }) {
               type="button"
               onClick={onClose}
               className="text-sm text-gray-500 hover:text-gray-700 px-4 py-2 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving || !form.name.trim()}
-              className="bg-[#02348E] hover:bg-[#02348E]/90 disabled:opacity-40 text-white text-sm font-medium px-5 py-2 rounded transition-colors"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
+              className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 disabled:opacity-40 text-white text-sm font-medium px-5 py-2 rounded transition-colors"
+              style={{ fontFamily: 'Manrope, sans-serif' }}
             >
               {saving ? 'Saving…' : 'Add Kiosk'}
             </button>

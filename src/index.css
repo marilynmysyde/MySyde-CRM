@@ -1,24 +1,54 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Roboto:wght@400;500;600&family=Roboto+Condensed:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
-  /* MySyde brand colors */
-  --color-mysyde-blue: #02348E;
-  --color-community-yellow: #FFEC00;
-  --color-mysyde-black: #010100;
-  --color-light-gray: #F2F3F7;
+  /* ─── MySyde Brand v2 (2026-08-11) ─────────────────────────
+     Refreshed to align with the app rebuild + kiosk launch.
+     Retiring: #02348E (deep blue), #FFEC00 (community yellow),
+     the IBM Plex + Roboto + Roboto Condensed font trio.
+     ───────────────────────────────────────────────────────── */
 
-  /* Partner type colors */
-  --color-partner-chamber: #1d4ed8;
-  --color-partner-city: #7c3aed;
-  --color-partner-downtown: #0d9488;
-  --color-partner-community: #f43f5e;
-  --color-partner-business: #f59e0b;
+  /* Primary — brighter, more modern blue */
+  --color-mysyde-blue:      #1D4ED8; /* blue-700 · primary actions, brand */
+  --color-mysyde-blue-dark: #1E40AF; /* blue-800 · hover/pressed */
+  --color-mysyde-blue-soft: #EFF6FF; /* blue-50  · tinted backgrounds */
 
-  /* Typography */
-  --font-heading: 'IBM Plex Sans', sans-serif;
-  --font-sans: 'Roboto', sans-serif;
-  --font-condensed: 'Roboto Condensed', sans-serif;
+  /* Accent — amber replaces the punchy yellow */
+  --color-mysyde-accent:      #F59E0B; /* amber-500 · accents, highlights */
+  --color-mysyde-accent-soft: #FEF3C7; /* amber-100 · tinted callouts */
+
+  /* Neutrals — full grayscale for depth */
+  --color-mysyde-ink:      #111827; /* gray-900 · body text */
+  --color-mysyde-muted:    #6B7280; /* gray-500 · secondary text */
+  --color-mysyde-subtle:   #9CA3AF; /* gray-400 · tertiary text */
+  --color-mysyde-border:   #E5E7EB; /* gray-200 · borders */
+  --color-mysyde-bg:       #F9FAFB; /* gray-50  · app background */
+
+  /* Status */
+  --color-mysyde-success:  #10B981; /* emerald-500 */
+  --color-mysyde-warning:  #F59E0B; /* amber-500 (same as accent) */
+  --color-mysyde-danger:   #E11D48; /* rose-600 */
+
+  /* Legacy alias — keep for now so existing `bg-mysyde-black` doesn't break */
+  --color-mysyde-black:    #111827; /* was #010100 */
+  --color-light-gray:      #F9FAFB; /* was #F2F3F7 */
+
+  /* Partner type colors (unchanged — already well-tuned) */
+  --color-partner-chamber:   #1D4ED8;
+  --color-partner-city:      #7C3AED;
+  --color-partner-downtown:  #0D9488;
+  --color-partner-community: #F43F5E;
+  --color-partner-business:  #F59E0B;
+
+  /* Radii */
+  --radius-btn:  8px;
+  --radius-card: 14px;
+  --radius-pill: 9999px;
+
+  /* Typography — one family, many weights */
+  --font-heading:   'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans:      'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-condensed: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 * {
@@ -27,10 +57,18 @@
 
 body {
   margin: 0;
-  font-family: var(--font-sans);
-  background-color: #F2F3F7;
-  color: #010100;
+  font-family: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-feature-settings: 'ss01', 'cv11'; /* Manrope stylistic set + tabular-friendly alt */
+  background-color: #F9FAFB;
+  color: #111827;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.005em; /* subtle tightening at body scale */
+}
+
+/* Large display text — tighten letter-spacing per storybook scale */
+h1, h2, h3, .display {
+  letter-spacing: -0.02em;
 }
 
 #root {
