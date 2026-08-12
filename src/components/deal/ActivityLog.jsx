@@ -61,7 +61,7 @@ export default function ActivityLog({ deal }) {
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-100 p-4 flex flex-col h-full">
+    <div className="bg-white rounded-[14px] border border-gray-100 p-4 flex flex-col h-full">
       <h3
         className="text-sm font-semibold text-[#111827] mb-3"
         style={{ fontFamily: "'Manrope', sans-serif" }}

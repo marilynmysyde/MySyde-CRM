@@ -310,7 +310,7 @@ export default function KioskRecord() {
 
       {/* Edit details panel */}
       {editingInfo ? (
-        <div className="bg-white rounded-lg border border-[#1D4ED8]/20 p-4 mb-6">
+        <div className="bg-white rounded-[14px] border border-[#1D4ED8]/20 p-4 mb-6">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold text-[#111827]" style={{ fontFamily: "'Manrope', sans-serif" }}>Edit Kiosk Details</h3>
             <div className="flex gap-2">
@@ -365,7 +365,7 @@ export default function KioskRecord() {
           { label: 'Live Campaigns',  value: liveDeals.length,   color: 'text-green-600' },
           { label: 'Monthly Revenue', value: `$${totalMRR.toLocaleString()}`, color: 'text-[#111827]' },
         ].map(s => (
-          <div key={s.label} className="bg-white rounded-lg border border-gray-100 p-4 text-center">
+          <div key={s.label} className="bg-white rounded-[14px] border border-gray-100 p-4 text-center">
             <p className={`text-2xl font-bold mb-1 ${s.color}`} style={{ fontFamily: "'Manrope', sans-serif" }}>
               {s.value}
             </p>
@@ -380,7 +380,7 @@ export default function KioskRecord() {
 
         {/* Ad slots / linked deals */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg border border-gray-100 p-4">
+          <div className="bg-white rounded-[14px] border border-gray-100 p-4">
             <h3
               className="text-sm font-semibold text-[#111827] mb-3"
               style={{ fontFamily: "'Manrope', sans-serif" }}
@@ -441,7 +441,7 @@ export default function KioskRecord() {
 
         {/* Notes */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg border border-gray-100 p-4 h-full">
+          <div className="bg-white rounded-[14px] border border-gray-100 p-4 h-full">
             <h3
               className="text-sm font-semibold text-[#111827] mb-3"
               style={{ fontFamily: "'Manrope', sans-serif" }}

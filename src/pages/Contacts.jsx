@@ -78,7 +78,7 @@ export default function Contacts() {
         style={{ fontFamily: 'Manrope, sans-serif' }}
       />
 
-      <div className="bg-white rounded-lg border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-[14px] border border-gray-100 overflow-hidden">
         {visible.length === 0 && (
           <div className="text-center py-12 text-gray-400 text-sm" style={{ fontFamily: "'Manrope', sans-serif" }}>
             No contacts found.

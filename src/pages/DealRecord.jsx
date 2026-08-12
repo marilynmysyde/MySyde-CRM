@@ -608,7 +608,7 @@ export default function DealRecord() {
           <CanvaLink       deal={deal} onUpdate={handleUpdate} />
 
           {/* Payment link */}
-          <div className="bg-white rounded-lg border border-gray-100 p-4">
+          <div className="bg-white rounded-[14px] border border-gray-100 p-4">
             <div className="flex items-center justify-between mb-1">
               <h3
                 className="text-sm font-semibold text-[#111827]"
@@ -680,7 +680,7 @@ export default function DealRecord() {
           </div>
 
           {/* Proposal Email */}
-          <div className="bg-white rounded-lg border border-gray-100 p-4">
+          <div className="bg-white rounded-[14px] border border-gray-100 p-4">
             <div className="flex items-center justify-between mb-1">
               <h3
                 className="text-sm font-semibold text-[#111827]"
@@ -705,7 +705,7 @@ export default function DealRecord() {
           </div>
 
           {/* Gmail thread */}
-          <div className="bg-white rounded-lg border border-gray-100 p-4">
+          <div className="bg-white rounded-[14px] border border-gray-100 p-4">
             <h3
               className="text-sm font-semibold text-[#111827] mb-3"
               style={{ fontFamily: "'Manrope', sans-serif" }}
@@ -792,7 +792,7 @@ export default function DealRecord() {
             </p>
           </div>
           {/* Notes */}
-          <div className="bg-white rounded-lg border border-gray-100 p-4">
+          <div className="bg-white rounded-[14px] border border-gray-100 p-4">
             <div className="flex items-center justify-between mb-3">
               <h3
                 className="text-sm font-semibold text-[#111827]"

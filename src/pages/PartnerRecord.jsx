@@ -137,7 +137,7 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
       {/* Partner details */}
-      <div className="lg:col-span-2 bg-white rounded-lg border border-gray-100 p-4">
+      <div className="lg:col-span-2 bg-white rounded-[14px] border border-gray-100 p-4">
         <div className="flex items-center justify-between mb-4">
           <h3
             className="text-sm font-semibold text-[#111827]"
@@ -314,7 +314,7 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
       </div>
 
       {/* Contact list */}
-      <div className="bg-white rounded-lg border border-gray-100 p-4">
+      <div className="bg-white rounded-[14px] border border-gray-100 p-4">
         <h3
           className="text-sm font-semibold text-[#111827] mb-3"
           style={{ fontFamily: "'Manrope', sans-serif" }}
@@ -375,7 +375,7 @@ function OverviewTab({ partner, contacts, onPartnerUpdate }) {
 function DealsTab({ deals }) {
   if (deals.length === 0) {
     return (
-      <div className="bg-white rounded-lg border border-gray-100 p-8 text-center">
+      <div className="bg-white rounded-[14px] border border-gray-100 p-8 text-center">
         <p className="text-sm text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
           No deals linked to this partner yet
         </p>
@@ -389,7 +389,7 @@ function DealsTab({ deals }) {
         <Link
           key={d.id}
           to={`/deal/${d.id}`}
-          className="bg-white rounded-lg border border-gray-100 p-4 flex items-center gap-4 hover:border-[#1D4ED8]/30 hover:shadow-sm transition-all block"
+          className="bg-white rounded-[14px] border border-gray-100 p-4 flex items-center gap-4 hover:border-[#1D4ED8]/30 hover:shadow-sm transition-all block"
         >
           <div className="flex-1 min-w-0">
             <p
@@ -523,7 +523,7 @@ function NotesTab({ partnerId }) {
 
   return (
     <div>
-      <div className="bg-white rounded-lg border border-gray-100 p-4 mb-4">
+      <div className="bg-white rounded-[14px] border border-gray-100 p-4 mb-4">
         <h3
           className="text-sm font-semibold text-[#111827] mb-3"
           style={{ fontFamily: "'Manrope', sans-serif" }}
@@ -551,13 +551,13 @@ function NotesTab({ partnerId }) {
 
       <div className="space-y-3">
         {notes.length === 0 ? (
-          <div className="bg-white rounded-lg border border-gray-100 p-8 text-center">
+          <div className="bg-white rounded-[14px] border border-gray-100 p-8 text-center">
             <p className="text-sm text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
               No notes yet — add meeting logs, call recaps, or reminders above
             </p>
           </div>
         ) : notes.map(note => (
-          <div key={note.id} className="bg-white rounded-lg border border-gray-100 p-4">
+          <div key={note.id} className="bg-white rounded-[14px] border border-gray-100 p-4">
             <p className="text-[10px] text-gray-400 mb-1.5 uppercase tracking-wide" style={{ fontFamily: "'Manrope', sans-serif" }}>
               {fmtDate(note.created_at)}
             </p>

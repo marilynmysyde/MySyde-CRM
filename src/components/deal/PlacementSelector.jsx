@@ -92,7 +92,7 @@ export default function PlacementSelector({ deal, onUpdate }) {
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-100 p-4">
+    <div className="bg-white rounded-[14px] border border-gray-100 p-4">
       <div className="flex items-center justify-between mb-3">
         <h3
           className="text-sm font-semibold text-[#111827]"

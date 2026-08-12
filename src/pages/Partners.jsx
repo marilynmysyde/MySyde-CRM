@@ -122,7 +122,7 @@ export default function Partners() {
           <div
             key={partner.id}
             onClick={() => navigate(`/partner/${partner.id}`)}
-            className="bg-white rounded-lg border border-gray-100 px-4 py-3 flex items-center justify-between hover:shadow-sm transition-shadow cursor-pointer"
+            className="bg-white rounded-[14px] border border-gray-100 px-4 py-3 flex items-center justify-between hover:shadow-sm transition-shadow cursor-pointer"
           >
             <div className="flex items-center gap-3">
               <PartnerTypeTag type={partner.type} />

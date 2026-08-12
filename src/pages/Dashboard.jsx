@@ -81,7 +81,7 @@ const STAGE_COLORS = {
 
 function StatCard({ label, value, sub, accent = false, to }) {
   const inner = (
-    <div className={`bg-white rounded-lg border p-4 ${accent ? 'border-[#1D4ED8]/20' : 'border-gray-100'} ${to ? 'hover:shadow-md transition-shadow cursor-pointer' : ''}`}>
+    <div className={`bg-white rounded-[14px] border p-4 ${accent ? 'border-[#1D4ED8]/20' : 'border-gray-100'} ${to ? 'hover:shadow-md transition-shadow cursor-pointer' : ''}`}>
       <p
         className={`text-2xl font-bold mb-0.5 ${accent ? 'text-[#1D4ED8]' : 'text-[#111827]'}`}
         style={{ fontFamily: "'Manrope', sans-serif" }}
@@ -231,7 +231,7 @@ export default function Dashboard() {
 
         {/* Pipeline by stage */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg border border-gray-100 p-4 mb-4">
+          <div className="bg-white rounded-[14px] border border-gray-100 p-4 mb-4">
             <div className="flex items-center justify-between mb-4">
               <h2
                 className="text-sm font-semibold text-[#111827]"
@@ -288,7 +288,7 @@ export default function Dashboard() {
 
           {/* Upcoming renewals */}
           {renewals.length > 0 && (
-            <div className="bg-white rounded-lg border border-amber-100 p-4 mb-4">
+            <div className="bg-white rounded-[14px] border border-amber-100 p-4 mb-4">
               <div className="flex items-center justify-between mb-3">
                 <h2
                   className="text-sm font-semibold text-[#111827]"
@@ -358,7 +358,7 @@ export default function Dashboard() {
 
         {/* Recent activity */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg border border-gray-100 p-4">
+          <div className="bg-white rounded-[14px] border border-gray-100 p-4">
             <h2
               className="text-sm font-semibold text-[#111827] mb-3"
               style={{ fontFamily: "'Manrope', sans-serif" }}

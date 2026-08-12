@@ -40,7 +40,7 @@ export default function CanvaLink({ deal, onUpdate }) {
   const linked = deal.canva_file_url
 
   return (
-    <div className="bg-white rounded-lg border border-gray-100 p-4">
+    <div className="bg-white rounded-[14px] border border-gray-100 p-4">
       <h3
         className="text-sm font-semibold text-[#111827] mb-3"
         style={{ fontFamily: "'Manrope', sans-serif" }}

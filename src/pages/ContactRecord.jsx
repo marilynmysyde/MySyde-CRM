@@ -64,7 +64,7 @@ function MailerLitePanel({ email, mailerliteId }) {
   const statusCfg = data ? (ML_STATUS_CONFIG[data.status] ?? ML_STATUS_CONFIG.unknown) : null
 
   return (
-    <div className="bg-white rounded-lg border border-gray-100 p-4">
+    <div className="bg-white rounded-[14px] border border-gray-100 p-4">
       <div className="flex items-center justify-between mb-3">
         <h3
           className="text-sm font-semibold text-[#111827]"
@@ -350,7 +350,7 @@ export default function ContactRecord() {
         <div className="lg:col-span-2 space-y-4">
 
           {/* Contact info */}
-          <div className="bg-white rounded-lg border border-gray-100 p-4">
+          <div className="bg-white rounded-[14px] border border-gray-100 p-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-[#111827]" style={{ fontFamily: "'Manrope', sans-serif" }}>
                 Contact Info
@@ -430,7 +430,7 @@ export default function ContactRecord() {
           </div>
 
           {/* Notes */}
-          <div className="bg-white rounded-lg border border-gray-100 p-4">
+          <div className="bg-white rounded-[14px] border border-gray-100 p-4">
             <h3
               className="text-sm font-semibold text-[#111827] mb-3"
               style={{ fontFamily: "'Manrope', sans-serif" }}

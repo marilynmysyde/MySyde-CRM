@@ -197,7 +197,7 @@ export default function Kiosks() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-lg border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-[14px] border border-gray-100 overflow-hidden">
 
         {/* Column headers */}
         <div
