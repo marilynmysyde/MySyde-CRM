@@ -35,8 +35,7 @@ export default function Topbar() {
             to={to}
             className={({ isActive }) =>
               [
-                'px-3 py-1.5 rounded text-sm font-medium whitespace-nowrap transition-colors',
-                'font-[Roboto]',
+                'px-3 py-1.5 rounded text-sm font-semibold whitespace-nowrap transition-colors',
                 isActive
                   ? 'bg-[#F59E0B] text-[#111827]'
                   : 'text-white/80 hover:text-white hover:bg-white/10',
