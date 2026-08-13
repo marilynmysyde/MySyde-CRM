@@ -38,12 +38,16 @@ export default function BoardColumn({ stage, label, deals }) {
         </SortableContext>
 
         {deals.length === 0 && (
-          <div className="flex items-center justify-center h-20 border-2 border-dashed border-gray-200 rounded-lg">
+          <div className="flex items-center justify-center h-20 border-2 border-dashed border-gray-200 rounded-lg px-2">
             <span
-              className="text-xs text-gray-300"
+              className="text-xs text-gray-400 text-center leading-snug"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
-              No deals here
+              {stage === 'prospect'
+                ? 'Drop a new deal here to start'
+                : stage === 'live'
+                  ? 'Signed deals land here'
+                  : 'Drag deals across to move stages'}
             </span>
           </div>
         )}

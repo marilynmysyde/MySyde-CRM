@@ -27,7 +27,7 @@ export default function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<RequireAuth><Shell /></RequireAuth>}>
-              <Route index element={<Navigate to="/board" replace />} />
+              <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="board"          element={<Board />} />
               <Route path="deal/:id"       element={<DealRecord />} />
               <Route path="partners"       element={<Partners />} />
@@ -41,7 +41,7 @@ export default function App() {
               <Route path="calendar"       element={<Calendar />} />
               <Route path="dashboard"      element={<Dashboard />} />
             </Route>
-            <Route path="*" element={<Navigate to="/board" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

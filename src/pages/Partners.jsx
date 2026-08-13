@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import PartnerTypeTag from '../components/shared/PartnerTypeTag'
+import EmptyState from '../components/shared/EmptyState'
 import NewPartnerModal from '../components/partners/NewPartnerModal'
 import { exportCsv, todaySlug } from '../lib/csvExport'
 
@@ -113,10 +114,24 @@ export default function Partners() {
 
       {/* Partner list */}
       <div className="space-y-2">
-        {visible.length === 0 && (
-          <div className="text-center py-12 text-gray-400 text-sm" style={{ fontFamily: "'Manrope', sans-serif" }}>
-            No partners match your filter.
-          </div>
+        {visible.length === 0 && partners.length === 0 && (
+          <EmptyState
+            icon="🤝"
+            title="No partners yet"
+            subtitle="Chambers, cities, downtown associations, event organizers — everyone you'll pitch kiosk ad space to. Start with the big three for Morgan Hill."
+            ctaLabel="+ Add your first partner"
+            onCta={() => setShowNewPartner(true)}
+          />
+        )}
+        {visible.length === 0 && partners.length > 0 && (
+          <EmptyState
+            variant="filtered"
+            icon="🔍"
+            title="No partners match"
+            subtitle={search ? `Nothing matches "${search}"${filter !== 'all' ? ` in the current filter` : ''}.` : 'Try a different filter.'}
+            ctaLabel="Clear filters"
+            onCta={() => { setSearch(''); setFilter('all') }}
+          />
         )}
         {visible.map(partner => (
           <div

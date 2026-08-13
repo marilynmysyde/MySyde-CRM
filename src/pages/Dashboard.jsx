@@ -2,7 +2,34 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════
+// LAUNCH COMMAND CENTER — Morgan Hill kiosk launch
+// Reviewing this setup? See context/decisions.md (2026-08-13 entry).
+// Post-launch (~2026-10-12), reassess whether to swap to Option A (task-first).
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─── EDIT ME as launch details firm up ──────────────────────────────────────
+
+// Set to the ribbon-cutting date once locked. Countdown flips to "Day N Live"
+// after this date passes. Leave as `null` to hide the countdown.
+const LAUNCH_DATE = '2026-08-30'   // TODO: replace with confirmed ribbon-cutting date
+
+// Fallback used only if the launch_milestones table is missing/empty.
+// Once the table is populated (see supabase/schema.sql), milestones load from DB
+// and toggle via clicking the circles on the dashboard.
+const DEFAULT_MILESTONES = [
+  { slug: 'installed', label: 'Kiosk installed',       status: 'todo', sort_order: 1 },
+  { slug: 'content',   label: 'Launch content loaded', status: 'todo', sort_order: 2 },
+  { slug: 'ribbon',    label: 'Ribbon cutting',        status: 'todo', sort_order: 3 },
+]
+
+// Morgan Hill inventory count (from rate card). Adjust if slot mix changes.
+// Both-screens slots count as 2 (once per screen).
+const TOTAL_PLACEMENT_SLOTS = 18
+// Fully-sold Option 2 (Recommended) target — the "what's possible" number.
+const POTENTIAL_MRR = 30_250
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
 
 function fmt$(n) {
   if (n >= 1000) return `$${(n / 1000).toFixed(1)}k`
@@ -20,385 +47,447 @@ function fmtActivity(ts) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
-// ─── Sample data ─────────────────────────────────────────────────────────────
-
-const SAMPLE_STATS = {
-  pipelineValue:   48_750,
-  liveMRR:         2_350,
-  activeKiosks:    3,
-  dealsByStage: {
-    prospect:    2,
-    pitched:     3,
-    proposal:    2,
-    creative:    1,
-    live:        4,
-    closed_won:  7,
-    closed_lost: 1,
-  },
-  tasksDueThisWeek:  5,
+function fmtToday() {
+  return new Date().toLocaleDateString('en-US', {
+    weekday: 'long', month: 'long', day: 'numeric',
+  })
 }
 
-const SAMPLE_RENEWALS = [
-  { id: 'r1', title: 'Spring Ad Campaign — Banner Slot',   partner: 'MH Chamber',    run_end: '2026-06-10' },
-  { id: 'r2', title: 'PDF Map Bundle',                     partner: 'City of MH',    run_end: '2026-06-18' },
-  { id: 'r3', title: 'Full Panel Ad — Downtown Feature',   partner: 'Downtown MH',   run_end: '2026-06-25' },
-]
+// Days until launch. Positive = pre-launch. Zero = today. Negative = live for N days.
+function launchDelta() {
+  if (!LAUNCH_DATE) return null
+  const launch = new Date(LAUNCH_DATE + 'T00:00:00')
+  const today  = new Date()
+  today.setHours(0, 0, 0, 0)
+  return Math.round((launch - today) / 86_400_000)
+}
+
+// ─── Sample fallbacks (used when Supabase returns nothing) ──────────────────
 
 const SAMPLE_ACTIVITY = [
-  { id: 'a1', type: 'stage_change',   body: 'Spring Campaign moved to Live',           created_at: new Date(Date.now() - 1_800_000).toISOString() },
-  { id: 'a2', type: 'task_complete',  body: 'Send proposal deck — MH Chamber',         created_at: new Date(Date.now() - 3_600_000).toISOString() },
-  { id: 'a3', type: 'post_published', body: 'Kiosk Launch Announcement — published',   created_at: new Date(Date.now() - 7_200_000).toISOString() },
-  { id: 'a4', type: 'canva_update',   body: 'Creative updated — Downtown Feature',     created_at: new Date(Date.now() - 14_400_000).toISOString() },
-  { id: 'a5', type: 'note',           body: 'Call with James Ortega — City of MH',     created_at: new Date(Date.now() - 86_400_000).toISOString() },
-  { id: 'a6', type: 'stage_change',   body: 'Civic Center Banner moved to Proposal',   created_at: new Date(Date.now() - 172_800_000).toISOString() },
+  { id: 'a1', type: 'stage_change',  body: 'Spring Campaign moved to Live',    created_at: new Date(Date.now() - 1_800_000).toISOString() },
+  { id: 'a2', type: 'task_complete', body: 'Send proposal deck — MH Chamber',  created_at: new Date(Date.now() - 3_600_000).toISOString() },
+  { id: 'a3', type: 'note',          body: 'Call with James Ortega — City',    created_at: new Date(Date.now() - 86_400_000).toISOString() },
 ]
 
 const ACTIVITY_ICONS = {
-  note:           { icon: '📝', color: 'text-gray-500'   },
-  email:          { icon: '📧', color: 'text-[#1D4ED8]'  },
-  call:           { icon: '📞', color: 'text-green-600'  },
-  stage_change:   { icon: '🔀', color: 'text-purple-600' },
-  canva_update:   { icon: '🎨', color: 'text-pink-600'   },
-  task_complete:  { icon: '✅', color: 'text-green-600'  },
-  post_published: { icon: '📣', color: 'text-orange-500' },
-  gmail_linked:   { icon: '📧', color: 'text-[#1D4ED8]'  },
+  note:           '📝',
+  email:          '📧',
+  call:           '📞',
+  stage_change:   '🔀',
+  canva_update:   '🎨',
+  task_complete:  '✅',
+  post_published: '📣',
+  gmail_linked:   '📧',
 }
 
-const STAGE_LABELS = {
-  prospect: 'Prospect', pitched: 'Pitched', proposal: 'Proposal',
-  creative: 'Creative', live: 'Live',
-}
+// ─── Launch hero ────────────────────────────────────────────────────────────
 
-const STAGE_COLORS = {
-  prospect: 'bg-gray-200',
-  pitched:  'bg-blue-300',
-  proposal: 'bg-purple-300',
-  creative: 'bg-orange-300',
-  live:     'bg-green-400',
-}
+function LaunchHero() {
+  const delta = launchDelta()
+  if (delta === null) return null
 
-// ─── Stat card ───────────────────────────────────────────────────────────────
+  const preLaunch = delta > 0
+  const isToday   = delta === 0
+  const live      = delta < 0
 
-function StatCard({ label, value, sub, accent = false, to }) {
-  const inner = (
-    <div className={`bg-white rounded-[14px] border p-4 ${accent ? 'border-[#1D4ED8]/20' : 'border-gray-100'} ${to ? 'hover:shadow-md transition-shadow cursor-pointer' : ''}`}>
-      <p
-        className={`text-2xl font-bold mb-0.5 ${accent ? 'text-[#1D4ED8]' : 'text-[#111827]'}`}
-        style={{ fontFamily: "'Manrope', sans-serif" }}
-      >
-        {value}
-      </p>
-      <p
-        className="text-xs text-gray-500 font-medium"
-        style={{ fontFamily: 'Manrope, sans-serif' }}
-      >
-        {label}
-      </p>
-      {sub && (
-        <p className="text-[10px] text-gray-400 mt-1" style={{ fontFamily: "'Manrope', sans-serif" }}>
-          {sub}
+  const headline = preLaunch
+    ? `Morgan Hill kiosk launches in ${delta} ${delta === 1 ? 'day' : 'days'}`
+    : isToday
+      ? 'Ribbon cutting today — Morgan Hill kiosk goes live'
+      : `Live — Day ${Math.abs(delta)} in Morgan Hill`
+
+  const sub = preLaunch
+    ? new Date(LAUNCH_DATE + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+    : live
+      ? 'Launch date: ' + new Date(LAUNCH_DATE + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+      : 'Today'
+
+  return (
+    <div
+      className="mb-6 rounded-[14px] px-5 py-4 flex items-center justify-between gap-4"
+      style={{
+        background: live
+          ? 'linear-gradient(135deg, #10B981 0%, #059669 100%)'
+          : 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+      }}
+    >
+      <div className="min-w-0">
+        <p className="text-white/90 text-[11px] font-semibold uppercase tracking-wider mb-0.5">
+          {live ? 'Live' : 'Kiosk launch'}
         </p>
+        <h2 className="text-white text-lg sm:text-xl font-bold leading-tight truncate">
+          {headline}
+        </h2>
+        <p className="text-white/85 text-xs mt-0.5">{sub}</p>
+      </div>
+      {preLaunch && (
+        <div className="text-right shrink-0">
+          <p className="text-white text-3xl sm:text-4xl font-extrabold leading-none">{delta}</p>
+          <p className="text-white/85 text-[10px] font-semibold uppercase tracking-wider mt-1">
+            {delta === 1 ? 'day' : 'days'} to go
+          </p>
+        </div>
       )}
     </div>
   )
-  return to ? <Link to={to}>{inner}</Link> : inner
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
+// ─── Milestone tracker ──────────────────────────────────────────────────────
+
+function MilestoneTracker({ milestones, onToggle }) {
+  const doneCount = milestones.filter(m => m.status === 'done').length
+  const pct       = milestones.length ? Math.round((doneCount / milestones.length) * 100) : 0
+
+  return (
+    <div className="bg-white rounded-[14px] border border-gray-100 p-4 mb-4">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h2 className="text-sm font-semibold text-[#111827]">Launch Milestones</h2>
+          <p className="text-[10px] text-gray-400 mt-0.5">Click a circle to mark done · click again to undo</p>
+        </div>
+        <span className="text-xs text-gray-500 font-medium">
+          {doneCount} of {milestones.length} · {pct}%
+        </span>
+      </div>
+
+      <div className="flex items-center gap-2 sm:gap-3">
+        {milestones.map((m, i) => {
+          const done = m.status === 'done'
+          return (
+            <div key={m.slug} className="flex-1 flex items-center gap-2 sm:gap-3">
+              <div className="flex flex-col items-center gap-1.5 min-w-0 flex-1">
+                <button
+                  type="button"
+                  onClick={() => onToggle(m.slug)}
+                  aria-label={`Toggle ${m.label}`}
+                  aria-pressed={done}
+                  className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shrink-0 transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#1D4ED8]/40 cursor-pointer ${
+                    done
+                      ? 'bg-emerald-500 text-white hover:bg-emerald-600'
+                      : 'bg-gray-100 text-gray-400 border-2 border-gray-200 hover:border-[#1D4ED8]/50 hover:text-[#1D4ED8]'
+                  }`}
+                >
+                  {done ? '✓' : i + 1}
+                </button>
+                <p
+                  className={`text-[11px] font-semibold text-center leading-tight ${
+                    done ? 'text-[#111827]' : 'text-gray-500'
+                  }`}
+                >
+                  {m.label}
+                </p>
+              </div>
+              {i < milestones.length - 1 && (
+                <div className={`h-0.5 flex-1 rounded transition-colors ${done ? 'bg-emerald-400' : 'bg-gray-200'}`} />
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// ─── Inventory fill ─────────────────────────────────────────────────────────
+
+function InventoryFill({ sold, committedMRR }) {
+  const soldPct  = Math.min(100, Math.round((sold / TOTAL_PLACEMENT_SLOTS) * 100))
+  const mrrPct   = Math.min(100, Math.round((committedMRR / POTENTIAL_MRR) * 100))
+  const remaining = Math.max(0, TOTAL_PLACEMENT_SLOTS - sold)
+
+  return (
+    <div className="bg-white rounded-[14px] border border-gray-100 p-4">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-sm font-semibold text-[#111827]">Ad Inventory — Morgan Hill</h2>
+        <Link to="/board" className="text-xs text-[#1D4ED8] hover:underline font-medium">
+          Work the pipeline →
+        </Link>
+      </div>
+
+      {/* Placements sold */}
+      <div className="mb-5">
+        <div className="flex items-baseline justify-between mb-2">
+          <div>
+            <span className="text-2xl font-extrabold text-[#111827]">{sold}</span>
+            <span className="text-sm text-gray-500 font-medium"> / {TOTAL_PLACEMENT_SLOTS} placements sold</span>
+          </div>
+          <span className="text-xs font-semibold text-[#1D4ED8]">{soldPct}%</span>
+        </div>
+        <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-[#1D4ED8] transition-all duration-500"
+            style={{ width: `${soldPct}%` }}
+          />
+        </div>
+        <p className="text-[11px] text-gray-500 mt-1.5">
+          {remaining} {remaining === 1 ? 'slot' : 'slots'} still open to sell
+        </p>
+      </div>
+
+      {/* Committed MRR */}
+      <div>
+        <div className="flex items-baseline justify-between mb-2">
+          <div>
+            <span className="text-2xl font-extrabold text-[#111827]">{fmt$(committedMRR)}</span>
+            <span className="text-sm text-gray-500 font-medium"> / {fmt$(POTENTIAL_MRR)} potential MRR</span>
+          </div>
+          <span className="text-xs font-semibold text-amber-600">{mrrPct}%</span>
+        </div>
+        <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-amber-500 transition-all duration-500"
+            style={{ width: `${mrrPct}%` }}
+          />
+        </div>
+        <p className="text-[11px] text-gray-500 mt-1.5">
+          Committed monthly revenue from signed + in-flight deals
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// ─── Today's Focus columns ─────────────────────────────────────────────────
+
+function TasksTodayCard({ tasks, loading }) {
+  const today = new Date().toISOString().slice(0, 10)
+  const dueToday = tasks.filter(t => t.due_date === today && t.status !== 'done')
+  const overdue  = tasks.filter(t => t.due_date && t.due_date < today && t.status !== 'done')
+
+  return (
+    <div className="bg-white rounded-[14px] border border-gray-100 p-4">
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-sm font-semibold text-[#111827]">Today's Tasks</h2>
+        <Link to="/tasks" className="text-xs text-[#1D4ED8] hover:underline font-medium">
+          All →
+        </Link>
+      </div>
+
+      {loading ? (
+        <p className="text-xs text-gray-400 italic py-4 text-center">Loading…</p>
+      ) : dueToday.length === 0 && overdue.length === 0 ? (
+        <p className="text-xs text-gray-400 italic py-4 text-center">
+          Nothing due today. Nice.
+        </p>
+      ) : (
+        <div className="space-y-2">
+          {overdue.length > 0 && (
+            <div className="text-[10px] font-semibold text-rose-600 uppercase tracking-wider mb-1">
+              {overdue.length} overdue
+            </div>
+          )}
+          {[...overdue, ...dueToday].slice(0, 5).map(t => (
+            <Link
+              key={t.id}
+              to="/tasks"
+              className="flex items-start gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <span className={`mt-1 w-1.5 h-1.5 rounded-full shrink-0 ${
+                overdue.includes(t) ? 'bg-rose-500' : 'bg-[#1D4ED8]'
+              }`} />
+              <p className="text-xs text-[#111827] leading-snug truncate">{t.title}</p>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function DealsNeedActionCard({ deals, loading }) {
+  const today = new Date()
+  const in30  = new Date(Date.now() + 30 * 86_400_000).toISOString().slice(0, 10)
+  const todayStr = today.toISOString().slice(0, 10)
+
+  // Stuck > 7 days in a non-terminal stage
+  const stuckThreshold = new Date(Date.now() - 7 * 86_400_000).toISOString()
+  const stuck = deals.filter(d =>
+    !['closed_won', 'closed_lost'].includes(d.stage) &&
+    d.created_at && d.created_at < stuckThreshold
+  )
+  const renewing = deals.filter(d =>
+    d.run_end && d.run_end >= todayStr && d.run_end <= in30
+  )
+
+  const combined = [
+    ...renewing.map(d => ({ ...d, _reason: 'renewal' })),
+    ...stuck.map(d => ({ ...d, _reason: 'stuck' })),
+  ].slice(0, 5)
+
+  return (
+    <div className="bg-white rounded-[14px] border border-gray-100 p-4">
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-sm font-semibold text-[#111827]">Deals Needing Action</h2>
+        <Link to="/board" className="text-xs text-[#1D4ED8] hover:underline font-medium">
+          Board →
+        </Link>
+      </div>
+
+      {loading ? (
+        <p className="text-xs text-gray-400 italic py-4 text-center">Loading…</p>
+      ) : combined.length === 0 ? (
+        <p className="text-xs text-gray-400 italic py-4 text-center">
+          Nothing flagged. All deals moving.
+        </p>
+      ) : (
+        <div className="space-y-2">
+          {combined.map(d => (
+            <Link
+              key={d.id}
+              to={`/deal/${d.id}`}
+              className="flex items-start gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <span className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shrink-0 mt-0.5 ${
+                d._reason === 'renewal'
+                  ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                  : 'bg-gray-100 text-gray-600 border border-gray-200'
+              }`}>
+                {d._reason === 'renewal' ? 'Renew' : 'Stuck'}
+              </span>
+              <p className="text-xs text-[#111827] leading-snug truncate flex-1">{d.title}</p>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function RecentActivityCard({ activity, loading }) {
+  const list = activity.length ? activity : SAMPLE_ACTIVITY
+
+  return (
+    <div className="bg-white rounded-[14px] border border-gray-100 p-4">
+      <h2 className="text-sm font-semibold text-[#111827] mb-3">Recent Activity</h2>
+
+      {loading ? (
+        <p className="text-xs text-gray-400 italic py-4 text-center">Loading…</p>
+      ) : (
+        <div className="space-y-2.5">
+          {list.slice(0, 5).map(a => (
+            <div key={a.id} className="flex gap-2">
+              <span className="text-sm leading-none mt-0.5">{ACTIVITY_ICONS[a.type] ?? '📝'}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-[#111827] leading-snug">{a.body}</p>
+                <p className="text-[10px] text-gray-400 mt-0.5">{fmtActivity(a.created_at)}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ─── Quick actions ─────────────────────────────────────────────────────────
+
+function QuickActions() {
+  const actions = [
+    { label: 'New Deal',    to: '/board',    icon: '💼' },
+    { label: 'New Task',    to: '/tasks',    icon: '✅' },
+    { label: 'New Contact', to: '/contacts', icon: '👤' },
+    { label: 'Add Partner', to: '/partners', icon: '🤝' },
+  ]
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4">
+      {actions.map(a => (
+        <Link
+          key={a.label}
+          to={a.to}
+          className="bg-white rounded-[14px] border border-gray-100 hover:border-[#1D4ED8]/30 hover:bg-[#1D4ED8]/5 transition-colors p-3 flex items-center gap-2"
+        >
+          <span className="text-base">{a.icon}</span>
+          <span className="text-xs font-semibold text-[#111827]">+ {a.label}</span>
+        </Link>
+      ))}
+    </div>
+  )
+}
+
+// ─── Page ──────────────────────────────────────────────────────────────────
 
 export default function Dashboard() {
-  const [stats,    setStats]    = useState({ pipelineValue: 0, liveMRR: 0, activeKiosks: 0, dealsByStage: {}, tasksDueThisWeek: 0 })
-  const [activity, setActivity] = useState([])
-  const [renewals, setRenewals] = useState([])
-  const [loading,  setLoading]  = useState(true)
+  const [deals,      setDeals]      = useState([])
+  const [tasks,      setTasks]      = useState([])
+  const [activity,   setActivity]   = useState([])
+  const [milestones, setMilestones] = useState(DEFAULT_MILESTONES)
+  const [loading,    setLoading]    = useState(true)
 
   useEffect(() => {
     async function load() {
       try {
-        // Pipeline value (non-lost deals)
-        const { data: deals } = await supabase
-          .from('deals')
-          .select('stage, total_value, monthly_rate, months')
-          .neq('stage', 'closed_lost')
-
-        // Active kiosks
-        const { count: kioskCount } = await supabase
-          .from('kiosks')
-          .select('id', { count: 'exact', head: true })
-          .eq('status', 'active')
-
-        // Tasks due this week
-        const weekEnd = new Date()
-        weekEnd.setDate(weekEnd.getDate() + 7)
-        const { count: taskCount } = await supabase
-          .from('tasks')
-          .select('id', { count: 'exact', head: true })
-          .neq('status', 'done')
-          .lte('due_date', weekEnd.toISOString().slice(0, 10))
-
-        // Upcoming renewals (run_end within 30 days, still active)
-        const today       = new Date().toISOString().slice(0, 10)
-        const in30Days    = new Date(Date.now() + 30 * 86_400_000).toISOString().slice(0, 10)
-        const { data: renewalData } = await supabase
-          .from('deals')
-          .select('id, title, run_end, partners(name)')
-          .not('stage', 'in', '("closed_won","closed_lost")')
-          .gte('run_end', today)
-          .lte('run_end', in30Days)
-          .order('run_end')
-
-        // Recent activity
-        const { data: actData } = await supabase
-          .from('activity_log')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(10)
-
-        if (deals) {
-          const totalVal = deals.reduce((s, d) => s + (Number(d.total_value ?? (d.monthly_rate ?? 0) * (d.months ?? 1)) || 0), 0)
-          const liveMRR  = deals.filter(d => d.stage === 'live').reduce((s, d) => s + (Number(d.monthly_rate) || 0), 0)
-          const byStage  = {}
-          for (const d of deals) { byStage[d.stage] = (byStage[d.stage] ?? 0) + 1 }
-          setStats({
-            pipelineValue:    totalVal,
-            liveMRR,
-            activeKiosks:     kioskCount ?? 0,
-            dealsByStage:     byStage,
-            tasksDueThisWeek: taskCount ?? 0,
-          })
-        }
-        if (renewalData) setRenewals(renewalData.map(d => ({ id: d.id, title: d.title, partner: d.partners?.name ?? '', run_end: d.run_end })))
-        if (actData) setActivity(actData)
-      } catch { /* ignore */ }
+        const [{ data: d }, { data: t }, { data: a }, { data: m }] = await Promise.all([
+          supabase.from('deals').select('id, title, stage, monthly_rate, run_end, placement_type, created_at'),
+          supabase.from('tasks').select('id, title, due_date, status').neq('status', 'done'),
+          supabase.from('activity_log').select('*').order('created_at', { ascending: false }).limit(10),
+          supabase.from('launch_milestones').select('slug, label, status, sort_order').order('sort_order'),
+        ])
+        if (d) setDeals(d)
+        if (t) setTasks(t)
+        if (a) setActivity(a)
+        if (m && m.length) setMilestones(m)
+      } catch { /* silent — sample/default fallbacks handle it */ }
       setLoading(false)
     }
     load()
   }, [])
 
-  const openDeals  = Object.entries(stats.dealsByStage ?? {})
-    .filter(([s]) => Object.keys(STAGE_LABELS).includes(s))
-  const totalOpen  = openDeals.reduce((s, [, c]) => s + c, 0)
-  const maxCount   = Math.max(...openDeals.map(([, c]) => c), 1)
+  async function toggleMilestone(slug) {
+    const current = milestones.find(m => m.slug === slug)
+    if (!current) return
+    const nextStatus = current.status === 'done' ? 'todo' : 'done'
+    // Optimistic UI
+    setMilestones(prev => prev.map(m => m.slug === slug ? { ...m, status: nextStatus } : m))
+    // Persist (silent-fail if table missing or not connected — matches project pattern)
+    try {
+      await supabase
+        .from('launch_milestones')
+        .update({ status: nextStatus, updated_at: new Date().toISOString() })
+        .eq('slug', slug)
+    } catch { /* ignore */ }
+  }
+
+  // Inventory computed from deals that have a placement and aren't lost
+  const committed = deals.filter(d =>
+    d.placement_type && !['closed_lost'].includes(d.stage)
+  )
+  const sold         = committed.length
+  const committedMRR = committed.reduce((s, d) => s + (Number(d.monthly_rate) || 0), 0)
 
   return (
     <div className="px-4 py-4 max-w-6xl mx-auto">
 
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1
-          className="text-xl font-semibold text-[#111827]"
-          style={{ fontFamily: "'Manrope', sans-serif" }}
-        >
-          Dashboard
+      {/* Greeting */}
+      <div className="mb-4">
+        <p className="text-[11px] text-gray-500 font-semibold uppercase tracking-wider">
+          {fmtToday()}
+        </p>
+        <h1 className="text-xl font-bold text-[#111827] mt-0.5">
+          Morning, Marilyn
         </h1>
-        {loading && (
-          <span className="text-xs text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
-            Loading…
-          </span>
-        )}
       </div>
 
-      {/* Top stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-        <StatCard
-          label="Live MRR"
-          value={fmt$(stats.liveMRR ?? 0)}
-          sub="Monthly from live deals"
-          accent
-          to="/board"
-        />
-        <StatCard
-          label="Pipeline Value"
-          value={fmt$(stats.pipelineValue)}
-          sub="Open deals excl. lost"
-          to="/board"
-        />
-        <StatCard
-          label="Active Kiosks"
-          value={stats.activeKiosks}
-          sub="Live in the field"
-          to="/kiosks"
-        />
-        <StatCard
-          label="Tasks Due This Week"
-          value={stats.tasksDueThisWeek}
-          sub="Across all partners"
-          to="/tasks"
-        />
+      {/* Launch countdown hero */}
+      <LaunchHero />
+
+      {/* Milestones */}
+      <MilestoneTracker milestones={milestones} onToggle={toggleMilestone} />
+
+      {/* Inventory + committed MRR */}
+      <div className="mb-4">
+        <InventoryFill sold={sold} committedMRR={committedMRR} />
       </div>
 
+      {/* Today's focus — 3 columns */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-
-        {/* Pipeline by stage */}
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-[14px] border border-gray-100 p-4 mb-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2
-                className="text-sm font-semibold text-[#111827]"
-                style={{ fontFamily: "'Manrope', sans-serif" }}
-              >
-                Open Deals by Stage
-              </h2>
-              <Link
-                to="/board"
-                className="text-xs text-[#1D4ED8] hover:underline"
-                style={{ fontFamily: 'Manrope, sans-serif' }}
-              >
-                View board →
-              </Link>
-            </div>
-
-            {openDeals.length === 0 ? (
-              <p className="text-xs text-gray-400 italic py-4 text-center" style={{ fontFamily: "'Manrope', sans-serif" }}>
-                No open deals.
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {openDeals.map(([stage, count]) => (
-                  <div key={stage} className="flex items-center gap-3">
-                    <span
-                      className="text-xs text-gray-500 w-18 shrink-0"
-                      style={{ fontFamily: 'Manrope, sans-serif' }}
-                    >
-                      {STAGE_LABELS[stage]}
-                    </span>
-                    <div className="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
-                      <div
-                        className={`h-2 rounded-full ${STAGE_COLORS[stage] ?? 'bg-gray-300'} transition-all`}
-                        style={{ width: `${(count / maxCount) * 100}%` }}
-                      />
-                    </div>
-                    <span
-                      className="text-xs font-semibold text-[#111827] w-4 text-right shrink-0"
-                      style={{ fontFamily: 'Manrope, sans-serif' }}
-                    >
-                      {count}
-                    </span>
-                  </div>
-                ))}
-                <p
-                  className="text-[10px] text-gray-400 pt-1"
-                  style={{ fontFamily: "'Manrope', sans-serif" }}
-                >
-                  {totalOpen} open deals total
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Upcoming renewals */}
-          {renewals.length > 0 && (
-            <div className="bg-white rounded-[14px] border border-amber-100 p-4 mb-4">
-              <div className="flex items-center justify-between mb-3">
-                <h2
-                  className="text-sm font-semibold text-[#111827]"
-                  style={{ fontFamily: "'Manrope', sans-serif" }}
-                >
-                  Renewals in Next 30 Days
-                </h2>
-                <span
-                  className="text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded-full"
-                  style={{ fontFamily: 'Manrope, sans-serif' }}
-                >
-                  {renewals.length}
-                </span>
-              </div>
-              <div className="space-y-2">
-                {renewals.map(r => {
-                  const daysLeft = Math.ceil((new Date(r.run_end) - new Date()) / 86_400_000)
-                  return (
-                    <Link
-                      key={r.id}
-                      to={`/deal/${r.id}`}
-                      className="flex items-center justify-between gap-3 p-2.5 rounded-lg hover:bg-amber-50/60 transition-colors group"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-medium text-[#111827] truncate" style={{ fontFamily: 'Manrope, sans-serif' }}>
-                          {r.title}
-                        </p>
-                        <p className="text-[10px] text-gray-400" style={{ fontFamily: "'Manrope', sans-serif" }}>
-                          {r.partner}
-                        </p>
-                      </div>
-                      <span
-                        className={`text-[10px] font-semibold shrink-0 px-2 py-0.5 rounded-full ${
-                          daysLeft <= 7 ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-700'
-                        }`}
-                        style={{ fontFamily: 'Manrope, sans-serif' }}
-                      >
-                        {daysLeft}d
-                      </span>
-                    </Link>
-                  )
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Quick links */}
-          <div className="grid grid-cols-3 gap-3">
-            {[
-              { label: 'Sales Board',    to: '/board',    icon: '📋' },
-              { label: 'Partners',       to: '/partners', icon: '🤝' },
-              { label: 'Social',         to: '/social',   icon: '📱' },
-            ].map(l => (
-              <Link
-                key={l.to}
-                to={l.to}
-                className="bg-white rounded-lg border border-gray-100 p-3 flex items-center gap-2 hover:border-[#1D4ED8]/30 hover:bg-[#1D4ED8]/5 transition-colors"
-              >
-                <span>{l.icon}</span>
-                <span className="text-xs font-medium text-[#111827]" style={{ fontFamily: 'Manrope, sans-serif' }}>
-                  {l.label}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Recent activity */}
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-[14px] border border-gray-100 p-4">
-            <h2
-              className="text-sm font-semibold text-[#111827] mb-3"
-              style={{ fontFamily: "'Manrope', sans-serif" }}
-            >
-              Recent Activity
-            </h2>
-
-            {activity.length === 0 ? (
-              <p className="text-xs text-gray-400 italic py-4 text-center" style={{ fontFamily: "'Manrope', sans-serif" }}>
-                No activity yet.
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {activity.slice(0, 8).map(entry => {
-                  const cfg = ACTIVITY_ICONS[entry.type] ?? ACTIVITY_ICONS.note
-                  return (
-                    <div key={entry.id} className="flex gap-3 pb-3 border-b border-gray-50 last:border-0">
-                      <span className="text-base mt-0.5 shrink-0 leading-none">{cfg.icon}</span>
-                      <div className="flex-1 min-w-0">
-                        <p
-                          className="text-xs text-[#111827] leading-snug"
-                          style={{ fontFamily: 'Manrope, sans-serif' }}
-                        >
-                          {entry.body}
-                        </p>
-                        <p
-                          className="text-[10px] text-gray-400 mt-0.5"
-                          style={{ fontFamily: "'Manrope', sans-serif" }}
-                        >
-                          {fmtActivity(entry.created_at)}
-                        </p>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
-          </div>
-        </div>
+        <TasksTodayCard   tasks={tasks}       loading={loading} />
+        <DealsNeedActionCard deals={deals}    loading={loading} />
+        <RecentActivityCard  activity={activity} loading={loading} />
       </div>
+
+      {/* Quick actions */}
+      <QuickActions />
     </div>
   )
 }

@@ -176,6 +176,25 @@ create table activity_log (
 
 
 -- ─────────────────────────────────────────────────────────
+-- Launch milestones (Dashboard "Launch Command Center" tracker)
+-- ─────────────────────────────────────────────────────────
+create table if not exists launch_milestones (
+  id          uuid primary key default gen_random_uuid(),
+  slug        text unique not null,
+  label       text not null,
+  status      text not null default 'todo' check (status in ('todo','done')),
+  sort_order  integer not null default 0,
+  updated_at  timestamp with time zone default now()
+);
+
+insert into launch_milestones (slug, label, sort_order) values
+  ('installed', 'Kiosk installed',       1),
+  ('content',   'Launch content loaded', 2),
+  ('ribbon',    'Ribbon cutting',        3)
+on conflict (slug) do nothing;
+
+
+-- ─────────────────────────────────────────────────────────
 -- SEED: Default packages
 -- ─────────────────────────────────────────────────────────
 
@@ -215,14 +234,16 @@ alter table tasks        enable row level security;
 alter table posts        enable row level security;
 alter table notes        enable row level security;
 alter table activity_log enable row level security;
+alter table launch_milestones enable row level security;
 
 -- Authenticated users only — any signed-in team member can read/write all rows
-create policy "auth_all" on partners     for all to authenticated using (true) with check (true);
-create policy "auth_all" on contacts     for all to authenticated using (true) with check (true);
-create policy "auth_all" on kiosks       for all to authenticated using (true) with check (true);
-create policy "auth_all" on packages     for all to authenticated using (true) with check (true);
-create policy "auth_all" on deals        for all to authenticated using (true) with check (true);
-create policy "auth_all" on tasks        for all to authenticated using (true) with check (true);
-create policy "auth_all" on posts        for all to authenticated using (true) with check (true);
-create policy "auth_all" on notes        for all to authenticated using (true) with check (true);
-create policy "auth_all" on activity_log for all to authenticated using (true) with check (true);
+create policy "auth_all" on partners          for all to authenticated using (true) with check (true);
+create policy "auth_all" on contacts          for all to authenticated using (true) with check (true);
+create policy "auth_all" on kiosks            for all to authenticated using (true) with check (true);
+create policy "auth_all" on packages          for all to authenticated using (true) with check (true);
+create policy "auth_all" on deals             for all to authenticated using (true) with check (true);
+create policy "auth_all" on tasks             for all to authenticated using (true) with check (true);
+create policy "auth_all" on posts             for all to authenticated using (true) with check (true);
+create policy "auth_all" on notes             for all to authenticated using (true) with check (true);
+create policy "auth_all" on activity_log      for all to authenticated using (true) with check (true);
+create policy "auth_all" on launch_milestones for all to authenticated using (true) with check (true);
