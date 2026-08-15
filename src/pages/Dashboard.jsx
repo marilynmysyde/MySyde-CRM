@@ -12,7 +12,7 @@ import { supabase } from '../lib/supabase'
 
 // Set to the ribbon-cutting date once locked. Countdown flips to "Day N Live"
 // after this date passes. Leave as `null` to hide the countdown.
-const LAUNCH_DATE = '2026-08-30'   // TODO: replace with confirmed ribbon-cutting date
+const LAUNCH_DATE = '2026-08-21'   // Install-complete date. Ribbon cutting still TBD — swap to that when confirmed.
 
 // Fallback used only if the launch_milestones table is missing/empty.
 // Once the table is populated (see supabase/schema.sql), milestones load from DB
