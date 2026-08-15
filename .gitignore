@@ -11,6 +11,12 @@ dist/
 
 # Local Claude Code settings
 .claude/settings.local.json
+.claude/commands/
+.claude/worktrees/
+
+# Session scratch / temp
+.tmp/
+supabase/.temp/
 
 # Browser automation cache
 .playwright-mcp/
