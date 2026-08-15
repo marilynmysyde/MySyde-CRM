@@ -15,16 +15,17 @@ const STAGES = ['prospect', 'pitched', 'proposal', 'creative', 'live', 'closed_w
 const PLACEMENT_LABELS = {
   top_banner:        'Top Banner',
   bottom_banner:     'Bottom Banner',
-  premier_welcome:   'Premier Welcome Screen',
-  start_screen:      'Start Screen',
+  middle_takeover:   'Middle-Screen Takeover',
+  featured_box:      'Welcome Featured Sponsor Box',
   search_button:     'Search Button',
   primary_wrap:      'Primary Wrap',
-  side_wrap:         'Side Wrap',
+  side_qr_tile:      'Side Panel QR Sponsor Tile',
   featured_event:    'Featured Event',
-  map_picture:       'Map Picture',
-  map_name_under:    'Map Name (Under)',
-  map_name_category: 'Map Name + Category',
-  map_bundle:        'Map Bundle',
+  map_stand_out:     'Stand Out Building',
+  map_name_under:    'Bold Name on Map',
+  map_name_category: 'Bold Name in Category',
+  map_bundle:        'Stand Out Map Bundle',
+  package:           'Package',
 }
 
 const SCREEN_LABELS = {

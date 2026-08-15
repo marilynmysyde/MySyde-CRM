@@ -67,10 +67,12 @@ create table deals (
 
   -- Placement & pricing (MySyde rate card)
   placement_type    text check (placement_type in (
-                      'top_banner','bottom_banner','premier_welcome','start_screen',
-                      'search_button','primary_wrap','side_wrap','featured_event',
-                      'map_picture','map_name_under','map_name_category','map_bundle'
+                      'top_banner','bottom_banner','middle_takeover','featured_box',
+                      'search_button','primary_wrap','side_qr_tile','featured_event',
+                      'map_stand_out','map_name_under','map_name_category','map_bundle',
+                      'package'
                     )),
+  package_key       text, -- set when placement_type='package' (see rateCard.js PACKAGES)
   screen            text check (screen in ('screen_1','screen_2','both')),
   pricing_tier      text default 'option_2' check (pricing_tier in ('option_1','option_2','option_3')),
   launch_pricing    boolean default false,
