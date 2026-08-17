@@ -6,6 +6,7 @@
 // Launch special: 50% off all monthly rates for first 6 months (setup/one-time fees excluded).
 
 export const CATEGORIES = [
+  { key: 'package', label: 'Packages',        icon: '📦' },
   { key: 'digital', label: 'Digital Screen',   icon: '🖥️' },
   { key: 'wrap',    label: 'Exterior Wrap',    icon: '🏢' },
   { key: 'event',   label: 'Events',           icon: '📅' },

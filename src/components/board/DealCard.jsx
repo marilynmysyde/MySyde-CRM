@@ -2,9 +2,10 @@ import { useNavigate } from 'react-router-dom'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import PartnerTypeTag from '../shared/PartnerTypeTag'
-import { PLACEMENTS, CATEGORIES } from '../../lib/rateCard'
+import { PLACEMENTS, CATEGORIES, PACKAGES } from '../../lib/rateCard'
 
 const CATEGORY_STYLES = {
+  package: 'bg-blue-50 text-[#1D4ED8]',
   digital: 'bg-blue-50 text-[#1D4ED8]',
   wrap:    'bg-amber-50 text-amber-700',
   event:   'bg-purple-50 text-purple-700',
@@ -16,8 +17,23 @@ function formatCurrency(value) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value)
 }
 
-function PlacementBadge({ placementType }) {
+function PlacementBadge({ placementType, packageKey }) {
   if (!placementType) return null
+
+  if (placementType === 'package') {
+    const pkg = PACKAGES[packageKey]
+    if (!pkg) return null
+    return (
+      <span
+        className={`text-[10px] font-semibold px-1.5 py-0.5 rounded uppercase tracking-wide shrink-0 ${CATEGORY_STYLES.package}`}
+        style={{ fontFamily: 'Manrope, sans-serif' }}
+        title={pkg.label}
+      >
+        📦 {pkg.label.length > 16 ? pkg.label.slice(0, 14) + '…' : pkg.label}
+      </span>
+    )
+  }
+
   const p   = PLACEMENTS[placementType]
   if (!p) return null
   const cat = CATEGORIES.find(c => c.key === p.category)
@@ -90,7 +106,7 @@ export default function DealCard({ deal }) {
             <PartnerTypeTag type={deal.partners.type} />
           )}
         </div>
-        <PlacementBadge placementType={deal.placement_type ?? deal.package} />
+        <PlacementBadge placementType={deal.placement_type} packageKey={deal.package_key} />
       </div>
 
       {/* Clickable body — navigates to DealRecord */}
