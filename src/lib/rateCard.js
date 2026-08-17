@@ -209,7 +209,7 @@ export const PACKAGES = {
       'Featured Event monthly placement',
       'Stand Out Map Bundle',
       'PrimeTime scheduling on BOTH screens',
-      'Weekly creative refresh',
+      'Up to weekly creative refresh',
     ],
     bonus: 'Setup/onboarding fee waived + one static ad design included',
   },
@@ -230,7 +230,7 @@ export const PACKAGES = {
       'Stand Out Map Bundle',
       'PrimeTime scheduling on BOTH screens',
     ],
-    bonus: 'One 2×/month creative refresh included',
+    bonus: 'Up to 2×/month creative refresh included',
   },
   downtown_pop: {
     key:            'downtown_pop',
@@ -247,7 +247,7 @@ export const PACKAGES = {
       'Bold Business Name in Category Section',
       'One Featured Event monthly placement',
     ],
-    bonus: 'One creative update per month included',
+    bonus: 'Up to one creative update per month included',
   },
   main_street_moment: {
     key:            'main_street_moment',
