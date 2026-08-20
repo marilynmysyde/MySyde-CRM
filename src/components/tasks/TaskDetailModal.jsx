@@ -87,6 +87,9 @@ export default function TaskDetailModal({ task, partners = [], onClose, onUpdate
       tags:            form.tags ? form.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
       is_recurring:    form.is_recurring,
       recurrence_rule: form.is_recurring ? form.recurrence_rule : null,
+      // completed_at powers the Done column's rolling window — stamp on close,
+      // clear on reopen. Leave untouched if it was already done and still is.
+      completed_at:    nowDone ? (wasDone ? task.completed_at : new Date().toISOString()) : null,
     }
 
     const { data } = await supabase

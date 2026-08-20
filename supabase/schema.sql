@@ -114,6 +114,7 @@ create table tasks (
   is_recurring    boolean not null default false,
   recurrence_rule text check (recurrence_rule in ('weekly','monthly','quarterly')),
   tags            text[] default '{}',
+  completed_at    timestamp with time zone,
   created_at      timestamp with time zone default now()
 );
 

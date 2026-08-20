@@ -1,21 +1,50 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../contexts/AuthContext'
+import { teamMemberFromEmail } from '../lib/team'
 import TaskBoard from '../components/tasks/TaskBoard'
 import NewTaskModal from '../components/tasks/NewTaskModal'
 import TaskDetailModal from '../components/tasks/TaskDetailModal'
 import ConfettiBurst from '../components/tasks/ConfettiBurst'
 import CelebrateToast from '../components/tasks/CelebrateToast'
 
+const QUICK_FILTERS = [
+  { key: 'mine',     label: 'Assigned to Me' },
+  { key: 'overdue',  label: 'Overdue' },
+  { key: 'thisWeek', label: 'Due This Week' },
+]
+
+function isOverdue(task) {
+  if (!task.due_date || task.status === 'done') return false
+  const today = new Date(); today.setHours(0, 0, 0, 0)
+  return new Date(task.due_date + 'T00:00:00') < today
+}
+
+function isDueThisWeek(task) {
+  if (!task.due_date || task.status === 'done') return false
+  const today = new Date(); today.setHours(0, 0, 0, 0)
+  const weekOut = new Date(today); weekOut.setDate(weekOut.getDate() + 7)
+  const due = new Date(task.due_date + 'T00:00:00')
+  return due >= today && due <= weekOut
+}
+
 // ─── Tasks page ───────────────────────────────────────────────────────────────
 
 export default function Tasks() {
+  const { user }      = useAuth()
+  const myName         = teamMemberFromEmail(user?.email)
   const [tasks,       setTasks]       = useState([])
   const [partners,    setPartners]    = useState([])
   const [filter,      setFilter]      = useState('all')
+  const [quickFilters, setQuickFilters] = useState({ mine: false, overdue: false, thisWeek: false })
   const [modal,       setModal]       = useState(false)
   const [openTask,    setOpenTask]    = useState(null)
   const [celebrating, setCelebrating] = useState(false)
   const [loading,     setLoading]     = useState(true)
+
+  function toggleQuickFilter(key) {
+    setQuickFilters(prev => ({ ...prev, [key]: !prev[key] }))
+  }
 
   useEffect(() => {
     async function load() {
@@ -41,9 +70,11 @@ export default function Tasks() {
   const activePartnerIds = [...new Set(tasks.map(t => t.partner_id).filter(Boolean))]
   const filterPartners   = partners.filter(p => activePartnerIds.includes(p.id))
 
-  const visibleTasks = filter === 'all'
-    ? tasks
-    : tasks.filter(t => t.partner_id === filter)
+  const visibleTasks = tasks
+    .filter(t => filter === 'all' || t.partner_id === filter)
+    .filter(t => !quickFilters.mine     || t.assigned_to === myName)
+    .filter(t => !quickFilters.overdue  || isOverdue(t))
+    .filter(t => !quickFilters.thisWeek || isDueThisWeek(t))
 
   function handleCreated(task) {
     setTasks(prev => [task, ...prev])
@@ -103,6 +134,26 @@ export default function Tasks() {
                 {tasks.filter(t => t.partner_id === p.id).length}
               </span>
             )}
+          </button>
+        ))}
+      </div>
+
+      {/* Quick filters */}
+      <div className="flex items-center gap-2 flex-wrap mb-4">
+        {QUICK_FILTERS.map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => toggleQuickFilter(key)}
+            disabled={key === 'mine' && !myName}
+            className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+              quickFilters[key]
+                ? 'bg-[#1D4ED8] border-[#1D4ED8] text-white'
+                : 'bg-white border-[#E5E7EB] text-[#6B7280] hover:border-[#1D4ED8] hover:text-[#1D4ED8]'
+            }`}
+            style={{ fontFamily: 'Manrope, sans-serif' }}
+            title={key === 'mine' && !myName ? 'Sign in as a recognized team member to use this filter' : undefined}
+          >
+            {label}
           </button>
         ))}
       </div>

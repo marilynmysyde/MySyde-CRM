@@ -31,3 +31,11 @@ export function teamMemberChip(name) {
     color:   TEAM_COLORS[name] ?? FALLBACK_COLOR,
   }
 }
+
+// Maps a login email (e.g. marilyn@mysyde.com) to a TEAM_MEMBERS name (e.g. "Marilyn"),
+// so "assigned to me" filters work without a separate email-to-name mapping table.
+export function teamMemberFromEmail(email) {
+  if (!email) return null
+  const localPart = email.split('@')[0]?.toLowerCase()
+  return TEAM_MEMBERS.find(m => m.toLowerCase() === localPart) ?? null
+}

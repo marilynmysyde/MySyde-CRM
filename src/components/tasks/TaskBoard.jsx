@@ -37,11 +37,15 @@ export default function TaskBoard({ tasks, setTasks, showPartner = false, onOpen
     const task      = tasks.find(t => t.id === taskId)
     if (!task || task.status === newStatus) return
 
+    // completed_at powers the Done column's rolling window — stamp it on close,
+    // clear it if a task gets reopened into another column.
+    const completedAt = newStatus === 'done' ? new Date().toISOString() : null
+
     // Optimistic update
-    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: newStatus } : t))
+    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: newStatus, completed_at: completedAt } : t))
 
     // Supabase
-    await supabase.from('tasks').update({ status: newStatus }).eq('id', taskId)
+    await supabase.from('tasks').update({ status: newStatus, completed_at: completedAt }).eq('id', taskId)
 
     // Celebrate when a task lands in Done (from any other column)
     if (newStatus === 'done' && task.status !== 'done') {
