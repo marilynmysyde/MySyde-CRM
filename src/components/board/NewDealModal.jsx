@@ -7,23 +7,6 @@ const STAGE_LABELS = {
   creative: 'Creative', live: 'Live',
 }
 
-const PLACEMENT_OPTIONS = [
-  { value: '',                  label: '— None yet —' },
-  { value: 'top_banner',        label: 'Top Banner' },
-  { value: 'bottom_banner',     label: 'Bottom Banner' },
-  { value: 'middle_takeover',   label: 'Middle-Screen Takeover' },
-  { value: 'featured_box',      label: 'Welcome Featured Sponsor Box' },
-  { value: 'search_button',     label: 'Search Button' },
-  { value: 'primary_wrap',      label: 'Primary Wrap' },
-  { value: 'side_qr_tile',      label: 'Side Panel QR Sponsor Tile' },
-  { value: 'featured_event',    label: 'Featured Event' },
-  { value: 'map_stand_out',     label: 'Stand Out Building' },
-  { value: 'map_name_under',    label: 'Bold Name on Map' },
-  { value: 'map_name_category', label: 'Bold Name in Category' },
-  { value: 'map_bundle',        label: 'Stand Out Map Bundle' },
-  { value: 'package',           label: 'Package (bundle)' },
-]
-
 const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#1D4ED8] text-[#111827] bg-white'
 const labelCls = 'text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1'
 
@@ -33,9 +16,6 @@ export default function NewDealModal({ onClose, onCreated }) {
     title:          '',
     partner_id:     '',
     stage:          'prospect',
-    placement_type: '',
-    monthly_rate:   '',
-    months:         '3',
     run_start:      '',
     run_end:        '',
     notes:          '',
@@ -60,10 +40,6 @@ export default function NewDealModal({ onClose, onCreated }) {
     setForm(prev => ({ ...prev, [field]: value }))
   }
 
-  const totalPreview = form.monthly_rate && form.months
-    ? Number(form.monthly_rate) * Number(form.months)
-    : null
-
   async function submit(e) {
     e.preventDefault()
     if (!form.title.trim()) return
@@ -73,9 +49,6 @@ export default function NewDealModal({ onClose, onCreated }) {
       title:          form.title.trim(),
       partner_id:     form.partner_id || null,
       stage:          form.stage,
-      placement_type: form.placement_type || null,
-      monthly_rate:   form.monthly_rate ? Number(form.monthly_rate) : null,
-      months:         form.months ? Number(form.months) : 3,
       run_start:      form.run_start || null,
       run_end:        form.run_end || null,
       notes:          form.notes.trim() || null,
@@ -92,7 +65,7 @@ export default function NewDealModal({ onClose, onCreated }) {
       ...payload,
       id:          crypto.randomUUID(),
       created_at:  new Date().toISOString(),
-      total_value: totalPreview ?? 0,
+      total_value: 0,
       partners:    partners.find(p => p.id === payload.partner_id) ?? null,
     }
 
@@ -172,58 +145,9 @@ export default function NewDealModal({ onClose, onCreated }) {
             </div>
           </div>
 
-          {/* Placement */}
-          <div>
-            <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Placement Type</label>
-            <select
-              value={form.placement_type}
-              onChange={e => set('placement_type', e.target.value)}
-              className={inputCls}
-              style={{ fontFamily: 'Manrope, sans-serif' }}
-            >
-              {PLACEMENT_OPTIONS.map(o => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
+          <div className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-lg px-3 py-2 text-xs text-[#6B7280]" style={{ fontFamily: 'Manrope, sans-serif' }}>
+            Placement, package, and pricing are set on the deal card after it's created — this just creates the deal.
           </div>
-
-          {/* Rate + Months */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Monthly Rate ($)</label>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={form.monthly_rate}
-                onChange={e => set('monthly_rate', e.target.value)}
-                placeholder="0.00"
-                className={inputCls}
-                style={{ fontFamily: 'Manrope, sans-serif' }}
-              />
-            </div>
-            <div>
-              <label className={labelCls} style={{ fontFamily: 'Manrope, sans-serif' }}>Months</label>
-              <input
-                type="number"
-                min="1"
-                value={form.months}
-                onChange={e => set('months', e.target.value)}
-                className={inputCls}
-                style={{ fontFamily: 'Manrope, sans-serif' }}
-              />
-            </div>
-          </div>
-
-          {/* Total value preview */}
-          {totalPreview !== null && (
-            <div
-              className="bg-[#1D4ED8]/5 border border-[#1D4ED8]/15 rounded-lg px-3 py-2 text-sm font-semibold text-[#1D4ED8]"
-              style={{ fontFamily: "'Manrope', sans-serif" }}
-            >
-              Total value: ${totalPreview.toLocaleString()}
-            </div>
-          )}
 
           {/* Run dates */}
           <div className="grid grid-cols-2 gap-3">
