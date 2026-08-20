@@ -11,6 +11,7 @@ const NAV_TABS = [
   { label: 'Kiosks',    to: '/kiosks' },
   { label: 'Calendar',  to: '/calendar' },
   { label: 'Dashboard', to: '/dashboard' },
+  { label: 'Links',     to: '/links' },
 ]
 
 export default function Topbar() {

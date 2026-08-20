@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase'
 import PartnerTypeTag from '../components/shared/PartnerTypeTag'
 import TaskBoard from '../components/tasks/TaskBoard'
 import NewTaskModal from '../components/tasks/NewTaskModal'
+import { PACKAGES } from '../lib/rateCard'
 
 // ─── Sample data ────────────────────────────────────────────────────────────
 
@@ -79,9 +80,7 @@ const STAGE_COLORS = {
   live:     'bg-green-100 text-green-700', closed_won:   'bg-[#1D4ED8] text-white',
   closed_lost: 'bg-red-100 text-red-600',
 }
-const PACKAGE_COLORS = {
-  starter: 'bg-gray-100 text-gray-600', standard: 'bg-blue-50 text-[#1D4ED8]', premium: 'bg-yellow-50 text-yellow-700',
-}
+const PACKAGE_BADGE_STYLE = 'bg-blue-50 text-[#1D4ED8]'
 const PRIORITY_COLORS = {
   high: 'text-red-500', medium: 'text-orange-400', low: 'text-gray-400',
 }
@@ -409,14 +408,13 @@ function DealsTab({ deals }) {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            {d.package && (
+            {d.placement_type === 'package' && PACKAGES[d.package_key] && (
               <span
-                className={`text-[10px] font-semibold px-1.5 py-0.5 rounded uppercase tracking-wide ${
-                  PACKAGE_COLORS[d.package] ?? 'bg-gray-100 text-gray-600'
-                }`}
+                className={`text-[10px] font-semibold px-1.5 py-0.5 rounded uppercase tracking-wide ${PACKAGE_BADGE_STYLE}`}
                 style={{ fontFamily: 'Manrope, sans-serif' }}
+                title={PACKAGES[d.package_key].label}
               >
-                {d.package}
+                📦 {PACKAGES[d.package_key].label}
               </span>
             )}
             <span

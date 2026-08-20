@@ -16,6 +16,7 @@ import Calendar from './pages/Calendar'
 import Dashboard from './pages/Dashboard'
 import DealRecord from './pages/DealRecord'
 import PartnerRecord from './pages/PartnerRecord'
+import Links from './pages/Links'
 
 const queryClient = new QueryClient()
 
@@ -40,6 +41,7 @@ export default function App() {
               <Route path="kiosks/:id"     element={<KioskRecord />} />
               <Route path="calendar"       element={<Calendar />} />
               <Route path="dashboard"      element={<Dashboard />} />
+              <Route path="links"          element={<Links />} />
             </Route>
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
