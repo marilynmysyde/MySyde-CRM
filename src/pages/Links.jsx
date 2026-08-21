@@ -57,7 +57,7 @@ const LINK_GROUPS = [
   {
     label: 'Tools & Logins',
     links: [
-      { name: 'Mandoe (digital signage scheduler)', url: null, note: 'Add login URL' },
+      { name: 'Mandoe (digital signage scheduler)', url: 'https://us.mandoemedia.com/welcome' },
       { name: 'Stripe Dashboard', url: null, note: 'Add once new bank account Stripe is set up' },
       { name: 'Mailerlite', url: 'https://app.mailerlite.com' },
       { name: 'Plann That', url: 'https://web.plannthat.com' },
