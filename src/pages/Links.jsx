@@ -41,7 +41,7 @@ const LINK_GROUPS = [
       { name: '2. General MySyde Interest', url: null, note: 'Not built yet — post-launch (Q4)' },
       { name: '3. Sales Nurture (from Drew)', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live · reply-to has a typo in Mailerlite ("diigitalads@") — worth fixing' },
       { name: '4. Advertiser Interest', url: null, note: 'Blocked on dev — needs the "advertise here" QR + landing page' },
-      { name: '5. Active Advertiser Onboarding', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live · split across 4 automations — "Creative Deadline Nudge" (Email 3) is missing from Mailerlite, only 3 of 4 are actually there' },
+      { name: '5. Active Advertiser Onboarding', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live · all 4 automations built (Onboarding, Creative Deadline Nudge, Launch Day, Renewal/Transition)' },
     ],
   },
   {
