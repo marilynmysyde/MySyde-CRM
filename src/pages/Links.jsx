@@ -8,6 +8,7 @@ const LINK_GROUPS = [
     links: [
       { name: 'Website', url: 'https://mysyde.com' },
       { name: 'Kiosk Landing Page', url: 'https://mysyde.com/kiosk' },
+      { name: 'Kiosk Product Site', url: 'https://mysydekiosk.com' },
       { name: 'MySyde Connect (CRM)', url: 'https://crm.mysyde.com' },
       { name: 'MySyde Connect User Guide', url: 'https://claude.ai/code/artifact/c60a854d-0c69-4e9e-ab53-0d870e596593' },
       { name: 'Selling in MySyde Connect (sales cheat sheet)', url: 'https://claude.ai/code/artifact/3a3e7910-cd87-4c08-a055-82e144bb422d' },
@@ -29,7 +30,18 @@ const LINK_GROUPS = [
   {
     label: 'Kiosk-Facing (Consumer)',
     links: [
-      { name: 'Kiosk QR Landing — morganhill.mysyde.com', url: null, note: 'Live once the email-capture bar ships (Wed dev agenda item)' },
+      { name: 'Kiosk QR Landing — morganhill.mysyde.com', url: 'https://morganhill.mysyde.com' },
+      { name: 'Alternate domain — morgan-hill.mysyde.com', url: 'https://morgan-hill.mysyde.com' },
+    ],
+  },
+  {
+    label: 'Marketing Funnels (Mailerlite)',
+    links: [
+      { name: '1. Kiosk QR Welcome', url: 'https://dashboard.mailerlite.com/automations', note: 'OFF — waits on the email-capture bar. 4 emails built.' },
+      { name: '2. General MySyde Interest', url: null, note: 'Not built yet — post-launch (Q4)' },
+      { name: '3. Sales Nurture (from Drew)', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live · reply-to has a typo in Mailerlite ("diigitalads@") — worth fixing' },
+      { name: '4. Advertiser Interest', url: null, note: 'Blocked on dev — needs the "advertise here" QR + landing page' },
+      { name: '5. Active Advertiser Onboarding', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live · split across 4 automations — "Creative Deadline Nudge" (Email 3) is missing from Mailerlite, only 3 of 4 are actually there' },
     ],
   },
   {
@@ -49,6 +61,8 @@ const LINK_GROUPS = [
       { name: 'Stripe Dashboard', url: null, note: 'Add once new bank account Stripe is set up' },
       { name: 'Mailerlite', url: 'https://app.mailerlite.com' },
       { name: 'Plann That', url: 'https://web.plannthat.com' },
+      { name: 'Scalefusion (kiosk remote viewer/MDM)', url: 'https://app.scalefusion.com/users/sign_in', note: 'Login: marilyn@mysyde.com' },
+      { name: 'PostHog (analytics)', url: 'https://app.posthog.com' },
       { name: 'WordPress Admin (mysyde.com)', url: null, note: 'Add login URL — not in .env yet' },
       { name: 'Canva', url: null, note: 'Add brand kit URL' },
       { name: 'GitHub — mysyde-crm', url: 'https://github.com/marilynmysyde/MySyde-CRM' },
@@ -95,6 +109,9 @@ function LinkRow({ link }) {
           </a>
         ) : (
           <p className="text-xs text-[#6B7280] italic truncate">{link.note ?? 'Link not set yet'}</p>
+        )}
+        {link.url && link.note && (
+          <p className="text-[11px] text-[#6B7280] truncate mt-0.5">{link.note}</p>
         )}
       </div>
       <div className="flex items-center gap-2 shrink-0">
