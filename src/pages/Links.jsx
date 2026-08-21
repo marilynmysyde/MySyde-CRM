@@ -7,18 +7,22 @@ const LINK_GROUPS = [
     label: 'MySyde — Core',
     links: [
       { name: 'Website', url: 'https://mysyde.com' },
+      { name: 'Kiosk Landing Page', url: 'https://mysyde.com/kiosk' },
       { name: 'MySyde Connect (CRM)', url: 'https://crm.mysyde.com' },
       { name: 'MySyde Connect User Guide', url: 'https://claude.ai/code/artifact/c60a854d-0c69-4e9e-ab53-0d870e596593' },
+      { name: 'Selling in MySyde Connect (sales cheat sheet)', url: 'https://claude.ai/code/artifact/3a3e7910-cd87-4c08-a055-82e144bb422d' },
     ],
   },
   {
     label: 'Morgan Hill Kiosk — Sales Assets',
     links: [
+      { name: 'Morgan Hill Launch Assets (Drive folder)', url: 'https://drive.google.com/drive/folders/1pXsvXVM_HUfKFplQ7s1UnX-BFSVak0rb' },
       { name: '[Morgan Hill] Community Kiosk Program Offer (Google Doc)', url: 'https://docs.google.com/document/d/1i_4Cu6JmmIuXIviMMN2WNX4o2FU0iQXu3Qnrif91xDc/edit' },
       { name: 'Morgan Hill Sales Offer (PDF, brand v2)', url: null, note: 'projects/active/morgan-hill-kiosk-launch/2026-08-14-morgan-hill-sales-offer.pdf' },
       { name: 'Creative Specs & Submission Guide (Google Doc)', url: 'https://docs.google.com/document/d/1Scq9BPuSZR_4on98pWKWhOTM62O2M8PtE4iqLkcqIGw/edit' },
       { name: 'Creative Submission Form', url: 'https://forms.gle/3WsFbG4hofW3XKXs7' },
-      { name: 'Book a Kiosk Demo (Calendly)', url: 'https://calendly.com/digitalads-mysyde/30min' },
+      { name: 'Book a Kiosk Demo (Calendly — Sales)', url: 'https://calendly.com/digitalads-mysyde/30min' },
+      { name: "Marilyn's Calendly", url: 'https://calendly.com/marilyn-mysyde' },
       { name: 'Exhibit A — Sales Compensation Plan v2', url: 'https://docs.google.com/document/d/1OyUNAdRrVRzwFhqfPlCVgEE5WQkxx_LljZkmc-VNvQY/edit' },
     ],
   },
@@ -29,12 +33,27 @@ const LINK_GROUPS = [
     ],
   },
   {
+    label: 'Team & Onboarding',
+    links: [
+      { name: 'Onboarding Packet MASTER (Drive folder)', url: 'https://drive.google.com/drive/folders/1LN4jedfqsVdjXHHba2ESuXvFFO7lOjyB' },
+      { name: 'Welcome to MySyde — Day 1 Guide', url: 'https://docs.google.com/document/d/15I8dGHZJ2GRc0yrqw4Rv8wI6ngU3UnJB3wjibDmMiDY/edit' },
+      { name: 'Welcome Email Template', url: 'https://docs.google.com/document/d/1cdB2FagR4ZQIskUN_HtF3GDAbR582t0SWDkUNi5GADk/edit' },
+      { name: 'CRM Walkthrough — 30-Min Script', url: 'https://docs.google.com/document/d/1V4exAnatKR-KjtXgsvdhHlV6YmJzDBrx-4CjUChbldg/edit' },
+      { name: 'Andrew Becks — Onboarding (Drive folder)', url: 'https://drive.google.com/drive/folders/14FMWtKrVRA_cnVZAGiHJkaPyDqwoEiBs' },
+    ],
+  },
+  {
     label: 'Tools & Logins',
     links: [
       { name: 'Mandoe (digital signage scheduler)', url: null, note: 'Add login URL' },
       { name: 'Stripe Dashboard', url: null, note: 'Add once new bank account Stripe is set up' },
       { name: 'Mailerlite', url: 'https://app.mailerlite.com' },
       { name: 'Plann That', url: 'https://web.plannthat.com' },
+      { name: 'WordPress Admin (mysyde.com)', url: null, note: 'Add login URL — not in .env yet' },
+      { name: 'Canva', url: null, note: 'Add brand kit URL' },
+      { name: 'GitHub — mysyde-crm', url: 'https://github.com/marilynmysyde/MySyde-CRM' },
+      { name: 'Vercel Dashboard', url: 'https://vercel.com/dashboard' },
+      { name: 'Supabase Dashboard', url: 'https://supabase.com/dashboard/project/wyguubkjefkefqosguio' },
     ],
   },
 ]
