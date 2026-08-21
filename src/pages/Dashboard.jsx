@@ -10,9 +10,9 @@ import { supabase } from '../lib/supabase'
 
 // ─── EDIT ME as launch details firm up ──────────────────────────────────────
 
-// Set to the ribbon-cutting date once locked. Countdown flips to "Day N Live"
-// after this date passes. Leave as `null` to hide the countdown.
-const LAUNCH_DATE = '2026-08-21'   // Install-complete date. Ribbon cutting still TBD — swap to that when confirmed.
+// Set to the date the kiosk is set in the cement downtown and live/operational.
+// Countdown flips to "Day N Live" after this date passes. Leave as `null` to hide the countdown.
+const LAUNCH_DATE = '2026-08-24'   // Install-complete, live & operational date (est. — not yet confirmed by install crew).
 
 // Fallback used only if the launch_milestones table is missing/empty.
 // Once the table is populated (see supabase/schema.sql), milestones load from DB
@@ -92,9 +92,9 @@ function LaunchHero() {
   const live      = delta < 0
 
   const headline = preLaunch
-    ? `Morgan Hill kiosk launches in ${delta} ${delta === 1 ? 'day' : 'days'}`
+    ? `Morgan Hill kiosk live in ${delta} ${delta === 1 ? 'day' : 'days'}`
     : isToday
-      ? 'Ribbon cutting today — Morgan Hill kiosk goes live'
+      ? 'Kiosk set in the cement today — Morgan Hill goes live'
       : `Live — Day ${Math.abs(delta)} in Morgan Hill`
 
   const sub = preLaunch
