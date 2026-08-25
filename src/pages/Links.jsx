@@ -22,6 +22,7 @@ const LINK_GROUPS = [
       { name: 'Morgan Hill Sales Offer (PDF, brand v2)', url: null, note: 'projects/active/morgan-hill-kiosk-launch/2026-08-14-morgan-hill-sales-offer.pdf' },
       { name: 'Creative Specs & Submission Guide (Google Doc)', url: 'https://docs.google.com/document/d/1Scq9BPuSZR_4on98pWKWhOTM62O2M8PtE4iqLkcqIGw/edit' },
       { name: 'Creative Submission Form', url: 'https://forms.gle/3WsFbG4hofW3XKXs7' },
+      { name: 'Client Creative Intake (Drive folder — per-business art)', url: 'https://drive.google.com/drive/folders/127PWW5uYDH4nzaIHFBFnn3lLaJtX-RkX', note: 'Lives in the "Drive" shared drive (not My Drive) — one subfolder per advertiser, where their submitted art/files land.' },
       { name: 'Book a Kiosk Demo (Calendly — Sales)', url: 'https://calendly.com/digitalads-mysyde/30min' },
       { name: "Marilyn's Calendly", url: 'https://calendly.com/marilyn-mysyde' },
       { name: 'Exhibit A — Sales Compensation Plan v2', url: 'https://docs.google.com/document/d/1OyUNAdRrVRzwFhqfPlCVgEE5WQkxx_LljZkmc-VNvQY/edit' },
