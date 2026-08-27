@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   DndContext,
   DragOverlay,
@@ -24,6 +24,10 @@ const STAGES = [
 export default function BoardView({ initialDeals }) {
   const [deals, setDeals]     = useState(initialDeals)
   const [activeId, setActiveId] = useState(null)
+
+  // initialDeals starts empty and is filled in after Board.jsx's async fetch resolves —
+  // without this, the useState above only ever captures that first empty array.
+  useEffect(() => { setDeals(initialDeals) }, [initialDeals])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
