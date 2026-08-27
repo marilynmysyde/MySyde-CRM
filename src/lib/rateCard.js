@@ -75,6 +75,18 @@ export const PLACEMENTS = {
     perScreen:     { option_1: 500,  option_2: 750,  option_3: 1000  },
     both:          { option_1: 850,  option_2: 1275, option_3: 1700  },
   },
+  community_static_slot: {
+    key:           'community_static_slot',
+    label:         'Community Static Page Slot (Free)',
+    category:      'digital',
+    desc:          '4th static screen page — 5 slots total, free for City/Chamber/local orgs. Track booking here so we know how many of the 5 are still open.',
+    exclusive:     false,
+    defaultTerm:   3,
+    termOptions:   [3, 6, 12],
+    hasScreen:     false,
+    perScreen:     { option_1: 0, option_2: 0, option_3: 0 },
+    both:          null,
+  },
   search_button: {
     key:           'search_button',
     label:         'Sponsored Search Button',
@@ -105,13 +117,13 @@ export const PLACEMENTS = {
     key:           'side_qr_tile',
     label:         'Side Panel QR Sponsor Tile',
     category:      'wrap',
-    desc:          'One sponsor tile on a side panel (up to 6 tiles per side, 12 total) — 6-month minimum',
+    desc:          'One sponsor tile on the spine — up to 6 tiles total (sellable side only; the other side is not available) — 6-month minimum',
     exclusive:     false,
     defaultTerm:   6,
     termOptions:   [6, 12],
     hasScreen:     false,
     perScreen:     { option_1: 300,  option_2: 450,  option_3: 650   },
-    both:          { option_1: 510,  option_2: 765,  option_3: 1105  }, // same advertiser on both sides
+    both:          null, // 2026-08-26: only one side of the spine is sellable — no "both sides" bundle
     setupFee:      { option_1: 150,  option_2: 200,  option_3: 250   }, // one-time tile production
   },
 
@@ -201,7 +213,7 @@ export const PACKAGES = {
     launchPrice:    4848,   // First 6 months
     includes: [
       'Primary Main-Face Wrap',
-      'Side Panel QR Sponsorship on BOTH sides',
+      'Side Panel QR Sponsorship (spine)',
       'Complete Middle-Screen Takeover on BOTH screens',
       'Top Banner on BOTH screens',
       'Bottom Banner on BOTH screens',
