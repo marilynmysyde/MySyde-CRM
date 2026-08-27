@@ -113,19 +113,28 @@ export default function PlacementSelector({ deal, onUpdate }) {
     }
   }
 
+  const [isTrade, setIsTrade] = useState(
+    () => deal.monthly_rate === 0 && !!deal.placement_type && deal.placement_type !== 'community_static_slot'
+  )
+
   const isPackage = placementType === 'package'
   const placement = PLACEMENTS[placementType]
   const pkg       = isPackage ? getPackage(packageKey) : null
+  // community_static_slot is $0 by rate-card design already — the trade toggle would be redundant there.
+  const isInherentlyFree = !isPackage && placement && placement.perScreen.option_1 === 0 && placement.perScreen.option_2 === 0 && placement.perScreen.option_3 === 0
 
   const monthlyRate = isPackage
     ? (pkg ? packageMonthlyRate(pkg.key, launchPricing) : 0)
-    : (placementType ? calcRate(placementType, tier, placement?.hasScreen ? screen : 'screen_1', launchPricing) : 0)
+    : (!placementType ? 0
+        : (isTrade && !isInherentlyFree) ? 0
+        : calcRate(placementType, tier, placement?.hasScreen ? screen : 'screen_1', launchPricing))
 
   const totalValue = isPackage
     ? monthlyRate * months
+    : (isTrade && !isInherentlyFree) ? 0
     : calcTotal(placementType, tier, placement?.hasScreen ? screen : 'screen_1', launchPricing, months)
 
-  const setupFee = isPackage ? 0 : (placementType ? getSetupFee(placementType, tier) : 0)
+  const setupFee = isPackage ? 0 : (isTrade ? 0 : (placementType ? getSetupFee(placementType, tier) : 0))
 
   async function persist(patch) {
     setSaving(true)
@@ -148,7 +157,8 @@ export default function PlacementSelector({ deal, onUpdate }) {
     setPlacementType(key)
     setPackageKey(null)
     setMonths(newMonths)
-    const rate  = calcRate(key, tier, p.hasScreen ? newScreen : 'screen_1', launchPricing)
+    const inherentlyFree = p.perScreen.option_1 === 0 && p.perScreen.option_2 === 0 && p.perScreen.option_3 === 0
+    const rate  = (isTrade && !inherentlyFree) ? 0 : calcRate(key, tier, p.hasScreen ? newScreen : 'screen_1', launchPricing)
     persist({
       placement_type: key,
       package_key:    null,
@@ -181,8 +191,16 @@ export default function PlacementSelector({ deal, onUpdate }) {
   function handleTier(t) {
     setTier(t)
     if (!placementType || isPackage) return
+    if (isTrade && !isInherentlyFree) { persist({ pricing_tier: t, monthly_rate: 0 }); return }
     const rate = calcRate(placementType, t, placement?.hasScreen ? screen : 'screen_1', launchPricing)
     persist({ pricing_tier: t, monthly_rate: rate })
+  }
+
+  function handleTrade(val) {
+    setIsTrade(val)
+    if (!placementType || isPackage) return
+    const rate = val ? 0 : calcRate(placementType, tier, placement?.hasScreen ? screen : 'screen_1', launchPricing)
+    persist({ monthly_rate: rate })
   }
 
   function handleScreen(s) {
@@ -200,6 +218,7 @@ export default function PlacementSelector({ deal, onUpdate }) {
     }
     setScreen(s)
     if (!placementType || isPackage) return
+    if (isTrade && !isInherentlyFree) { persist({ screen: s, monthly_rate: 0 }); return }
     const rate = calcRate(placementType, tier, s, launchPricing)
     persist({ screen: s, monthly_rate: rate })
   }
@@ -213,6 +232,7 @@ export default function PlacementSelector({ deal, onUpdate }) {
       return
     }
     if (!placementType) return
+    if (isTrade && !isInherentlyFree) { persist({ launch_pricing: val, monthly_rate: 0 }); return }
     const rate = calcRate(placementType, tier, placement?.hasScreen ? screen : 'screen_1', val)
     persist({ launch_pricing: val, monthly_rate: rate })
   }
@@ -583,8 +603,40 @@ export default function PlacementSelector({ deal, onUpdate }) {
             </div>
           </div>
 
+          {/* Trade / free toggle — hidden for placements that are already $0 by rate-card design */}
+          {!isInherentlyFree && (
+            <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#E11D48]/5 border border-[#E11D48]/30">
+              <div>
+                <p
+                  className="text-xs font-semibold text-[#111827]"
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
+                >
+                  🤝 Trade / Free ($0)
+                </p>
+                <p
+                  className="text-[10px] text-gray-500"
+                  style={{ fontFamily: "'Manrope', sans-serif" }}
+                >
+                  Comp or barter — zeroes the rate, keeps the tier for reference
+                </p>
+              </div>
+              <button
+                onClick={() => handleTrade(!isTrade)}
+                className={`w-10 h-6 rounded-full transition-colors relative ${
+                  isTrade ? 'bg-[#E11D48]' : 'bg-gray-300'
+                }`}
+              >
+                <span
+                  className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                    isTrade ? 'translate-x-5' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+          )}
+
           {/* Launch pricing toggle */}
-          <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#F59E0B]/10 border border-[#F59E0B]/40">
+          <div className={`flex items-center justify-between p-2.5 rounded-lg bg-[#F59E0B]/10 border border-[#F59E0B]/40 ${isTrade && !isInherentlyFree ? 'opacity-40 pointer-events-none' : ''}`}>
             <div>
               <p
                 className="text-xs font-semibold text-[#111827]"
