@@ -356,6 +356,35 @@ export function placementsByCategory(categoryKey) {
   return Object.values(PLACEMENTS).filter(p => p.category === categoryKey)
 }
 
+// ── Inventory caps ───────────────────────────────────────────────────────────
+// `perScreen` = cap applies independently to screen_1 and screen_2 (a "both" booking
+// fills one unit on each). `total` = single cap across the placement regardless of screen.
+// `currentPeriod` (featured_event only) = cap applies to deals currently in their run window,
+// not a lifetime total — see bookedCount().
+export const MAX_SLOTS = {
+  top_banner:            { perScreen: 10 },
+  bottom_banner:         { perScreen: 10 },
+  middle_takeover:       { perScreen: 1 },
+  featured_box:          { perScreen: 3 },
+  search_button:         { total: 5 },
+  primary_wrap:          { total: 1 },
+  side_qr_tile:          { total: 6 },
+  community_static_slot: { total: 5 },
+  featured_event:        { total: 1, currentPeriod: true },
+}
+
+export function getMaxSlots(placementKey) {
+  return MAX_SLOTS[placementKey] ?? null
+}
+
+// Stages that actually hold inventory (a 'prospect' lead hasn't claimed a slot yet;
+// 'closed_lost' freed it back up).
+export const INVENTORY_HOLDING_STAGES = ['pitched', 'proposal', 'creative', 'live', 'closed_won']
+
+export function isInventoryHolding(deal) {
+  return INVENTORY_HOLDING_STAGES.includes(deal.stage)
+}
+
 export function getPackage(packageKey) {
   return PACKAGES[packageKey] ?? null
 }

@@ -1,10 +1,65 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
 import {
-  CATEGORIES, TIER_LABELS, PLACEMENTS, PACKAGES,
+  CATEGORIES, TIER_LABELS, PLACEMENTS, PACKAGES, MAX_SLOTS, INVENTORY_HOLDING_STAGES,
   placementsByCategory, calcRate, calcTotal, getSetupFee, fmt,
-  getPackage, packageMonthlyRate,
+  getPackage, packageMonthlyRate, getMaxSlots,
 } from '../../lib/rateCard'
+
+// Booked counts for every capped placement, keyed by `${placement_type}` for `total` caps
+// and `${placement_type}:${screen}` for `perScreen` caps. Excludes `excludeDealId` (the deal
+// being edited shouldn't count as competing with itself) and non-holding stages.
+async function fetchBookedCounts(excludeDealId) {
+  const cappedKeys = Object.keys(MAX_SLOTS)
+  const { data, error } = await supabase
+    .from('deals')
+    .select('id, placement_type, screen, stage, run_start, run_end')
+    .in('placement_type', cappedKeys)
+    .in('stage', INVENTORY_HOLDING_STAGES)
+
+  if (error || !data) return {}
+
+  const today = new Date().toISOString().slice(0, 10)
+  const counts = {}
+  const bump = key => { counts[key] = (counts[key] ?? 0) + 1 }
+
+  for (const deal of data) {
+    if (deal.id === excludeDealId) continue
+    const cap = MAX_SLOTS[deal.placement_type]
+    if (!cap) continue
+
+    if (cap.currentPeriod) {
+      // featured_event: only counts against the cap while its run window is current/upcoming
+      if (deal.run_end && deal.run_end < today) continue
+      bump(deal.placement_type)
+      continue
+    }
+
+    if (cap.total) {
+      bump(deal.placement_type)
+    } else if (cap.perScreen) {
+      if (deal.screen === 'both') {
+        bump(`${deal.placement_type}:screen_1`)
+        bump(`${deal.placement_type}:screen_2`)
+      } else if (deal.screen) {
+        bump(`${deal.placement_type}:${deal.screen}`)
+      }
+    }
+  }
+
+  return counts
+}
+
+function slotsFilled(placementKey, screen, counts) {
+  const cap = getMaxSlots(placementKey)
+  if (!cap) return null
+  if (cap.total) return { filled: counts[placementKey] ?? 0, max: cap.total }
+  if (cap.perScreen) {
+    const key = `${placementKey}:${screen ?? 'screen_1'}`
+    return { filled: counts[key] ?? 0, max: cap.perScreen }
+  }
+  return null
+}
 
 const SCREEN_OPTIONS = [
   { key: 'screen_1', label: 'Screen 1' },
@@ -33,6 +88,30 @@ export default function PlacementSelector({ deal, onUpdate }) {
   const [launchPricing, setLaunchPricing] = useState(deal.launch_pricing ?? false)
   const [months,        setMonths]        = useState(deal.months ?? 3)
   const [saving,        setSaving]        = useState(false)
+  const [bookedCounts,  setBookedCounts]  = useState({})
+
+  useEffect(() => {
+    let cancelled = false
+    fetchBookedCounts(deal.id).then(counts => { if (!cancelled) setBookedCounts(counts) })
+    return () => { cancelled = true }
+  }, [deal.id])
+
+  function capacityFor(placementKey) {
+    const cap = getMaxSlots(placementKey)
+    if (!cap) return null
+    if (cap.total) {
+      const filled = bookedCounts[placementKey] ?? 0
+      return { full: filled >= cap.total, screen1: null, screen2: null, label: `${filled} of ${cap.total} filled` }
+    }
+    const s1 = slotsFilled(placementKey, 'screen_1', bookedCounts)
+    const s2 = slotsFilled(placementKey, 'screen_2', bookedCounts)
+    return {
+      full: s1.filled >= s1.max && s2.filled >= s2.max,
+      screen1: s1,
+      screen2: s2,
+      label: `S1 ${s1.filled}/${s1.max} · S2 ${s2.filled}/${s2.max}`,
+    }
+  }
 
   const isPackage = placementType === 'package'
   const placement = PLACEMENTS[placementType]
@@ -63,6 +142,7 @@ export default function PlacementSelector({ deal, onUpdate }) {
 
   function handlePlacement(key) {
     const p = PLACEMENTS[key]
+    if (capacityFor(key)?.full) return
     const newMonths  = p.defaultTerm
     const newScreen  = p.hasScreen ? screen : 'screen_1'
     setPlacementType(key)
@@ -106,6 +186,18 @@ export default function PlacementSelector({ deal, onUpdate }) {
   }
 
   function handleScreen(s) {
+    if (placementType && !isPackage) {
+      const cap = getMaxSlots(placementType)
+      if (cap?.perScreen) {
+        const s1 = slotsFilled(placementType, 'screen_1', bookedCounts)
+        const s2 = slotsFilled(placementType, 'screen_2', bookedCounts)
+        const full1 = s1.filled >= s1.max
+        const full2 = s2.filled >= s2.max
+        if (s === 'screen_1' && full1 && screen !== 'screen_1') return
+        if (s === 'screen_2' && full2 && screen !== 'screen_2') return
+        if (s === 'both' && (full1 || full2) && screen !== 'both') return
+      }
+    }
     setScreen(s)
     if (!placementType || isPackage) return
     const rate = calcRate(placementType, tier, s, launchPricing)
@@ -210,19 +302,25 @@ export default function PlacementSelector({ deal, onUpdate }) {
                 </div>
               </button>
             ))
-          : placementsByCategory(category).map(p => (
+          : placementsByCategory(category).map(p => {
+              const cap = capacityFor(p.key)
+              const isFull = cap?.full && placementType !== p.key
+              return (
               <button
                 key={p.key}
                 onClick={() => handlePlacement(p.key)}
+                disabled={isFull}
                 className={`w-full text-left rounded-lg border px-3 py-2.5 transition-all ${
-                  placementType === p.key
+                  isFull
+                    ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
+                    : placementType === p.key
                     ? 'border-[#1D4ED8] bg-[#1D4ED8]/5'
                     : 'border-gray-200 hover:border-gray-300 bg-white'
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1.5 flex-wrap">
                       <span
                         className="text-xs font-semibold text-[#111827]"
                         style={{ fontFamily: 'Manrope, sans-serif' }}
@@ -235,6 +333,16 @@ export default function PlacementSelector({ deal, onUpdate }) {
                           style={{ fontFamily: 'Manrope, sans-serif' }}
                         >
                           Exclusive
+                        </span>
+                      )}
+                      {cap && (
+                        <span
+                          className={`text-[9px] font-semibold px-1 py-0.5 rounded uppercase tracking-wide ${
+                            isFull ? 'bg-[#E11D48]/10 text-[#E11D48]' : 'bg-gray-100 text-gray-500'
+                          }`}
+                          style={{ fontFamily: 'Manrope, sans-serif' }}
+                        >
+                          {isFull ? 'Full' : cap.label}
                         </span>
                       )}
                     </div>
@@ -261,7 +369,7 @@ export default function PlacementSelector({ deal, onUpdate }) {
                   </div>
                 </div>
               </button>
-            ))}
+            )})}
       </div>
 
       {/* Package configuration — only shown once a package is selected */}
@@ -387,11 +495,21 @@ export default function PlacementSelector({ deal, onUpdate }) {
                 Screen
               </p>
               <div className="flex gap-1.5">
-                {SCREEN_OPTIONS.map(s => (
+                {SCREEN_OPTIONS.map(s => {
+                  const cap = getMaxSlots(placementType)
+                  let screenFull = false
+                  if (cap?.perScreen && screen !== s.key) {
+                    const s1 = slotsFilled(placementType, 'screen_1', bookedCounts)
+                    const s2 = slotsFilled(placementType, 'screen_2', bookedCounts)
+                    if (s.key === 'screen_1') screenFull = s1.filled >= s1.max
+                    if (s.key === 'screen_2') screenFull = s2.filled >= s2.max
+                    if (s.key === 'both') screenFull = s1.filled >= s1.max || s2.filled >= s2.max
+                  }
+                  return (
                   <button
                     key={s.key}
                     onClick={() => handleScreen(s.key)}
-                    disabled={s.key === 'both' && !placement.both}
+                    disabled={(s.key === 'both' && !placement.both) || screenFull}
                     className={`flex-1 text-xs px-2 py-1.5 rounded-lg border transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
                       screen === s.key
                         ? 'bg-[#1D4ED8] text-white border-[#1D4ED8]'
@@ -399,9 +517,9 @@ export default function PlacementSelector({ deal, onUpdate }) {
                     }`}
                     style={{ fontFamily: 'Manrope, sans-serif' }}
                   >
-                    {s.label}
+                    {s.label}{screenFull ? ' · Full' : ''}
                   </button>
-                ))}
+                )})}
               </div>
               {screen === 'both' && placement.both && (
                 <p

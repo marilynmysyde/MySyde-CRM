@@ -69,6 +69,7 @@ create table deals (
   placement_type    text check (placement_type in (
                       'top_banner','bottom_banner','middle_takeover','featured_box',
                       'search_button','primary_wrap','side_qr_tile','featured_event',
+                      'community_static_slot',
                       'map_stand_out','map_name_under','map_name_category','map_bundle',
                       'package'
                     )),
