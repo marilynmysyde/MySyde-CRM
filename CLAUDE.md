@@ -14,6 +14,8 @@ npm run build    # production build
 npm run preview  # preview production build
 ```
 
+**Deploying:** `git push origin master` does **not** put changes live on crm.mysyde.com by itself. Vercel builds the new commit and marks it "Ready," but the custom domain stays pointed at whatever was last promoted. After every push, go to the Vercel dashboard → this project → Deployments → right-click the newest "Ready" deployment → **Promote to Production**. Found 2026-08-27 after a push sat un-promoted for ~30 min with no visible error.
+
 ## Tech stack
 
 - **Vite + React** (no framework — client-side SPA)
