@@ -32,17 +32,17 @@ const LINK_GROUPS = [
   {
     label: 'Kiosk-Facing (Consumer)',
     links: [
-      { name: 'Kiosk QR Landing — morganhill.mysyde.com', url: 'https://morganhill.mysyde.com' },
-      { name: 'Alternate domain — morgan-hill.mysyde.com', url: 'https://morgan-hill.mysyde.com' },
+      { name: 'Kiosk QR Landing — mysyde.com/kiosk', url: 'https://mysyde.com/kiosk', note: 'Both physical QR codes (front + back panel) point here as of 2026-08-31. Joins subscribers to Funnel 1.' },
+      { name: 'Advertise-Here QR Landing — mysyde.com/advertise', url: 'https://mysyde.com/advertise', note: 'Wrap "Advertise Here" panel QR. Joins Business - Kiosk QR, triggers Funnel 4.' },
     ],
   },
   {
     label: 'Marketing Funnels (Mailerlite)',
     links: [
-      { name: '1. Kiosk QR Welcome', url: 'https://dashboard.mailerlite.com/automations', note: 'OFF — waits on the email-capture bar. 4 emails built.' },
+      { name: '1. Kiosk QR Welcome', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live since 2026-09-01 · triggered by the mysyde.com/kiosk popup' },
       { name: '2. General MySyde Interest', url: null, note: 'Not built yet — post-launch (Q4)' },
-      { name: '3. Sales Nurture (from Drew)', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live · reply-to has a typo in Mailerlite ("diigitalads@") — worth fixing' },
-      { name: '4. Advertiser Interest', url: null, note: 'Blocked on dev — needs the "advertise here" QR + landing page' },
+      { name: '3. Sales Nurture (from Drew)', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live · reply-to has a typo in Mailerlite ("diigitalads@") — still worth fixing' },
+      { name: '4. Advertiser Interest', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live since 2026-09-01 · triggered by the mysyde.com/advertise popup, 3 emails, Team MySyde → Drew handoff' },
       { name: '5. Active Advertiser Onboarding', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live · all 4 automations built (Onboarding, Creative Deadline Nudge, Launch Day, Renewal/Transition)' },
     ],
   },
