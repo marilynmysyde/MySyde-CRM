@@ -70,6 +70,12 @@ export default function AgendaSidebar() {
 
     fetchDueTasks()
     fetchRenewals()
+
+    // This sidebar persists across page navigation and only fetched once on
+    // mount, so marking a task done on the Tasks board never cleared it here
+    // until a full reload. Re-fetch whenever any task changes.
+    window.addEventListener('tasks-changed', fetchDueTasks)
+    return () => window.removeEventListener('tasks-changed', fetchDueTasks)
   }, [])
 
   // Load Google Calendar events if already connected

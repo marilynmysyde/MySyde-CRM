@@ -46,6 +46,7 @@ export default function TaskBoard({ tasks, setTasks, showPartner = false, onOpen
 
     // Supabase
     await supabase.from('tasks').update({ status: newStatus, completed_at: completedAt }).eq('id', taskId)
+    window.dispatchEvent(new Event('tasks-changed'))
 
     // Celebrate when a task lands in Done (from any other column)
     if (newStatus === 'done' && task.status !== 'done') {

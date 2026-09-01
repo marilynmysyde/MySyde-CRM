@@ -101,6 +101,7 @@ export default function TaskDetailModal({ task, partners = [], onClose, onUpdate
 
     const updated = data ?? { ...task, ...payload }
     onUpdated(updated)
+    window.dispatchEvent(new Event('tasks-changed'))
     setSaving(false)
 
     if (justClosed) onCelebrate?.()
