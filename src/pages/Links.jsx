@@ -21,6 +21,7 @@ const LINK_GROUPS = [
       { name: 'Morgan Hill Launch Assets (Drive folder)', url: 'https://drive.google.com/drive/folders/1pXsvXVM_HUfKFplQ7s1UnX-BFSVak0rb' },
       { name: '[Morgan Hill] Community Kiosk Program Offer (Google Doc)', url: 'https://docs.google.com/document/d/1i_4Cu6JmmIuXIviMMN2WNX4o2FU0iQXu3Qnrif91xDc/edit' },
       { name: 'Morgan Hill Sales Offer (PDF, brand v2)', url: null, note: 'projects/active/morgan-hill-kiosk-launch/2026-08-14-morgan-hill-sales-offer.pdf' },
+      { name: 'Advertiser Agreement (the one contract, every deal)', url: 'https://docs.google.com/document/d/1_zx9CS_G66DBV4rehMOBsuj10rlfkQHo6a3spmJg1bQ/edit', note: 'Replaces the old set of 5 package-specific contracts, retired 2026-09-01.' },
       { name: 'Creative Specs & Submission Guide (Google Doc)', url: 'https://docs.google.com/document/d/1Scq9BPuSZR_4on98pWKWhOTM62O2M8PtE4iqLkcqIGw/edit' },
       { name: 'Creative Submission Form', url: 'https://forms.gle/3WsFbG4hofW3XKXs7' },
       { name: 'Client Creative Intake (Drive folder — per-business art)', url: 'https://drive.google.com/drive/folders/127PWW5uYDH4nzaIHFBFnn3lLaJtX-RkX', note: 'Lives in the "Drive" shared drive (not My Drive) — one subfolder per advertiser, where their submitted art/files land.' },
