@@ -12,7 +12,7 @@ const LINK_GROUPS = [
       { name: 'MySyde Connect (CRM)', url: 'https://crm.mysyde.com' },
       { name: 'MySyde Connect User Guide', url: 'https://claude.ai/code/artifact/c60a854d-0c69-4e9e-ab53-0d870e596593' },
       { name: 'Selling in MySyde Connect (sales cheat sheet)', url: 'https://claude.ai/code/artifact/3a3e7910-cd87-4c08-a055-82e144bb422d' },
-      { name: 'Master Policies & Procedures', url: 'https://claude.ai/code/artifact/1d996ee4-4044-4cb1-9a76-3b549624205f', note: 'Drive mirror: docs.google.com/document/d/1o4n_Md7wO7Im0PS26boFRtXSqkBiOK1WVHO2hI8GwPs' },
+      { name: 'Master Policies & Procedures', url: 'https://claude.ai/code/artifact/1d996ee4-4044-4cb1-9a76-3b549624205f', note: 'Drive mirror: docs.google.com/document/d/1q6xS3HDLPOtP8kH24E0Vjyranhh_REmWBUmFLC8NWBk' },
     ],
   },
   {
