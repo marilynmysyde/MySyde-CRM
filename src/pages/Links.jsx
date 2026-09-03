@@ -19,8 +19,11 @@ const LINK_GROUPS = [
     label: 'Morgan Hill Kiosk — Sales Assets',
     links: [
       { name: 'Morgan Hill Launch Assets (Drive folder)', url: 'https://drive.google.com/drive/folders/1pXsvXVM_HUfKFplQ7s1UnX-BFSVak0rb' },
-      { name: '[Morgan Hill] Community Kiosk Program Offer (Google Doc)', url: 'https://docs.google.com/document/d/1i_4Cu6JmmIuXIviMMN2WNX4o2FU0iQXu3Qnrif91xDc/edit' },
-      { name: 'Morgan Hill Sales Offer (PDF, brand v2)', url: null, note: 'projects/active/morgan-hill-kiosk-launch/2026-08-14-morgan-hill-sales-offer.pdf' },
+      { name: 'Client Handout — 3 Ways to Get Seen (PDF)', url: 'https://drive.google.com/file/d/1W4RrzL7wkByoWIzdB2NMnPGaTfdszBnT/view', note: 'Client-facing. Real kiosk photo, top 3 placements + full à la carte pricing. Final design, 2026-09-03.' },
+      { name: 'Bundle Packages (PDF)', url: 'https://drive.google.com/file/d/1p16xgnSIYG-UnC27OpxDYTViHShYxhle/view', note: 'Client-facing. All 5 packages, kept separate from the à la carte handout per Ricky’s request. Final design, 2026-09-03.' },
+      { name: 'Internal Rep Close Sheet (PDF)', url: 'https://drive.google.com/file/d/1l9WSID8m18BtXkCG30OyCUSC1NBpfTG8/view', note: '⚠️ Internal only — has every scan-to-pay QR code + the live close workflow. Never hand this to a prospect.' },
+      { name: '[Morgan Hill] Community Kiosk Program Offer (Google Doc)', url: 'https://docs.google.com/document/d/1i_4Cu6JmmIuXIviMMN2WNX4o2FU0iQXu3Qnrif91xDc/edit', note: 'Superseded 2026-09-03 by the Client Handout + Bundle Packages PDFs above — kept for reference only.' },
+      { name: 'Morgan Hill Sales Offer (PDF, brand v2) — RETIRED', url: null, note: 'Superseded 2026-09-03 by the Client Handout PDF above. Was: projects/active/morgan-hill-kiosk-launch/2026-08-14-morgan-hill-sales-offer.pdf' },
       { name: 'Advertiser Agreement (the one contract, every deal)', url: 'https://docs.google.com/document/d/1_zx9CS_G66DBV4rehMOBsuj10rlfkQHo6a3spmJg1bQ/edit', note: 'Replaces the old set of 5 package-specific contracts, retired 2026-09-01.' },
       { name: 'Creative Specs & Submission Guide (Google Doc)', url: 'https://docs.google.com/document/d/1Scq9BPuSZR_4on98pWKWhOTM62O2M8PtE4iqLkcqIGw/edit' },
       { name: 'Creative Submission Form', url: 'https://forms.gle/3WsFbG4hofW3XKXs7' },
