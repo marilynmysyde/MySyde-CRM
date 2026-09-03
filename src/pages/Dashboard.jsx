@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { MAX_SLOTS } from '../lib/rateCard'
+import ConfettiBurst from '../components/tasks/ConfettiBurst'
+import CelebrateToast from '../components/tasks/CelebrateToast'
+import KioskFillGraphic from '../components/dashboard/KioskFillGraphic'
+import TrophyBadges from '../components/dashboard/TrophyBadges'
 
 // ═══════════════════════════════════════════════════════════════════════════
 // LAUNCH COMMAND CENTER — Morgan Hill kiosk launch
@@ -37,6 +42,60 @@ const TOTAL_PLACEMENT_SLOTS = 60
 // featured_box 750x6=4500, search_button 400x10=4000, primary_wrap 2500x1=2500,
 // featured_event 350x1=350. Total = 33,850.
 const POTENTIAL_MRR = 33_850
+
+// ─── Word / quote of the day ─────────────────────────────────────────────────
+// Rotates deterministically by day of year (no randomness, no API — same line
+// all day, different every day). Mixes MySyde's own mission voice (brand/overview.md)
+// with launch-specific momentum lines. Add to this list any time; order doesn't matter.
+const DAILY_LINES = [
+  { type: 'word',  text: 'MOMENTUM' },
+  { type: 'quote', text: 'Communities thrive when local connections thrive.' },
+  { type: 'word',  text: 'BUILD' },
+  { type: 'quote', text: 'Every slot filled is one more neighbor discovered.' },
+  { type: 'word',  text: 'CONNECT' },
+  { type: 'quote', text: 'Local businesses deserve visibility beyond algorithms.' },
+  { type: 'word',  text: 'PERSIST' },
+  { type: 'quote', text: 'Technology should bring people together, not separate them.' },
+  { type: 'word',  text: 'GROWTH' },
+  { type: 'quote', text: 'Community is more than where you live — it’s who you support.' },
+  { type: 'word',  text: 'EMPOWER' },
+  { type: 'quote', text: 'Morgan Hill is watching. Let’s give them something to see.' },
+  { type: 'word',  text: 'SHOW UP' },
+  { type: 'quote', text: 'We help businesses be seen and heard.' },
+  { type: 'word',  text: 'STEADY' },
+  { type: 'quote', text: 'Small business wins are community wins.' },
+  { type: 'word',  text: 'FOCUS' },
+  { type: 'quote', text: 'Real relationships. Real visibility. Real Morgan Hill.' },
+  { type: 'word',  text: 'CLAIM IT' },
+  { type: 'quote', text: 'Strong communities create stronger local economies.' },
+  { type: 'word',  text: 'ONE MORE' },
+  { type: 'quote', text: 'The kiosk doesn’t sleep. Keep the momentum with it.' },
+  { type: 'word',  text: 'FORWARD' },
+  { type: 'quote', text: 'Every number here is a real neighbor, seen.' },
+]
+
+function dailyLine() {
+  const now = new Date()
+  const startOfYear = new Date(now.getFullYear(), 0, 0)
+  const dayOfYear = Math.floor((now - startOfYear) / 86_400_000)
+  return DAILY_LINES[dayOfYear % DAILY_LINES.length]
+}
+
+function DailyLine() {
+  const line = dailyLine()
+  return (
+    <div className="mb-3 rounded-[14px] border border-[#F59E0B]/25 bg-[#FEF3C7]/50 px-4 py-2.5 flex items-center gap-3">
+      <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-700 shrink-0">
+        {line.type === 'word' ? "Today's Word" : "Today's Reminder"}
+      </span>
+      {line.type === 'word' ? (
+        <p className="text-sm font-extrabold tracking-wide text-[#111827]">{line.text}</p>
+      ) : (
+        <p className="text-sm italic text-[#111827]">"{line.text}"</p>
+      )}
+    </div>
+  )
+}
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -427,7 +486,7 @@ export default function Dashboard() {
     async function load() {
       try {
         const [{ data: d }, { data: t }, { data: a }, { data: m }] = await Promise.all([
-          supabase.from('deals').select('id, title, stage, monthly_rate, run_end, placement_type, created_at'),
+          supabase.from('deals').select('id, title, stage, monthly_rate, run_end, placement_type, screen, created_at'),
           supabase.from('tasks').select('id, title, due_date, status').neq('status', 'done'),
           supabase.from('activity_log').select('*').order('created_at', { ascending: false }).limit(10),
           supabase.from('launch_milestones').select('slug, label, status, sort_order').order('sort_order'),
@@ -475,8 +534,76 @@ export default function Dashboard() {
   const sold         = occupyingInventory.length
   const committedMRR = occupyingInventory.reduce((s, d) => s + (Number(d.monthly_rate) || 0), 0)
 
+  // ─── Trophy badges — computed live from real data, not tracked separately ──
+  const DIGITAL_ZONE_TYPES = ['top_banner', 'bottom_banner', 'middle_takeover', 'featured_box', 'search_button']
+
+  function screenFillPct(screen) {
+    let booked = 0, max = 0
+    DIGITAL_ZONE_TYPES.forEach(type => {
+      const cap = MAX_SLOTS[type]?.perScreen || 0
+      max += cap
+      booked += occupyingInventory.filter(d =>
+        d.placement_type === type && (d.screen === screen || d.screen === 'both')
+      ).length
+    })
+    return max ? booked / max : 0
+  }
+
+  function isCategoryFull(type) {
+    const cap = MAX_SLOTS[type]
+    if (!cap) return false
+    if (cap.perScreen) {
+      const bookedFor = (screen) => occupyingInventory.filter(d =>
+        d.placement_type === type && (d.screen === screen || d.screen === 'both')
+      ).length
+      return bookedFor('screen_1') >= cap.perScreen || bookedFor('screen_2') >= cap.perScreen
+    }
+    if (cap.total) {
+      return occupyingInventory.filter(d => d.placement_type === type).length >= cap.total
+    }
+    return false
+  }
+
+  const trophies = {
+    firstSlot:     sold >= 1,
+    quarterScreen: screenFillPct('screen_1') >= 0.25 || screenFillPct('screen_2') >= 0.25,
+    firstPaying:   committedMRR > 0,
+    categoryFull:  SELLABLE_INVENTORY_TYPES.some(isCategoryFull),
+  }
+
+  // ─── Milestone celebrations — confetti fires once per threshold, ever ──────
+  const MILESTONE_CHECKS = [
+    { key: 'sold_1',   earned: sold >= 1,                                         message: 'First slot booked! 🎉' },
+    { key: 'sold_25',  earned: sold >= Math.ceil(TOTAL_PLACEMENT_SLOTS * 0.25),    message: 'Quarter of the way to sold out!' },
+    { key: 'sold_50',  earned: sold >= Math.ceil(TOTAL_PLACEMENT_SLOTS * 0.5),     message: 'Halfway to fully sold out!' },
+    { key: 'sold_100', earned: sold >= TOTAL_PLACEMENT_SLOTS,                      message: 'SOLD OUT — every slot booked!' },
+    { key: 'mrr_1',    earned: committedMRR > 0,                                   message: 'First paying advertiser! 💰' },
+    { key: 'mrr_1000', earned: committedMRR >= 1000,                               message: '$1,000 in committed monthly revenue!' },
+    { key: 'mrr_max',  earned: committedMRR >= POTENTIAL_MRR,                      message: 'Full revenue potential reached!' },
+  ]
+
+  const [celebrating,  setCelebrating]  = useState(false)
+  const [celebrateMsg, setCelebrateMsg] = useState('Nice work!')
+
+  useEffect(() => {
+    if (loading) return
+    const STORAGE_KEY = 'mysyde_dashboard_milestones_seen'
+    let seen = []
+    try { seen = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]') } catch { /* ignore */ }
+    const newlyEarned = MILESTONE_CHECKS.find(m => m.earned && !seen.includes(m.key))
+    if (newlyEarned) {
+      setCelebrateMsg(newlyEarned.message)
+      setCelebrating(true)
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...seen, newlyEarned.key])) } catch { /* ignore */ }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, sold, committedMRR])
+
   return (
     <div className="px-4 py-4 max-w-6xl mx-auto">
+
+      {/* Word / quote of the day — stays at the very top */}
+      <DailyLine />
 
       {/* Greeting */}
       <div className="mb-4">
@@ -494,9 +621,17 @@ export default function Dashboard() {
       {/* Milestones */}
       <MilestoneTracker milestones={milestones} onToggle={toggleMilestone} />
 
+      {/* Trophy badges — real firsts, visible proof of progress */}
+      <TrophyBadges trophies={trophies} />
+
       {/* Inventory + committed MRR */}
       <div className="mb-4">
         <InventoryFill sold={sold} committedMRR={committedMRR} />
+      </div>
+
+      {/* Kiosk fill graphic — front + back screens, filling in by real zone */}
+      <div className="mb-4">
+        <KioskFillGraphic deals={occupyingInventory} />
       </div>
 
       {/* Today's focus — 3 columns */}
@@ -508,6 +643,14 @@ export default function Dashboard() {
 
       {/* Quick actions */}
       <QuickActions />
+
+      {/* Milestone celebration overlay */}
+      {celebrating && (
+        <>
+          <ConfettiBurst onDone={() => setCelebrating(false)} />
+          <CelebrateToast message={celebrateMsg} onDone={() => { /* handled by confetti unmount */ }} />
+        </>
+      )}
     </div>
   )
 }
