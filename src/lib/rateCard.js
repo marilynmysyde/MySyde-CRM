@@ -117,13 +117,13 @@ export const PLACEMENTS = {
     key:           'side_qr_tile',
     label:         'Side Panel QR Sponsor Tile',
     category:      'wrap',
-    desc:          'One sponsor tile on the spine — up to 6 tiles total (sellable side only; the other side is not available) — 6-month minimum',
+    desc:          'Spine sponsor tile — NOT SELLABLE as of 2026-09-03: the partner side is fully occupied by the 5 founding-partner tiles (City, Parks & Rec, Chamber, MG Constructors, Grafikx USA) and the opposite side is a permanent non-sold DISCOVER callout for sidewalk visibility. No physical room remains on the spine for a paying sponsor.',
     exclusive:     false,
     defaultTerm:   6,
     termOptions:   [6, 12],
     hasScreen:     false,
-    perScreen:     { option_1: 300,  option_2: 450,  option_3: 650   },
-    both:          null, // 2026-08-26: only one side of the spine is sellable — no "both sides" bundle
+    perScreen:     { option_1: 300,  option_2: 450,  option_3: 650   }, // kept for reference only — not sellable, see desc
+    both:          null, // 2026-08-26: only one side of the spine was ever sellable; as of 2026-09-03 that side is also full — no "both sides" bundle
     setupFee:      { option_1: 150,  option_2: 200,  option_3: 250   }, // one-time tile production
   },
 
@@ -368,7 +368,7 @@ export const MAX_SLOTS = {
   featured_box:          { perScreen: 3 },
   search_button:         { perScreen: 5 },
   primary_wrap:          { total: 1 },
-  side_qr_tile:          { total: 11 }, // 6 sellable + 5 free founding-partner tiles (City of Morgan Hill, Parks & Rec, Morgan Hill Chamber, MG Constructors, Grafikx USA)
+  side_qr_tile:          { total: 5 }, // 0 sellable as of 2026-09-03 (Marilyn: opposite spine side is a permanent DISCOVER callout, not for sale) — all 5 slots are the founding-partner tiles (City of Morgan Hill, Parks & Rec, Morgan Hill Chamber, MG Constructors, Grafikx USA)
   community_static_slot: { perScreen: 5 },
   featured_event:        { total: 1, currentPeriod: true },
 }
