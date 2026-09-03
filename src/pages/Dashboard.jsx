@@ -23,11 +23,20 @@ const DEFAULT_MILESTONES = [
   { slug: 'ribbon',    label: 'Ribbon cutting',        status: 'todo', sort_order: 3 },
 ]
 
-// Morgan Hill inventory count (from rate card). Adjust if slot mix changes.
-// Both-screens slots count as 2 (once per screen).
-const TOTAL_PLACEMENT_SLOTS = 18
-// Fully-sold Option 2 (Recommended) target — the "what's possible" number.
-const POTENTIAL_MRR = 30_250
+// Morgan Hill TRUE sellable inventory ceiling, recalculated 2026-09-03 from the
+// live rate card (front screen + back screen + spine + events; excludes the free
+// community_static_slot cards and the separate PDF Downtown Map product).
+// Digital (×2 for front+back): top_banner 10, bottom_banner 10, middle_takeover 1,
+// featured_box 3, search_button 5  => 29/screen x 2 = 58
+// Wrap: primary_wrap 1 + side_qr_tile 0 (spine sold out to founding partners, see
+// rateCard.js) = 1. Events: featured_event 1.
+// 58 + 1 + 1 = 60. Adjust if the rate card's slot counts change.
+const TOTAL_PLACEMENT_SLOTS = 60
+// Full-sellout MRR at Option 2 (Recommended) rates for the 60 slots above:
+// top_banner 450x20=9000, bottom_banner 350x20=7000, middle_takeover 3250x2=6500,
+// featured_box 750x6=4500, search_button 400x10=4000, primary_wrap 2500x1=2500,
+// featured_event 350x1=350. Total = 33,850.
+const POTENTIAL_MRR = 33_850
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
