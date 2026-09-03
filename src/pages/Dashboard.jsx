@@ -448,9 +448,11 @@ export default function Dashboard() {
     } catch { /* ignore */ }
   }
 
-  // Inventory computed from deals that have a placement and aren't lost
+  // Inventory computed from deals that have a placement, aren't lost, and are
+  // actually paying (excludes free launch ads, trades, standby, founding-partner,
+  // and community-page slots — those don't count against the 18 sellable-slot target).
   const committed = deals.filter(d =>
-    d.placement_type && !['closed_lost'].includes(d.stage)
+    d.placement_type && !['closed_lost'].includes(d.stage) && Number(d.monthly_rate) > 0
   )
   const sold         = committed.length
   const committedMRR = committed.reduce((s, d) => s + (Number(d.monthly_rate) || 0), 0)
