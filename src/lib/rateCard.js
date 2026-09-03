@@ -368,7 +368,7 @@ export const MAX_SLOTS = {
   featured_box:          { perScreen: 3 },
   search_button:         { perScreen: 5 },
   primary_wrap:          { total: 1 },
-  side_qr_tile:          { total: 8 }, // 6 sellable + 2 free founding-partner tiles (City of Morgan Hill, Parks & Rec)
+  side_qr_tile:          { total: 11 }, // 6 sellable + 5 free founding-partner tiles (City of Morgan Hill, Parks & Rec, Morgan Hill Chamber, MG Constructors, Grafikx USA)
   community_static_slot: { perScreen: 5 },
   featured_event:        { total: 1, currentPeriod: true },
 }
