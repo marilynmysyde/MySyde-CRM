@@ -48,29 +48,29 @@ const POTENTIAL_MRR = 33_850
 // all day, different every day). Mixes MySyde's own mission voice (brand/overview.md)
 // with launch-specific momentum lines. Add to this list any time; order doesn't matter.
 const DAILY_LINES = [
-  { type: 'word',  text: 'MOMENTUM' },
+  { type: 'word',  text: 'MOMENTUM', sub: 'Small moves, repeated daily, become unstoppable.' },
   { type: 'quote', text: 'Communities thrive when local connections thrive.' },
-  { type: 'word',  text: 'BUILD' },
+  { type: 'word',  text: 'BUILD', sub: 'What you create today is what tomorrow stands on.' },
   { type: 'quote', text: 'Every slot filled is one more neighbor discovered.' },
-  { type: 'word',  text: 'CONNECT' },
+  { type: 'word',  text: 'CONNECT', sub: 'Every relationship you build is infrastructure for growth.' },
   { type: 'quote', text: 'Local businesses deserve visibility beyond algorithms.' },
-  { type: 'word',  text: 'PERSIST' },
+  { type: 'word',  text: 'PERSIST', sub: 'The ones who last are the ones who don’t quit on a quiet day.' },
   { type: 'quote', text: 'Technology should bring people together, not separate them.' },
-  { type: 'word',  text: 'GROWTH' },
+  { type: 'word',  text: 'GROWTH', sub: 'Progress doesn’t ask permission — it asks for action.' },
   { type: 'quote', text: 'Community is more than where you live — it’s who you support.' },
-  { type: 'word',  text: 'EMPOWER' },
+  { type: 'word',  text: 'EMPOWER', sub: 'Give someone visibility, and you give them a real chance.' },
   { type: 'quote', text: 'Morgan Hill is watching. Let’s give them something to see.' },
-  { type: 'word',  text: 'SHOW UP' },
+  { type: 'word',  text: 'SHOW UP', sub: 'Consistency beats intensity, every single time.' },
   { type: 'quote', text: 'We help businesses be seen and heard.' },
-  { type: 'word',  text: 'STEADY' },
+  { type: 'word',  text: 'STEADY', sub: 'Slow and real outlasts fast and fake.' },
   { type: 'quote', text: 'Small business wins are community wins.' },
-  { type: 'word',  text: 'FOCUS' },
+  { type: 'word',  text: 'FOCUS', sub: 'One clear priority beats ten scattered ones.' },
   { type: 'quote', text: 'Real relationships. Real visibility. Real Morgan Hill.' },
-  { type: 'word',  text: 'CLAIM IT' },
+  { type: 'word',  text: 'CLAIM IT', sub: 'Nobody hands you the win — you build it, then you take it.' },
   { type: 'quote', text: 'Strong communities create stronger local economies.' },
-  { type: 'word',  text: 'ONE MORE' },
+  { type: 'word',  text: 'ONE MORE', sub: 'One more call, one more slot, one more yes — that’s how it’s won.' },
   { type: 'quote', text: 'The kiosk doesn’t sleep. Keep the momentum with it.' },
-  { type: 'word',  text: 'FORWARD' },
+  { type: 'word',  text: 'FORWARD', sub: 'In business, you’re either building or falling behind.' },
   { type: 'quote', text: 'Every number here is a real neighbor, seen.' },
 ]
 
@@ -84,15 +84,22 @@ function dailyLine() {
 function DailyLine() {
   const line = dailyLine()
   return (
-    <div className="mb-3 rounded-[14px] border border-[#F59E0B]/25 bg-[#FEF3C7]/50 px-4 py-2.5 flex items-center gap-3">
-      <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-700 shrink-0">
+    <div className="mb-3 rounded-[14px] border border-[#F59E0B]/25 bg-[#FEF3C7]/50 px-4 py-3 flex items-start gap-3">
+      <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-700 shrink-0 mt-0.5">
         {line.type === 'word' ? "Today's Word" : "Today's Reminder"}
       </span>
-      {line.type === 'word' ? (
-        <p className="text-sm font-extrabold tracking-wide text-[#111827]">{line.text}</p>
-      ) : (
-        <p className="text-sm italic text-[#111827]">"{line.text}"</p>
-      )}
+      <div className="min-w-0">
+        {line.type === 'word' ? (
+          <>
+            <p className="text-sm font-extrabold tracking-wide text-[#111827] leading-tight">{line.text}</p>
+            {line.sub && (
+              <p className="text-xs text-gray-600 mt-0.5 leading-snug">{line.sub}</p>
+            )}
+          </>
+        ) : (
+          <p className="text-sm italic text-[#111827]">"{line.text}"</p>
+        )}
+      </div>
     </div>
   )
 }
