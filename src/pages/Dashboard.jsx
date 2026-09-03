@@ -457,14 +457,23 @@ export default function Dashboard() {
     } catch { /* ignore */ }
   }
 
-  // Inventory computed from deals that have a placement, aren't lost, and are
-  // actually paying (excludes free launch ads, trades, standby, founding-partner,
-  // and community-page slots — those don't count against the 18 sellable-slot target).
-  const committed = deals.filter(d =>
-    d.placement_type && !['closed_lost'].includes(d.stage) && Number(d.monthly_rate) > 0
+  // Two separate facts, not one: inventory occupied vs. revenue committed.
+  // A free launch-cohort top_banner deal really does occupy one of the 60 sellable
+  // slots (counts toward "sold") even though it pays $0 (doesn't count toward MRR).
+  // Excludes placement types that were never part of the 60 to begin with:
+  // community_static_slot (free by design) and side_qr_tile (spine sold out to
+  // founding partners, 0 sellable capacity — see rateCard.js).
+  const SELLABLE_INVENTORY_TYPES = [
+    'top_banner', 'bottom_banner', 'middle_takeover', 'featured_box',
+    'search_button', 'primary_wrap', 'featured_event',
+  ]
+  const occupyingInventory = deals.filter(d =>
+    d.placement_type &&
+    SELLABLE_INVENTORY_TYPES.includes(d.placement_type) &&
+    !['closed_lost'].includes(d.stage)
   )
-  const sold         = committed.length
-  const committedMRR = committed.reduce((s, d) => s + (Number(d.monthly_rate) || 0), 0)
+  const sold         = occupyingInventory.length
+  const committedMRR = occupyingInventory.reduce((s, d) => s + (Number(d.monthly_rate) || 0), 0)
 
   return (
     <div className="px-4 py-4 max-w-6xl mx-auto">
