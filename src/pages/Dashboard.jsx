@@ -12,7 +12,7 @@ import { supabase } from '../lib/supabase'
 
 // Set to the date the kiosk is set in the cement downtown and live/operational.
 // Countdown flips to "Day N Live" after this date passes. Leave as `null` to hide the countdown.
-const LAUNCH_DATE = '2026-08-24'   // Install-complete, live & operational date (est. — not yet confirmed by install crew).
+const LAUNCH_DATE = '2026-09-01'   // True cone-free, fully open-to-the-public date (confirmed by Marilyn 2026-09-03). 8/24 was kiosk pickup/install only — cones stayed up around the front until 9/1.
 
 // Fallback used only if the launch_milestones table is missing/empty.
 // Once the table is populated (see supabase/schema.sql), milestones load from DB
