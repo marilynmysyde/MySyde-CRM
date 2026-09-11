@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { MAX_SLOTS } from '../lib/rateCard'
+import { teamMemberFromEmail } from '../lib/team'
+import { useAuth } from '../contexts/AuthContext'
 import ConfettiBurst from '../components/tasks/ConfettiBurst'
 import CelebrateToast from '../components/tasks/CelebrateToast'
 import KioskFillGraphic from '../components/dashboard/KioskFillGraphic'
@@ -483,6 +485,9 @@ function QuickActions() {
 // ─── Page ──────────────────────────────────────────────────────────────────
 
 export default function Dashboard() {
+  const { user } = useAuth()
+  const firstName = teamMemberFromEmail(user?.email)
+
   const [deals,      setDeals]      = useState([])
   const [tasks,      setTasks]      = useState([])
   const [activity,   setActivity]   = useState([])
@@ -618,7 +623,7 @@ export default function Dashboard() {
           {fmtToday()}
         </p>
         <h1 className="text-xl font-bold text-[#111827] mt-0.5">
-          Morning, Marilyn
+          {firstName ? `Morning, ${firstName}` : 'Morning'}
         </h1>
       </div>
 
