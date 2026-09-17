@@ -12,7 +12,7 @@ const LINK_GROUPS = [
       { name: 'MySyde Connect (CRM)', url: 'https://crm.mysyde.com' },
       { name: 'MySyde Connect User Guide', url: 'https://claude.ai/code/artifact/c60a854d-0c69-4e9e-ab53-0d870e596593' },
       { name: 'Selling in MySyde Connect (sales cheat sheet)', url: 'https://claude.ai/code/artifact/3a3e7910-cd87-4c08-a055-82e144bb422d' },
-      { name: 'Master Policies & Procedures', url: 'https://claude.ai/code/artifact/1d996ee4-4044-4cb1-9a76-3b549624205f', note: 'Drive mirror: docs.google.com/document/d/1q6xS3HDLPOtP8kH24E0Vjyranhh_REmWBUmFLC8NWBk' },
+      { name: 'Master Policies & Procedures', url: 'https://claude.ai/code/artifact/1d996ee4-4044-4cb1-9a76-3b549624205f', note: 'Drive mirror: docs.google.com/document/d/1MUNLDSnPUZPETvP8BxvBDgwHExijkkz6sTC4SU-cA2Y' },
     ],
   },
   {
@@ -25,7 +25,7 @@ const LINK_GROUPS = [
       { name: '[Morgan Hill] Community Kiosk Program Offer (Google Doc)', url: 'https://docs.google.com/document/d/1i_4Cu6JmmIuXIviMMN2WNX4o2FU0iQXu3Qnrif91xDc/edit', note: 'Superseded 2026-09-03 by the Client Handout + Bundle Packages PDFs above — kept for reference only.' },
       { name: 'Morgan Hill Sales Offer (PDF, brand v2) — RETIRED', url: null, note: 'Superseded 2026-09-03 by the Client Handout PDF above. Was: projects/active/morgan-hill-kiosk-launch/2026-08-14-morgan-hill-sales-offer.pdf' },
       { name: 'Advertiser Agreement (the one contract, every deal)', url: 'https://docs.google.com/document/d/1_zx9CS_G66DBV4rehMOBsuj10rlfkQHo6a3spmJg1bQ/edit', note: 'Replaces the old set of 5 package-specific contracts, retired 2026-09-01.' },
-      { name: 'Creative Specs & Submission Guide (Google Doc)', url: 'https://docs.google.com/document/d/1Scq9BPuSZR_4on98pWKWhOTM62O2M8PtE4iqLkcqIGw/edit' },
+      { name: 'Creative Specs & Submission Guide (PDF)', url: 'https://drive.google.com/uc?export=download&id=1gi1HcWWZIojzV5oEJwHfLD35xMh2dPAN', note: 'Replaces the old Google Doc mirror, retired 2026-09-17 — was internal-looking and required Marilyn to grant Drive access.' },
       { name: 'Creative Submission Form', url: 'https://forms.gle/3WsFbG4hofW3XKXs7' },
       { name: 'Client Creative Intake (Drive folder — per-business art)', url: 'https://drive.google.com/drive/folders/127PWW5uYDH4nzaIHFBFnn3lLaJtX-RkX', note: 'Lives in the "Drive" shared drive (not My Drive) — one subfolder per advertiser, where their submitted art/files land.' },
       { name: 'Book a Kiosk Demo (Calendly — Sales)', url: 'https://calendly.com/digitalads-mysyde/30min' },
