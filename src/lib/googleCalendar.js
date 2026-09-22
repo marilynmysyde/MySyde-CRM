@@ -32,14 +32,35 @@ export async function fetchTodayEvents() {
   if (!res.ok) return []
 
   const { items = [] } = await res.json()
-  return items.map(e => ({
-    id:      e.id,
-    summary: e.summary ?? '(No title)',
-    start:   e.start?.dateTime ?? e.start?.date ?? null,
-    end:     e.end?.dateTime   ?? e.end?.date   ?? null,
-    colorId: e.colorId ?? null,
-    allDay:  !e.start?.dateTime,
-  }))
+  return items.map(mapEvent)
+}
+
+/**
+ * Normalize a raw Google Calendar API event into what the UI needs,
+ * including a best-effort join link (Meet, or any video conferencing
+ * entry point attached to the event) and a fallback link to open the
+ * event in Google Calendar.
+ */
+export function mapEvent(e) {
+  return {
+    id:       e.id,
+    summary:  e.summary ?? '(No title)',
+    start:    e.start?.dateTime ?? e.start?.date ?? null,
+    end:      e.end?.dateTime   ?? e.end?.date   ?? null,
+    colorId:  e.colorId ?? null,
+    allDay:   !e.start?.dateTime,
+    location: e.location ?? null,
+    joinUrl:  getJoinUrl(e),
+    htmlLink: e.htmlLink ?? null,
+  }
+}
+
+/** Best-effort meeting join link: Hangouts/Meet first, then any video conferencing entry point. */
+function getJoinUrl(e) {
+  if (e.hangoutLink) return e.hangoutLink
+  const entryPoints = e.conferenceData?.entryPoints ?? []
+  const video = entryPoints.find(ep => ep.entryPointType === 'video')
+  return video?.uri ?? null
 }
 
 /** Format event start time as "10:00 AM" */

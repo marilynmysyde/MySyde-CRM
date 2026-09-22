@@ -209,6 +209,8 @@ export default function AgendaSidebar() {
                   key={ev.id}
                   color={GCAL_COLORS[ev.colorId] ?? DEFAULT_EVENT_COLOR}
                   label={`${ev.allDay ? 'All day' : fmtEventTime(ev.start)} — ${ev.summary}`}
+                  href={ev.joinUrl ?? ev.htmlLink}
+                  isJoin={Boolean(ev.joinUrl)}
                 />
               ))}
             </div>
@@ -299,16 +301,40 @@ export default function AgendaSidebar() {
   )
 }
 
-function AgendaItem({ color, label, overdue = false }) {
-  return (
-    <div className="flex items-start gap-2">
+function AgendaItem({ color, label, overdue = false, href = null, isJoin = false }) {
+  const content = (
+    <>
       <span className={`w-1.5 h-1.5 rounded-full shrink-0 mt-1 ${color}`} />
       <span
-        className={`text-xs leading-tight ${overdue ? 'text-red-500 font-medium' : 'text-gray-600'}`}
+        className={`text-xs leading-tight ${overdue ? 'text-red-500 font-medium' : 'text-gray-600'} ${href ? 'group-hover:text-[#1D4ED8] group-hover:underline' : ''}`}
         style={{ fontFamily: "'Manrope', sans-serif" }}
       >
         {label}
       </span>
-    </div>
+      {isJoin && (
+        <span
+          className="text-[9px] text-[#1D4ED8] bg-[#1D4ED8]/10 rounded px-1 py-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
+        >
+          Join
+        </span>
+      )}
+    </>
   )
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group flex items-start gap-2"
+        title={isJoin ? 'Join meeting' : 'Open event'}
+      >
+        {content}
+      </a>
+    )
+  }
+
+  return <div className="flex items-start gap-2">{content}</div>
 }

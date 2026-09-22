@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { isGoogleConnected, requestGoogleToken } from '../lib/googleAuth'
-import { fetchTodayEvents, fmtEventTime } from '../lib/googleCalendar'
+import { fmtEventTime, mapEvent } from '../lib/googleCalendar'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -76,26 +76,44 @@ async function fetchWeekEvents(weekStart) {
   )
   if (!res.ok) return []
   const { items = [] } = await res.json()
-  return items.map(e => ({
-    id:      e.id,
-    summary: e.summary ?? '(No title)',
-    start:   e.start?.dateTime ?? e.start?.date ?? null,
-    end:     e.end?.dateTime   ?? e.end?.date   ?? null,
-    colorId: e.colorId ?? null,
-    allDay:  !e.start?.dateTime,
-  }))
+  return items.map(mapEvent)
 }
 
 // ─── Event card ───────────────────────────────────────────────────────────────
 
 function EventCard({ event }) {
   const bg = GCAL_BG[event.colorId] ?? DEFAULT_EVENT_BG
-  return (
-    <div className={`text-[11px] rounded px-2 py-1 border leading-snug ${bg}`} style={{ fontFamily: 'Manrope, sans-serif' }}>
+  const href = event.joinUrl ?? event.htmlLink
+  const body = (
+    <>
       {!event.allDay && (
         <span className="font-semibold mr-1">{fmtEventTime(event.start)}</span>
       )}
       {event.summary}
+      {event.joinUrl && (
+        <span className="block text-[10px] font-semibold mt-0.5 opacity-80">Join →</span>
+      )}
+    </>
+  )
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`block text-[11px] rounded px-2 py-1 border leading-snug hover:brightness-95 transition-[filter] ${bg}`}
+        style={{ fontFamily: 'Manrope, sans-serif' }}
+        title={event.joinUrl ? 'Join meeting' : 'Open event in Google Calendar'}
+      >
+        {body}
+      </a>
+    )
+  }
+
+  return (
+    <div className={`text-[11px] rounded px-2 py-1 border leading-snug ${bg}`} style={{ fontFamily: 'Manrope, sans-serif' }}>
+      {body}
     </div>
   )
 }
