@@ -9,8 +9,11 @@
 //   1. Find-or-create the Partner + Contact in Supabase (business_name /
 //      contact_name / email come from required custom fields added to the
 //      checkout — see 2026-08-24 decision log entry)
-//   2. Create the Deal at stage='creative' with the correct
-//      placement_type / package_key / pricing from the catalog below
+//   2. If an open deal already exists for that partner + placement (the
+//      team entered it before the client paid), update it to stage
+//      'creative' and record the payment. Otherwise create the Deal at
+//      stage='creative' with placement_type / package_key / pricing from
+//      the catalog below
 //   3. Move the Mailerlite contact into Business - Kiosk Active Advertiser
 //      (+ VIP - Founding Advertiser), setting advertiser_type=paid_launch
 //      and the kiosk_ad_* fields — this is what fires Funnel 5
@@ -218,33 +221,79 @@ Deno.serve(async (req) => {
       contactId = newContact.id
     }
 
-    // Create the deal
     const today = new Date()
-    const runEnd = new Date(today)
-    runEnd.setMonth(runEnd.getMonth() + catalogEntry.months)
+    const paymentLinkUrl = session.url ?? `https://buy.stripe.com/${paymentLinkId}`
 
-    const { data: deal, error: dealErr } = await supabase
+    // Match a deal the team already entered by hand (e.g. Rosy's at the
+    // Beach, 2026-09-30 — pre-entered deal got duplicated on payment).
+    // Same partner + placement, still open, not already tied to a Stripe
+    // session. Oldest first so the original record wins.
+    let matchQuery = supabase
       .from('deals')
-      .insert({
-        title: `${businessName} — ${catalogEntry.name}`,
-        contact_id: contactId,
-        partner_id: partnerId,
-        stage: 'creative',
-        placement_type: catalogEntry.placement_type,
-        package_key: catalogEntry.package_key,
-        pricing_tier: 'option_2',
-        launch_pricing: true,
-        monthly_rate: catalogEntry.monthly_rate,
-        months: catalogEntry.months,
-        design_status: 'none',
-        run_start: today.toISOString().slice(0, 10),
-        run_end: runEnd.toISOString().slice(0, 10),
-        stripe_payment_link: session.url ?? `https://buy.stripe.com/${paymentLinkId}`,
-        notes: `Auto-created from self-serve Stripe checkout. Session: ${session.id}. Review placement_type/package_key and confirm run dates.`,
-      })
-      .select('id')
-      .single()
-    if (dealErr) throw dealErr
+      .select('id, stage, months, notes')
+      .eq('partner_id', partnerId)
+      .eq('placement_type', catalogEntry.placement_type)
+      .in('stage', ['prospect', 'pitched', 'proposal', 'creative'])
+      .or('notes.is.null,notes.not.ilike.*cs_live_*')
+      .order('created_at', { ascending: true })
+      .limit(1)
+    matchQuery = catalogEntry.package_key
+      ? matchQuery.eq('package_key', catalogEntry.package_key)
+      : matchQuery.is('package_key', null)
+    const { data: matches } = await matchQuery
+    const matchedDeal = matches?.[0] ?? null
+
+    let deal: { id: string }
+    let months = catalogEntry.months
+
+    if (matchedDeal) {
+      // Keep the hand-entered terms (rate, months, screen, run dates) —
+      // those were negotiated. Just record the payment and move it forward.
+      months = matchedDeal.months ?? catalogEntry.months
+      const paidNote = `Paid via self-serve Stripe checkout ${today.toISOString().slice(0, 10)}. Session: ${session.id}.`
+      const { data: updated, error: updErr } = await supabase
+        .from('deals')
+        .update({
+          stage: 'creative',
+          stripe_payment_link: paymentLinkUrl,
+          notes: matchedDeal.notes ? `${matchedDeal.notes} | ${paidNote}` : paidNote,
+        })
+        .eq('id', matchedDeal.id)
+        .select('id')
+        .single()
+      if (updErr) throw updErr
+      deal = updated
+    } else {
+      const runEnd = new Date(today)
+      runEnd.setMonth(runEnd.getMonth() + catalogEntry.months)
+
+      const { data: created, error: dealErr } = await supabase
+        .from('deals')
+        .insert({
+          title: `${businessName} — ${catalogEntry.name}`,
+          contact_id: contactId,
+          partner_id: partnerId,
+          stage: 'creative',
+          placement_type: catalogEntry.placement_type,
+          package_key: catalogEntry.package_key,
+          pricing_tier: 'option_2',
+          launch_pricing: true,
+          monthly_rate: catalogEntry.monthly_rate,
+          months: catalogEntry.months,
+          design_status: 'none',
+          run_start: today.toISOString().slice(0, 10),
+          run_end: runEnd.toISOString().slice(0, 10),
+          stripe_payment_link: paymentLinkUrl,
+          notes: `Auto-created from self-serve Stripe checkout. Session: ${session.id}. Review placement_type/package_key and confirm run dates.`,
+        })
+        .select('id')
+        .single()
+      if (dealErr) throw dealErr
+      deal = created
+    }
+
+    const runEnd = new Date(today)
+    runEnd.setMonth(runEnd.getMonth() + months)
 
     // Mailerlite — Funnel 5 trigger
     await mailerliteUpsert(email, {
@@ -259,7 +308,7 @@ Deno.serve(async (req) => {
     // Notify Marilyn — no closed sale should be silent
     await notifyMarilyn(
       `💰 New self-serve kiosk sale — ${catalogEntry.name}`,
-      `${businessName} (${contactName}, ${email}) just paid for ${catalogEntry.name} at $${catalogEntry.monthly_rate}/mo.\n\nCRM deal created (stage: creative) — review and confirm run dates: https://crm.mysyde.com\nMailerlite: moved into Business - Kiosk Active Advertiser, Funnel 5 will start automatically.`,
+      `${businessName} (${contactName}, ${email}) just paid for ${catalogEntry.name} at $${catalogEntry.monthly_rate}/mo.\n\n${matchedDeal ? 'Matched the existing CRM deal and marked it paid (stage: creative) — no duplicate created' : 'CRM deal created (stage: creative)'} — review and confirm run dates: https://crm.mysyde.com\nMailerlite: moved into Business - Kiosk Active Advertiser, Funnel 5 will start automatically.`,
     )
 
     return new Response(JSON.stringify({ success: true, deal_id: deal.id }), {
