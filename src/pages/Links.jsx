@@ -41,6 +41,16 @@ const LINK_GROUPS = [
     ],
   },
   {
+    label: 'Kiosk Operations, Contracts & Insurance',
+    links: [
+      { name: 'Insurance — Drive folder', url: 'https://drive.google.com/drive/folders/19_4t3XZDFeA8c9sR8MuDZ1-iN_N5FicV', note: 'Every current policy, certificate, and City endorsement. Broker: Carrie Hightower, 408-448-4667.' },
+      { name: 'Insurance Register (what we carry + renewal dates)', url: 'https://docs.google.com/document/d/1gMj30fS5WUYCtu-aqIqR3F-aPxJ0NQUG8eRaD9ap9OI/edit', note: 'GL + kiosk property renews May 14, 2027 · Professional Liability renews Nov 5, 2026' },
+      { name: 'Kiosk Wrap Build (Drive folder — final designer package)', url: 'https://drive.google.com/drive/folders/17jH-rwhlqD3Hx2L1BObZujihYIxEUB9R', note: 'Start with the File Key. Final mockup: soft cloud gray, 2026-10-09.' },
+      { name: 'Wrap File Key — FINAL', url: 'https://docs.google.com/document/d/1RE1UV7lV2UHbYOASg4exp3tuSVTD85MXYgTUNv5hJBE/edit' },
+      { name: '[Hollister] DRAFT Revocable License', url: 'https://docs.google.com/document/d/1mOKIW2CRpE0q5kC2beVKoLGJe7vUadaDvT4bWJdq1jM/edit', note: 'Modeled on the signed City of Morgan Hill license. Sent to Ana Cortez 2026-10-09.' },
+    ],
+  },
+  {
     label: 'Marketing Funnels (Mailerlite)',
     links: [
       { name: '1. Kiosk QR Welcome', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live since 2026-09-01 · triggered by the mysyde.com/kiosk popup' },
