@@ -119,8 +119,8 @@ export default function GlobalSearch() {
         <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
           <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
         </svg>
-        <span>Search</span>
-        <kbd className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded font-mono ml-1">Ctrl+K</kbd>
+        <span className="hidden sm:inline">Search</span>
+        <kbd className="hidden sm:inline text-[10px] bg-white/10 px-1.5 py-0.5 rounded font-mono ml-1">Ctrl+K</kbd>
       </button>
     )
   }
