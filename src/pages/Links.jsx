@@ -55,7 +55,7 @@ const LINK_GROUPS = [
     links: [
       { name: '1. Kiosk QR Welcome', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live since 2026-09-01 · triggered by the mysyde.com/kiosk popup' },
       { name: '2. General MySyde Interest', url: null, note: 'Not built yet — post-launch (Q4)' },
-      { name: '3. Sales Nurture (from Drew)', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live · reply-to has a typo in Mailerlite ("diigitalads@") — still worth fixing' },
+      { name: '3. Sales Nurture (from Drew)', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live · reply-to is digitalads@ (typo fixed, verified 2026-10-15) · no prospects added yet' },
       { name: '4. Advertiser Interest', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live since 2026-09-01 · triggered by the mysyde.com/advertise popup, 3 emails, Team MySyde → Drew handoff' },
       { name: '5. Active Advertiser Onboarding', url: 'https://dashboard.mailerlite.com/automations', note: 'ON, live · all 4 automations built (Onboarding, Creative Deadline Nudge, Launch Day, Renewal/Transition)' },
     ],
