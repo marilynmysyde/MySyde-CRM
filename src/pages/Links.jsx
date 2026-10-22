@@ -35,6 +35,8 @@ const LINK_GROUPS = [
   {
     label: 'Kiosk-Facing (Consumer)',
     links: [
+      { name: 'Kiosk Side 1 — morganhill.mysyde.com', url: 'https://morganhill.mysyde.com', note: 'What the Side 1 (front) screen runs. Not phone-friendly yet — open on a desktop.' },
+      { name: 'Kiosk Side 2 — morgan-hill.mysyde.com', url: 'https://morgan-hill.mysyde.com', note: 'What the Side 2 (back) screen runs. Not phone-friendly yet — open on a desktop.' },
       { name: 'Kiosk QR Landing — mysyde.com/kiosk', url: 'https://mysyde.com/kiosk', note: 'Both physical QR codes (front + back panel) point here as of 2026-08-31. Joins subscribers to Funnel 1.' },
       { name: 'Advertise-Here QR Landing — mysyde.com/advertise', url: 'https://mysyde.com/advertise', note: 'Wrap "Advertise Here" panel QR. Joins Business - Kiosk QR, triggers Funnel 4.' },
     ],
