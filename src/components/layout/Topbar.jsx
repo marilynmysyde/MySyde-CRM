@@ -119,7 +119,7 @@ export default function Topbar() {
           style={{ fontFamily: 'Manrope, sans-serif' }}
           title="Set or change your password"
         >
-          <span className="hidden sm:inline">Set password</span>
+          <span className="hidden sm:inline">{user?.user_metadata?.has_password ? 'Change password' : 'Set password'}</span>
           <span className="sm:hidden">🔐</span>
         </button>
         <button

@@ -16,7 +16,7 @@ export default function SetPasswordModal({ onClose }) {
     if (password !== confirm) return setError("Passwords don't match.")
     setLoading(true)
     setError('')
-    const { error } = await supabase.auth.updateUser({ password })
+    const { error } = await supabase.auth.updateUser({ password, data: { has_password: true } })
     setLoading(false)
     if (error) setError(error.message)
     else setDone(true)
