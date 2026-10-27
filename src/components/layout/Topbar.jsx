@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import GlobalSearch from './GlobalSearch'
+import SetPasswordModal from './SetPasswordModal'
 import { useAuth } from '../../contexts/AuthContext'
 
 const NAV_TABS = [
@@ -21,6 +22,7 @@ export default function Topbar() {
   // Mobile only: on phones the inline tab strip has no room (and its hidden
   // scrollbar gave no hint there were more tabs), so tabs live in a dropdown.
   const [menuOpen, setMenuOpen] = useState(false)
+  const [pwOpen, setPwOpen] = useState(false)
   const location = useLocation()
 
   useEffect(() => { setMenuOpen(false) }, [location.pathname])
@@ -112,6 +114,15 @@ export default function Topbar() {
           {initials}
         </div>
         <button
+          onClick={() => setPwOpen(true)}
+          className="text-white/60 hover:text-white text-xs transition-colors whitespace-nowrap"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
+          title="Set or change your password"
+        >
+          <span className="hidden sm:inline">Set password</span>
+          <span className="sm:hidden">🔐</span>
+        </button>
+        <button
           onClick={signOut}
           className="text-white/60 hover:text-white text-xs transition-colors"
           style={{ fontFamily: 'Manrope, sans-serif' }}
@@ -120,6 +131,8 @@ export default function Topbar() {
           Sign out
         </button>
       </div>
+
+      {pwOpen && <SetPasswordModal onClose={() => setPwOpen(false)} />}
     </header>
   )
 }
