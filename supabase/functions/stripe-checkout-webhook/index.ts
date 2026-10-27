@@ -30,7 +30,10 @@
 //
 // Register in Stripe: Developers → Webhooks → Add endpoint
 //   URL: https://wyguubkjefkefqosguio.supabase.co/functions/v1/stripe-checkout-webhook
-//   Event: checkout.session.completed
+//   Events: checkout.session.completed  AND  invoice.paid
+//   (invoice.paid added 2026-10-27 so monthly auto-charges are logged to the
+//   payments ledger; without it enabled on the endpoint, only first checkouts
+//   are seen.)
 
 import Stripe from 'https://esm.sh/stripe@14.21.0?target=deno'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
@@ -106,6 +109,78 @@ async function notifyMarilyn(subject: string, text: string) {
   })
 }
 
+// ── Payments ledger (added 2026-10-27) ────────────────────────────────────
+// Every real payment is logged to the `payments` table so the Chamber 10%
+// quarterly report (see workflows/finance/chamber-payout-sop.md) is exact.
+// Additive only: never edits or deletes an existing payment. Idempotent: the
+// Stripe id (in_… / cs_…) is stored in notes and checked before inserting.
+function jsonResponse(body: Record<string, unknown>, status = 200) {
+  return new Response(JSON.stringify(body), { status, headers: { ...CORS, 'Content-Type': 'application/json' } })
+}
+
+async function logPayment(
+  supabase: ReturnType<typeof createClient>,
+  dealId: string, amount: number, stripeRef: string, note: string,
+): Promise<'logged' | 'duplicate'> {
+  const { data: dup } = await supabase.from('payments').select('id').ilike('notes', `%${stripeRef}%`).limit(1)
+  if (dup && dup.length) return 'duplicate'
+  const { error } = await supabase.from('payments').insert({
+    deal_id: dealId,
+    amount,
+    paid_on: new Date().toISOString().slice(0, 10),
+    method: 'stripe',
+    notes: `${note} Stripe: ${stripeRef}.`,
+  })
+  if (error) throw error
+  return 'logged'
+}
+
+// Recurring monthly charges (and the first charge of a subscription) arrive as
+// invoice.paid. Match to a kiosk deal by billing email -> contact -> partner,
+// then by amount. If it can't be matched with confidence, log nothing and tell
+// Marilyn; never guess.
+async function handleInvoicePaid(invoice: Record<string, any>) {
+  const amount = (invoice.amount_paid ?? 0) / 100
+  if (amount <= 0) return jsonResponse({ skipped: true, reason: 'zero-amount invoice' })
+
+  const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
+  const email: string | null = invoice.customer_email ?? null
+  const customerName: string | null = invoice.customer_name ?? null
+
+  let partnerId: string | null = null
+  if (email) {
+    const { data: c } = await supabase.from('contacts').select('partner_id').eq('email', email).limit(1)
+    partnerId = c?.[0]?.partner_id ?? null
+  }
+  if (!partnerId && customerName) {
+    const { data: p } = await supabase.from('partners').select('id').ilike('name', customerName).limit(1)
+    partnerId = p?.[0]?.id ?? null
+  }
+  if (!partnerId) {
+    // Most likely an old-app subscription or something unrelated to the kiosk.
+    return jsonResponse({ skipped: true, reason: 'no kiosk partner matches this invoice' })
+  }
+
+  // Deals already tied to a self-serve Stripe checkout (cs_live_ in notes) for this partner.
+  const { data: deals } = await supabase
+    .from('deals')
+    .select('id, title, monthly_rate')
+    .eq('partner_id', partnerId)
+    .ilike('notes', '%cs_live_%')
+  const byAmount = (deals ?? []).filter((d) => Math.abs(Number(d.monthly_rate) - amount) < 0.01)
+
+  if (byAmount.length !== 1) {
+    await notifyMarilyn(
+      `⚠️ Stripe payment needs matching — $${amount.toFixed(2)}`,
+      `A $${amount.toFixed(2)} Stripe payment (${invoice.id}) came in from ${customerName ?? email}, but I couldn't match it to exactly one kiosk deal (${deals?.length ?? 0} Stripe deals for that partner, ${byAmount.length} at that amount). Nothing was logged. Tell Claude the deal and it will add the payment.`,
+    )
+    return jsonResponse({ skipped: true, reason: 'could not match to exactly one deal' })
+  }
+
+  const result = await logPayment(supabase, byAmount[0].id, amount, invoice.id, 'Recurring monthly charge (auto-logged).')
+  return jsonResponse({ success: true, payment: result, deal_id: byAmount[0].id })
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS })
 
@@ -126,6 +201,14 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ error: `Signature verification failed: ${err.message}` }), {
       status: 400, headers: { ...CORS, 'Content-Type': 'application/json' },
     })
+  }
+
+  if (event.type === 'invoice.paid') {
+    try {
+      return await handleInvoicePaid(event.data.object)
+    } catch (err) {
+      return jsonResponse({ error: err.message }, 500)
+    }
   }
 
   if (event.type !== 'checkout.session.completed') {
@@ -290,6 +373,15 @@ Deno.serve(async (req) => {
         .single()
       if (dealErr) throw dealErr
       deal = created
+    }
+
+    // Ledger: one-time checkouts are logged here. Subscription checkouts are
+    // logged by invoice.paid instead (it also fires for the first charge), so
+    // skip them here to avoid a double entry. Never blocks the sale flow.
+    if (session.mode === 'payment' && session.amount_total) {
+      try {
+        await logPayment(supabase, deal.id, session.amount_total / 100, session.id, 'One-time checkout payment (auto-logged).')
+      } catch (_err) { /* ledger is best-effort here; the sale flow continues */ }
     }
 
     const runEnd = new Date(today)
