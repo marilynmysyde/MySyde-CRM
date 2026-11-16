@@ -16,6 +16,23 @@ const STATUS_LABEL = {
 const inputCls = 'w-full text-sm border border-gray-200 rounded px-3 py-1.5 focus:outline-none focus:border-[#1D4ED8] text-[#111827] bg-white'
 const labelCls = 'text-[10px] uppercase tracking-wide text-gray-400 font-semibold block mb-1'
 
+// Pull every URL out of a task description so it can be shown as a clickable link.
+// The label is the text before the URL on the same line (e.g. "Gmail draft: https://…").
+function extractLinks(text) {
+  if (!text) return []
+  const out = []
+  for (const line of text.split('\n')) {
+    const re = /https?:\/\/[^\s<>"')]+/g
+    let m
+    while ((m = re.exec(line))) {
+      const url = m[0].replace(/[.,;:]+$/, '')
+      const before = line.slice(0, m.index).replace(/^[\s\-*•\d.)]+/, '').replace(/[\s:–—-]+$/, '').trim()
+      out.push({ url, label: before && before.length <= 80 ? before : '' })
+    }
+  }
+  return out
+}
+
 function fmtNoteDate(iso) {
   if (!iso) return ''
   const d = new Date(iso)
@@ -204,11 +221,26 @@ export default function TaskDetailModal({ task, partners = [], onClose, onUpdate
             <textarea
               value={form.description}
               onChange={e => set('description', e.target.value)}
-              rows={3}
+              rows={8}
               placeholder="What is this task about?"
-              className={`${inputCls} resize-none`}
+              className={`${inputCls} resize-y`}
               style={{ fontFamily: 'Manrope, sans-serif' }}
             />
+            {extractLinks(form.description).length > 0 && (
+              <div className="mt-2 rounded-[8px] border border-[#E5E7EB] bg-[#F9FAFB] p-3">
+                <p className="text-xs font-semibold text-[#6B7280] mb-1.5">Links</p>
+                <ul className="space-y-1">
+                  {extractLinks(form.description).map(({ label, url }, i) => (
+                    <li key={i} className="text-sm">
+                      <a href={url} target="_blank" rel="noopener noreferrer"
+                         className="font-semibold text-[#1D4ED8] hover:text-[#1E40AF] underline break-all">
+                        {label || url}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           {/* Due date + Assigned to */}
