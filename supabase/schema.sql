@@ -92,7 +92,8 @@ create table deals (
   renewal_alert     date generated always as (run_end - interval '14 days') stored,
 
   -- Admin
-  invoice_status      text default 'none' check (invoice_status in ('none','deposit_pending','paid','overdue')),
+  invoice_status      text default 'none' check (invoice_status in ('none','deposit_pending','paid','overdue','recurring')),
+  payments_made       integer default 0, -- recurring deals: monthly payments received so far
   gmail_thread_id     text,
   stripe_payment_link text,
   notes               text,

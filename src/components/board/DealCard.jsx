@@ -144,7 +144,14 @@ export default function DealCard({ deal }) {
             >
               {monthlyDisplay}/mo
             </span>
-            {totalDisplay && (
+            {deal.invoice_status === 'recurring' ? (
+              <span
+                className="text-xs font-semibold text-[#1D4ED8]"
+                style={{ fontFamily: "'Manrope', sans-serif" }}
+              >
+                {deal.payments_made ?? 0} of {deal.months ?? '?'} paid · {formatCurrency((deal.payments_made ?? 0) * (deal.monthly_rate ?? 0))} in
+              </span>
+            ) : totalDisplay && (
               <span
                 className="text-xs font-semibold text-[#1D4ED8]"
                 style={{ fontFamily: "'Manrope', sans-serif" }}

@@ -34,16 +34,18 @@ const SCREEN_LABELS = {
   both:     'Both Screens',
 }
 
-const INVOICE_STATUSES = ['none', 'deposit_pending', 'paid', 'overdue']
+const INVOICE_STATUSES = ['none', 'deposit_pending', 'recurring', 'paid', 'overdue']
 const INVOICE_LABELS = {
   none:            'No Invoice',
   deposit_pending: 'Deposit Pending',
-  paid:            'Paid',
+  recurring:       'Recurring Monthly',
+  paid:            'Paid in Full',
   overdue:         'Overdue',
 }
 const INVOICE_COLORS = {
   none:            'bg-gray-100 text-gray-500',
   deposit_pending: 'bg-amber-50 text-amber-700 border border-amber-200',
+  recurring:       'bg-blue-50 text-[#1D4ED8] border border-blue-200',
   paid:            'bg-green-50 text-green-700 border border-green-200',
   overdue:         'bg-red-50 text-red-600 border border-red-200',
 }
@@ -173,6 +175,21 @@ export default function DealRecord() {
     await supabase.from('activity_log').insert({
       type:       'note',
       body:       `Invoice status → ${INVOICE_LABELS[status]}`,
+      deal_id:    deal.id,
+      partner_id: deal.partner_id ?? null,
+    })
+  }
+
+  // Recurring deals: count of monthly payments received (e.g. "2 of 6 paid")
+  async function changePaymentsMade(delta) {
+    const months = deal.months ?? 0
+    const next = Math.max(0, Math.min(months || 999, (deal.payments_made ?? 0) + delta))
+    if (next === (deal.payments_made ?? 0)) return
+    handleUpdate({ payments_made: next })
+    await supabase.from('deals').update({ payments_made: next }).eq('id', deal.id)
+    await supabase.from('activity_log').insert({
+      type:       'note',
+      body:       `Payments received → ${next} of ${months}`,
       deal_id:    deal.id,
       partner_id: deal.partner_id ?? null,
     })
@@ -502,6 +519,24 @@ export default function DealRecord() {
               >
                 💳 {INVOICE_LABELS[invoiceStatus]} ▾
               </button>
+              {invoiceStatus === 'recurring' && (
+                <span
+                  className="ml-2 inline-flex items-center gap-1 text-xs text-[#111827] font-semibold"
+                  style={{ fontFamily: 'Manrope, sans-serif' }}
+                >
+                  <button
+                    onClick={() => changePaymentsMade(-1)}
+                    className="w-5 h-5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600"
+                    aria-label="One fewer payment received"
+                  >−</button>
+                  {deal.payments_made ?? 0} of {deal.months ?? '?'} paid
+                  <button
+                    onClick={() => changePaymentsMade(1)}
+                    className="w-5 h-5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600"
+                    aria-label="One more payment received"
+                  >+</button>
+                </span>
+              )}
               {invoiceDropOpen && (
                 <>
                   <div className="fixed inset-0 z-10" onClick={() => setInvoiceDropOpen(false)} />
